@@ -57,7 +57,7 @@ bool World::init(vec2 screen)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 	glfwWindowHint(GLFW_RESIZABLE, 0);
-	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "A1 Assignment", nullptr, nullptr);
+	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "DungeonJanitor", nullptr, nullptr);
 	if (m_window == nullptr)
 		return false;
 
@@ -78,7 +78,8 @@ bool World::init(vec2 screen)
 
 	//-------------------------------------------------------------------------
 	// Loading music and sounds
-	
+
+	/* No need for music at the moment
 	if (SDL_Init(SDL_INIT_AUDIO) < 0)
 	{
 		fprintf(stderr, "Failed to initialize SDL Audio");
@@ -105,6 +106,7 @@ bool World::init(vec2 screen)
 	Mix_PlayMusic(m_background_music, -1);
 
 	fprintf(stderr, "Loaded music");
+	*/
 
 	//actually put something like return m_janitor.init();
 	return true;
