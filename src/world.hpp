@@ -2,9 +2,6 @@
 
 // internal
 #include "common.hpp"
-#include "salmon.hpp"
-#include "turtle.hpp"
-#include "fish.hpp"
 
 // stlib
 #include <vector>
