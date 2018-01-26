@@ -115,6 +115,8 @@ bool World::init(vec2 screen)
 		return false;
 	}
 
+	m_room.set_position({ screen.x / 2.f, screen.y / 2.f });
+
 	return true;
 }
 

@@ -85,6 +85,9 @@ void Floor::draw(const mat3& projection, const mat3& parent_transform)
 	transform_scale(m_scale);
 	transform_end();
 
+	// make sure to transform vertices to parent coordinates
+	mat3 final_transform = parent_transform * transform;
+
 	// Setting shaders
 	glUseProgram(effect.program);
 
@@ -113,9 +116,6 @@ void Floor::draw(const mat3& projection, const mat3& parent_transform)
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, floor_texture.id);
-
-	// make sure to transform verticies to parent coordinates
-	mat3 final_transform = parent_transform * transform;
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&final_transform);
