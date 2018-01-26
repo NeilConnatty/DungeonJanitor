@@ -2,6 +2,7 @@
 
 // internal
 #include "common.hpp"
+#include "room.hpp"
 
 // stlib
 #include <vector>
@@ -42,8 +43,11 @@ private:
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 
 private:
-	// Window hjandle
+	// Window handle
 	GLFWwindow* m_window;
+
+	// Room
+	Room m_room;
 
 	// Game entities
 	Mix_Music* m_background_music;

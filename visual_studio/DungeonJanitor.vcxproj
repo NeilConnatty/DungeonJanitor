@@ -93,7 +93,7 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)/</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)/tmp/$(Configuration)/$(Platform)</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)/tmp/$(Configuration)/$(Platform)/</IntDir>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)</LocalDebuggerWorkingDirectory>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(projectDir)</LocalDebuggerWorkingDirectory>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">DungeonJanitor</TargetName>
@@ -105,7 +105,7 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)/</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)/tmp/$(Configuration)/$(Platform)</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)/tmp/$(Configuration)/$(Platform)/</IntDir>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)</LocalDebuggerWorkingDirectory>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)</LocalDebuggerWorkingDirectory>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">DungeonJanitor</TargetName>
@@ -117,7 +117,7 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">$(ProjectDir)/</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">$(ProjectDir)/tmp/$(Configuration)/$(Platform)</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">$(ProjectDir)/tmp/$(Configuration)/$(Platform)/</IntDir>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">$(ProjectDir)</LocalDebuggerWorkingDirectory>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(ProjectDir)</LocalDebuggerWorkingDirectory>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">DungeonJanitor</TargetName>
@@ -129,7 +129,7 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">$(ProjectDir)/</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">$(ProjectDir)/tmp/$(Configuration)/$(Platform)</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">$(ProjectDir)/tmp/$(Configuration)/$(Platform)/</IntDir>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">$(ProjectDir)</LocalDebuggerWorkingDirectory>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(ProjectDir)</LocalDebuggerWorkingDirectory>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">DungeonJanitor</TargetName>
@@ -143,19 +143,19 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(ProjectDir)/</OutDir>
-    <IntDir>$(ProjectDir)/tmp/$(Configuration)/$(Platform)</IntDir>
+    <IntDir>$(ProjectDir)/tmp/$(Configuration)/$(Platform)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <OutDir>$(ProjectDir)/</OutDir>
-    <IntDir>$(ProjectDir)/tmp/$(Configuration)/$(Platform)</IntDir>
+    <IntDir>$(ProjectDir)/tmp/$(Configuration)/$(Platform)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)/</OutDir>
-    <IntDir>$(ProjectDir)/tmp/$(Configuration)/$(Platform)</IntDir>
+    <IntDir>$(ProjectDir)/tmp/$(Configuration)/$(Platform)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <OutDir>$(ProjectDir)/</OutDir>
-    <IntDir>$(ProjectDir)/tmp/$(Configuration)/$(Platform)</IntDir>
+    <IntDir>$(ProjectDir)/tmp/$(Configuration)/$(Platform)/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -500,12 +500,18 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\floor.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\common.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\world.cpp" />
+    <ClCompile Include="..\src\room.cpp" />
+    <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common.hpp" />
+    <ClInclude Include="..\src\floor.hpp" />
+    <ClInclude Include="..\src\room.hpp" />
+    <ClInclude Include="..\src\wall.hpp" />
     <ClInclude Include="..\src\world.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
