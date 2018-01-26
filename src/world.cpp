@@ -115,9 +115,13 @@ bool World::init(vec2 screen)
 		return false;
 	}
 
-	m_room.set_position({ 128.f, 52.f });
+        m_room.set_position(
+            {128.f,
+             52.f}); // temporary values, as we don't have a real camera yet, so
+                     // positions are in pixels. we will eventually have a
+                     // dungeon object that contains multiple rooms.
 
-	return true;
+        return true;
 }
 
 // Releases all the associated resources
