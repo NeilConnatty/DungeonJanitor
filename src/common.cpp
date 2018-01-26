@@ -258,4 +258,4 @@ void Renderable::transform_translate(vec2 offset)
 void Renderable::transform_end()
 {
 	//
-
+}
