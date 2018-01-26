@@ -11,6 +11,7 @@ public:
 	Floor();
 	~Floor();
 
+	bool	init();
 	bool	init(vec2 position);
 	void	destroy();
 	

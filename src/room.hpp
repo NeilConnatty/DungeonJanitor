@@ -13,6 +13,7 @@ public:
 	~Room();
 
 	bool init();
+	bool init(vec2 position);
 	void destroy();
 
 	void set_position(vec2 pos);
@@ -24,4 +25,5 @@ private:
 	std::vector<Wall>		m_walls;
 
 	vec2	m_position;
+	vec2	m_scale;
 }; 

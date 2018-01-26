@@ -11,6 +11,7 @@ public:
 	~Wall();
 
 	bool	init();
+	bool	init(vec2 position);
 	void	destroy();
 
 	void	set_position(vec2 position);

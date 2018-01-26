@@ -8,6 +8,11 @@ Floor::Floor() {}
 
 Floor::~Floor() {}
 
+bool Floor::init()
+{
+	return init({ 0.f, 0.f });
+}
+
 bool Floor::init(vec2 position)
 {
 	if (!floor_texture.is_valid())

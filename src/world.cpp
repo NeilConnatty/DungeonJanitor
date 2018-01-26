@@ -115,7 +115,7 @@ bool World::init(vec2 screen)
 		return false;
 	}
 
-	m_room.set_position({ screen.x / 2.f, screen.y / 2.f });
+	m_room.set_position({ 64.f, 64.f });
 
 	return true;
 }
@@ -138,7 +138,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
 	int w, h;
-        glfwGetFramebufferSize(m_window, &w, &h);
+    glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
 	return true;
