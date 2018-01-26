@@ -78,6 +78,11 @@ mat3 mul(const mat3 & l, const mat3 & r)
 	return ret;
 }
 
+mat3 operator*(const mat3 & l, const mat3 & r)
+{
+	return mul(l, r);
+}
+
 vec2 normalize(vec2 v)
 {
 	float m = sqrtf(dot(v, v));

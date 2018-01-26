@@ -109,6 +109,12 @@ bool World::init(vec2 screen)
 	*/
 
 	//actually put something like return m_janitor.init();
+	if (!m_room.init())
+	{
+		fprintf(stderr, "Failed to init room.\n");
+		return false;
+	}
+
 	return true;
 }
 
@@ -144,7 +150,7 @@ void World::draw()
 
 	// Getting size of window
 	int w, h;
-        glfwGetFramebufferSize(m_window, &w, &h);
+    glfwGetFramebufferSize(m_window, &w, &h);
 
 
 	// Updating window title with points
@@ -154,7 +160,7 @@ void World::draw()
 	// Clearing backbuffer
 	glViewport(0, 0, w, h);
 	glDepthRange(0.00001, 10);
-	const float clear_color[3] = { 0.3f, 0.3f, 0.8f };
+	const float clear_color[3] = { 0.f, 0.f, 0.f };
 	glClearColor(clear_color[0], clear_color[1], clear_color[2], 1.0);
 	glClearDepth(1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -171,9 +177,10 @@ void World::draw()
 	float tx = -(right + left) / (right - left);
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
+	mat3 identity_transform{ {1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}, {0.f, 0.f, 1.f} };
 
 	// Drawing entities
-
+	m_room.draw(projection_2D, identity_transform);
 
 	// Presenting
 	glfwSwapBuffers(m_window);

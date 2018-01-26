@@ -34,6 +34,7 @@ struct mat3 { vec3 c0, c1, c2; };
 float dot(vec2 l, vec2 r);
 float dot(vec3 l, vec3 r);
 mat3  mul(const mat3& l, const mat3& r);
+mat3 operator*(const mat3& l, const mat3& r);
 vec2  normalize(vec2 v);
 
 // OpenGL utilities
@@ -102,7 +103,7 @@ struct Renderable
 
 	// projection contains the orthographic projection matrix. As every Renderable::draw()
 	// renders itself it needs it to correctly bind it to its shader.
-	virtual void draw(const mat3& projection) = 0;
+	virtual void draw(const mat3& projection, const mat3& parent_transform) = 0;
 
 	// gl Immediate mode equivalent, see the Rendering and Transformations section in the
 	// specification pdf

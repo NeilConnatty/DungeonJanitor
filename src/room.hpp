@@ -1,6 +1,10 @@
 #pragma once
 
 #include "common.hpp"
+#include "floor.hpp"
+#include "wall.hpp"
+
+#include <vector>
 
 class Room : Renderable
 {
@@ -18,7 +22,9 @@ public:
 	bool update(float ms);
 
 	// Renders our room
-	void draw(const mat3& projection) override;
+	void draw(const mat3& projection, const mat3& parent_transform) override;
 
 private:
-};
+	std::vector<Floor>		m_floors;
+	std::vector<Wall>		m_walls;
+}; 

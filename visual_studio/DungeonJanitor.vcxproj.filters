@@ -10,12 +10,30 @@
     <ClCompile Include="..\src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\room.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\floor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wall.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\world.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\common.hpp">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\world.hpp">
+    <ClInclude Include="..\src\room.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\floor.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\wall.hpp">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -15,7 +15,7 @@ public:
 
 	void	set_position(vec2 position);
 	vec2	get_bounding_box() const;
-	void	draw(const mat3& projection) override;
+	void	draw(const mat3& projection, const mat3& parent_transform) override;
 
 private:
 	vec2	m_position;
