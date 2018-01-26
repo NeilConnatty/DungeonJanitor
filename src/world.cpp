@@ -138,7 +138,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
 	int w, h;
-    glfwGetFramebufferSize(m_window, &w, &h);
+	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
 	return true;
@@ -152,7 +152,7 @@ void World::draw()
 
 	// Getting size of window
 	int w, h;
-    glfwGetFramebufferSize(m_window, &w, &h);
+	glfwGetFramebufferSize(m_window, &w, &h);
 
 
 	// Updating window title with points
