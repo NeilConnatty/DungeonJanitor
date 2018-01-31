@@ -1,13 +1,9 @@
 #pragma once
 
 #include "common.hpp"
+#include "room.hpp"
 
-class RoomTextParser
+namespace Parser
 {
-public:
-	RoomTextParser();
-	~RoomTextParser();
-
-private:
-
+	void parseRoom(Room& room, const char* filename);
 };

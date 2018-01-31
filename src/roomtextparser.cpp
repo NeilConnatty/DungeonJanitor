@@ -5,10 +5,13 @@
 #include <fstream>
 #include <string>
 
-RoomTextParser::RoomTextParser()
+void Parser::parseRoom(Room& room, const char* filename)
 {
-}
+	std::string line;
+	std::ifstream file(filename);
 
-RoomTextParser::~RoomTextParser()
-{
+	while (std::getline(file, line))
+	{
+
+	}
 }

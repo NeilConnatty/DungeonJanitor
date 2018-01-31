@@ -505,12 +505,14 @@
     <ClCompile Include="$(ProjectDir)..\src\common.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\world.cpp" />
     <ClCompile Include="..\src\room.cpp" />
+    <ClCompile Include="..\src\roomtextparser.cpp" />
     <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\common.hpp" />
     <ClInclude Include="..\src\floor.hpp" />
     <ClInclude Include="..\src\room.hpp" />
+    <ClInclude Include="..\src\roomtextparser.hpp" />
     <ClInclude Include="..\src\wall.hpp" />
     <ClInclude Include="..\src\world.hpp" />
   </ItemGroup>
