@@ -20,6 +20,9 @@ public:
 	bool update(float ms);
 	void draw(const mat3& projection, const mat3& parent_transform) override;
 
+	bool add_walls(std::vector<vec2>& positions);
+	bool add_floors(std::vector<vec2>& positions);
+
 private:
 	std::vector<Floor>		m_floors;
 	std::vector<Wall>		m_walls;

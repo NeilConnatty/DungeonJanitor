@@ -3,7 +3,15 @@
 #include "common.hpp"
 #include "room.hpp"
 
-namespace Parser
+class RoomParser
 {
-	void parseRoom(Room& room, const char* filename);
+public:
+	bool parseRoom(Room& room, const char* filename);
+
+private:
+	bool parseLine(std::string& line, float y);
+
+private:
+	std::vector<vec2> wall_pos;
+	std::vector<vec2> floor_pos;
 };

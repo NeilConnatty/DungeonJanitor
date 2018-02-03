@@ -1,5 +1,6 @@
 // Header
 #include "world.hpp"
+#include "roomtextparser.hpp"
 
 // stlib
 #include <string.h>
@@ -115,13 +116,16 @@ bool World::init(vec2 screen)
 		return false;
 	}
 
-        m_room.set_position(
-            {128.f,
+    m_room.set_position(
+		    {128.f,
              52.f}); // temporary values, as we don't have a real camera yet, so
                      // positions are in pixels. we will eventually have a
                      // dungeon object that contains multiple rooms.
 
-        return true;
+	RoomParser parser;
+	parser.parseRoom(m_room, "../data/rooms/1.rm");
+
+    return true;
 }
 
 // Releases all the associated resources

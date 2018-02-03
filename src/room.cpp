@@ -64,25 +64,6 @@ Room::~Room()
 // Creates a room
 bool Room::init(vec2 position)
 {
-	for (size_t i = 0; i < NUM_WALLS; ++i)
-	{
-		m_walls.push_back({});
-		if (!m_walls[i].init(wall_positions[i]*SPRITE_SIZE))    // each position needed to be mult by 64 as each spite is 64x64 pixels
-															// and 1 pixel = 1 in world coords
-		{
-			return false;
-		}
-	}
-
-	for (size_t i = 0; i < NUM_FLOORS; ++i)
-	{
-		m_floors.push_back({});
-		if (!m_floors[i].init(floor_positions[i] * SPRITE_SIZE))
-		{
-			return false;
-		}
-	}
-
 	m_position = position;
 	m_scale = { 1.f, 1.f };
 
@@ -140,4 +121,34 @@ void Room::draw(const mat3& projection, const mat3& parent_transform)
 void Room::set_position(vec2 pos)
 {
 	m_position = pos;
+}
+
+bool Room::add_floors(std::vector<vec2>& positions)
+{
+	for (vec2& pos : positions)
+	{
+		m_floors.push_back({});
+		if (!m_floors.back().init(pos * SPRITE_SIZE))	 // each position needed to be mult by 64 as each spite is 64x64 pixels
+														 // and 1 pixel = 1 in world coords
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Room::add_walls(std::vector<vec2>& positions)
+{
+	for (vec2& pos : positions)
+	{
+		m_walls.push_back({});
+		if (!m_walls.back().init(pos * SPRITE_SIZE))    // each position needed to be mult by 64 as each spite is 64x64 pixels
+														// and 1 pixel = 1 in world coords
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
