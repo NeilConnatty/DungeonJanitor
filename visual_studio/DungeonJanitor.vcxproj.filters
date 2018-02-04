@@ -19,6 +19,15 @@
     <ClCompile Include="..\src\wall.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\roomtextparser.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\drungeon.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gameobject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -34,6 +43,15 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\src\wall.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\roomtextparser.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\dungeon.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gameobject.hpp">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

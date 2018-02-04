@@ -2,27 +2,18 @@
 
 #include "common.hpp"
 #include "gameobject.hpp"
-#include "floor.hpp"
-#include "wall.hpp"
+#include "room.hpp"
 
 #include <vector>
-#include <memory>
 
-class Room : public GameObject
+class Dungeon : public GameObject
 {
-public: 
-	using ptr = std::unique_ptr<Room>;
-
 public:
-	Room();
-	~Room();
+	Dungeon();
+	~Dungeon();
 
 	bool init();
-	bool init(vec2 position);
 	void destroy();
-
-	bool add_walls(std::vector<vec2>& positions);
-	bool add_floors(std::vector<vec2>& positions);
 
 private:
 	void update_current(float ms) override;
@@ -31,6 +22,5 @@ private:
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
 
 private:
-	std::vector<Floor>		m_floors;
-	std::vector<Wall>		m_walls;
-}; 
+	std::vector<Room::ptr>	m_rooms;  // unsure if this should be a vector of pointers or rooms
+};

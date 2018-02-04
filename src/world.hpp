@@ -2,7 +2,7 @@
 
 // internal
 #include "common.hpp"
-#include "room.hpp"
+#include "dungeon.hpp"
 
 // stlib
 #include <vector>
@@ -46,8 +46,8 @@ private:
 	// Window handle
 	GLFWwindow* m_window;
 
-	// Room
-	Room m_room;
+	// Dungeon
+	Dungeon m_dungeon;
 
 	// Game entities
 	Mix_Music* m_background_music;

@@ -109,19 +109,13 @@ bool World::init(vec2 screen)
 	*/
 
 	//actually put something like return m_janitor.init();
-	if (!m_room.init())
+	if (!m_dungeon.init())
 	{
-		fprintf(stderr, "Failed to init room.\n");
+		fprintf(stderr, "Failed to init Dungeon.\n");
 		return false;
 	}
 
-        m_room.set_position(
-            {128.f,
-             52.f}); // temporary values, as we don't have a real camera yet, so
-                     // positions are in pixels. we will eventually have a
-                     // dungeon object that contains multiple rooms.
-
-        return true;
+    return true;
 }
 
 // Releases all the associated resources
@@ -144,6 +138,8 @@ bool World::update(float elapsed_ms)
 	int w, h;
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
+
+	m_dungeon.update(elapsed_ms);
 
 	return true;
 }
@@ -186,7 +182,7 @@ void World::draw()
 	mat3 identity_transform{ {1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}, {0.f, 0.f, 1.f} };
 
 	// Drawing entities
-	m_room.draw(projection_2D, identity_transform);
+	m_dungeon.draw(projection_2D, identity_transform);
 
 	// Presenting
 	glfwSwapBuffers(m_window);
