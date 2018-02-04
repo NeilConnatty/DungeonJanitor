@@ -5,9 +5,13 @@
 #include "wall.hpp"
 
 #include <vector>
+#include <memory>
 
 class Room : Renderable
 {
+public: 
+	using ptr = std::unique_ptr<Room>;
+
 public:
 	Room();
 	~Room();
