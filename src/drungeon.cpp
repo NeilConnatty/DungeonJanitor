@@ -4,8 +4,9 @@
 #include "roomtextparser.hpp"
 
 Dungeon::Dungeon() : 
-	m_position({0.f, 0.f})
-{}
+	GameObject()
+{
+}
 
 Dungeon::~Dungeon() {}
 
@@ -38,11 +39,6 @@ void Dungeon::destroy()
 	}
 }
 
-void Dungeon::set_position(vec2 pos)
-{
-	m_position = pos;
-}
-
 void Dungeon::update_current(float ms)
 {
 }
@@ -55,22 +51,14 @@ void Dungeon::update_children(float ms)
 	}
 }
 
-void Dungeon::update(float ms)
+void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
 {
-	update_current(ms);
-	update_children(ms);
 }
 
-void Dungeon::draw(const mat3& projection, const mat3& parent_transform)
+void Dungeon::draw_children(const mat3& projection, const mat3& current_transform)
 {
-	transform_begin();
-	transform_translate(m_position);
-	transform_end();
-
-	mat3 final_transform = parent_transform * transform;
-
 	for (Room::ptr& room : m_rooms)
 	{
-		room->draw(projection, final_transform);
+		room->draw(projection, current_transform);
 	}
 }

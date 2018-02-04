@@ -76,23 +76,12 @@ void Wall::destroy()
 {
 }
 
-void Wall::set_position(vec2 position)
+void Wall::draw_children(const mat3& projection, const mat3& current_transform)
 {
-	m_position = position;
 }
 
-void Wall::draw(const mat3& projection, const mat3& parent_transform)
+void Wall::draw_current(const mat3& projection, const mat3& current_transform)
 {
-	// Transformation code, see Rendering and Transformation in the template specification for more info
-	// Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
-	transform_begin();
-	transform_translate(m_position);
-	transform_scale(m_scale);
-	transform_end();
-
-	// make sure to transform vertices to parent coordinates
-	mat3 final_transform = parent_transform * transform;
-
 	// Setting shaders
 	glUseProgram(effect.program);
 
@@ -123,7 +112,7 @@ void Wall::draw(const mat3& projection, const mat3& parent_transform)
 	glBindTexture(GL_TEXTURE_2D, wall_texture.id);
 
 	// Setting uniform values to the currently bound program
-	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&final_transform);
+	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
