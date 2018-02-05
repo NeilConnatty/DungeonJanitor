@@ -1,8 +1,6 @@
-#pragma once
+#include "janitor.hpp"
 
-#include "Janitor.hpp"
-
-Texture placeholder_texture;
+Texture Janitor::placeholder_texture;
 
 Janitor::Janitor() : GameObject()
 {

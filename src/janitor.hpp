@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common.cpp"
-#include "gameobject.cpp"
+#include "common.hpp"
+#include "gameobject.hpp"
 
 class Janitor : public GameObject
 {

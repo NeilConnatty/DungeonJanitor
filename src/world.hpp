@@ -3,7 +3,7 @@
 // internal
 #include "common.hpp"
 #include "dungeon.hpp"
-#include "Janitor.hpp"
+#include "janitor.hpp"
 // stlib
 #include <vector>
 #include <random>
