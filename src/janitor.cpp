@@ -87,8 +87,9 @@ void Janitor::update_current(float ms)
 {
 	//hard code errthang :/
 	const float MAX_ACCEL = 3.0f;
-	float delta_accel = 0.8f;
+	float delta_accel = 0.05f;
 	float delta_decel = 1.0f;
+	//Deceleration cancels itself out right now, I'm missing something - Sean
 	//UP
 	if (m_key_up && m_accel.y > -MAX_ACCEL) 
 	{ 

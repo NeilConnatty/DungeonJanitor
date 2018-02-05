@@ -140,7 +140,7 @@ bool World::update(float elapsed_ms)
 	int w, h;
 	glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
-
+	m_janitor.update(elapsed_ms);
 	m_dungeon.update(elapsed_ms);
 
 	return true;
@@ -185,7 +185,7 @@ void World::draw()
 
 	// Drawing entities
 	m_dungeon.draw(projection_2D, identity_transform);
-
+	m_janitor.draw(projection_2D, identity_transform);
 	// Presenting
 	glfwSwapBuffers(m_window);
 }
