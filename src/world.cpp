@@ -115,7 +115,8 @@ bool World::init(vec2 screen)
 		return false;
 	}
 
-    return true;
+	vec2 janitor_position = { 100.f, 50.f };
+    return m_janitor.init(janitor_position);
 }
 
 // Releases all the associated resources
@@ -127,7 +128,8 @@ void World::destroy()
 	Mix_CloseAudio();
 	SDL_Quit();
 	
-
+	m_dungeon.destroy();
+	m_janitor.destroy();
 	//Destructors for game objects here
 	glfwDestroyWindow(m_window);
 }
@@ -205,10 +207,10 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 	//flip a boolean on press and release of the following keys for movement!
-	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_UP)
-	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_DOWN)
-	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_LEFT)
-	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_RIGHT)
+	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_UP) m_janitor.key_up();
+	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_DOWN) m_janitor.key_down();
+	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_LEFT) m_janitor.key_left();
+	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_RIGHT) m_janitor.key_right();
 
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)

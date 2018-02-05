@@ -1,34 +1,31 @@
-// wall.cpp
+#pragma once
 
-#include "wall.hpp"
+#include "Janitor.hpp"
 
-Texture Wall::wall_texture;
+Texture placeholder_texture;
 
-Wall::Wall() {}
-
-Wall::~Wall() {}
-
-bool Wall::init()
+Janitor::Janitor() : GameObject()
 {
-	return init({ 0.f, 0.f });
 }
 
-bool Wall::init(vec2 position)
+Janitor::~Janitor() {}
+
+//Init graphics resources
+bool Janitor::init() { return false; }
+bool Janitor::init(vec2 position) 
 {
-	if (!wall_texture.is_valid())
+
+	if (!placeholder_texture.is_valid())
 	{
-		if (!wall_texture.load_from_file(textures_path("wall.png")))
+		if (!placeholder_texture.load_from_file(textures_path("wall.png")))
 		{
 			fprintf(stderr, "Failed to load wall texture\n");
 			return false;
 		}
 	}
 
-	m_position = position;
-
-	// The position corresponds to the center of the texture
-	float wr = wall_texture.width * 0.5f;
-	float hr = wall_texture.height * 0.5f;
+	float wr = placeholder_texture.width * 0.5f;
+	float hr = placeholder_texture.height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -43,7 +40,6 @@ bool Wall::init(vec2 position)
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
 
-	// Clearing errors
 	gl_flush_errors();
 
 	// Vertex Buffer creation
@@ -65,14 +61,20 @@ bool Wall::init(vec2 position)
 	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
-	// Setting initial scale values
-	m_scale.x = 1.f;
-	m_scale.y = 1.f;
+	//Initialize member variables
+	
+	m_position = position;
+
+	m_key_up = false;
+	m_key_down = false;
+	m_key_left = false;
+	m_key_right = false;
 
 	return true;
 }
 
-void Wall::destroy()
+//Destroy graphics resources
+void Janitor::destroy() 
 {
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
@@ -83,11 +85,52 @@ void Wall::destroy()
 	glDeleteShader(effect.program);
 }
 
-void Wall::draw_children(const mat3& projection, const mat3& current_transform)
+void Janitor::update_current(float ms) 
 {
-}
+	//hard code errthang :/
+	const float MAX_ACCEL = 3.0f;
+	float delta_accel = 0.8f;
+	float delta_decel = 1.0f;
+	//UP
+	if (m_key_up && m_accel.y > -MAX_ACCEL) 
+	{ 
+		m_accel.y -= delta_accel; 
+		if (m_accel.y <= -MAX_ACCEL) m_accel.y = -MAX_ACCEL;
+	}
+	else m_accel.y += delta_decel;
+	//DOWN
+	if (m_key_down && m_accel.y < MAX_ACCEL)
+	{
+		m_accel.y += delta_accel;
+		if (m_accel.y > MAX_ACCEL) m_accel.y = MAX_ACCEL;
+	}
+	else m_accel.y -= delta_decel;
+	//LEFT
+	if (m_key_left && m_accel.x > -MAX_ACCEL) 
+	{
+		m_accel.x -= delta_accel;
+		if (m_accel.x < -MAX_ACCEL) m_accel.x = -MAX_ACCEL;
+	}
+	else m_accel.x += delta_decel;
+	//RIGHT
+	if (m_key_right && m_accel.x > MAX_ACCEL) 
+	{
+		m_accel.x += delta_accel;
+		if (m_accel.x > MAX_ACCEL) m_accel.x = MAX_ACCEL;
+	}
+	else m_accel.x -= delta_decel;
 
-void Wall::draw_current(const mat3& projection, const mat3& current_transform)
+
+	m_vel.x += m_accel.x;
+	m_vel.y += m_accel.y;
+
+	m_position.x += m_vel.x;
+	m_position.y += m_vel.y;
+
+}
+void Janitor::update_children(float ms) {}
+
+void Janitor::draw_current(const mat3& projection, const mat3& current_transform) 
 {
 	// Setting shaders
 	glUseProgram(effect.program);
@@ -116,7 +159,7 @@ void Wall::draw_current(const mat3& projection, const mat3& current_transform)
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, wall_texture.id);
+	glBindTexture(GL_TEXTURE_2D, placeholder_texture.id);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
@@ -127,3 +170,14 @@ void Wall::draw_current(const mat3& projection, const mat3& current_transform)
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
+void Janitor::draw_children(const mat3& projection, const mat3& current_transform) {
+
+}
+
+void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
+void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
+
+void Janitor::key_up() { m_key_up = !m_key_up; }
+void Janitor::key_down() { m_key_down = !m_key_down; }
+void Janitor::key_left() { m_key_left = !m_key_left; }
+void Janitor::key_right() { m_key_right = !m_key_right; }
