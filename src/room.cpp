@@ -84,6 +84,12 @@ bool Room::add_floors(std::vector<vec2>& positions)
 	return true;
 }
 
+
+bool Room::add_cleanables(std::vector<vec2>& puddle_positions)
+{
+	return true;
+}
+
 bool Room::add_walls(std::vector<vec2>& positions)
 {
 	for (vec2& pos : positions)

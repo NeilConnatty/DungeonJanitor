@@ -23,6 +23,7 @@ public:
 
 	bool add_walls(std::vector<vec2>& positions);
 	bool add_floors(std::vector<vec2>& positions);
+	bool add_cleanables(std::vector<vec2>& puddle_positions);
 
 private:
 	void update_current(float ms) override;
