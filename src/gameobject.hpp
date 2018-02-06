@@ -11,6 +11,7 @@ public:
 	void set_position(vec2 pos);
 	void set_scale(vec2 scale);
 	void set_rotation(float rotation);
+	void toggle_enable();
 
 	void update(float ms);
 	void draw(const mat3& projection, const mat3& parent_transform) override;
@@ -25,4 +26,5 @@ protected:
 	vec2	m_position;
 	vec2	m_scale;
 	float	m_rotation;
+	bool    m_enabled;
 };

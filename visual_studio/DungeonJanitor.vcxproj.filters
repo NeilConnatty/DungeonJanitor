@@ -28,7 +28,7 @@
     <ClCompile Include="..\src\gameobject.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Cleanable\Cleanable.cpp">
+    <ClCompile Include="..\src\Cleanable\puddle.cpp">
       <Filter>src\Cleanable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -57,7 +57,7 @@
     <ClInclude Include="..\src\gameobject.hpp">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Cleanable\Cleanable.hpp">
+    <ClInclude Include="..\src\Cleanable\puddle.hpp">
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
   </ItemGroup>
