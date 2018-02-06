@@ -4,6 +4,7 @@
 #include "gameobject.hpp"
 #include "floor.hpp"
 #include "wall.hpp"
+#include "./Cleanable/puddle.hpp"
 
 #include <vector>
 #include <memory>
@@ -34,4 +35,5 @@ private:
 private:
 	std::vector<Floor>		m_floors;
 	std::vector<Wall>		m_walls;
+	std::vector<Puddle>     m_puddles;
 }; 
