@@ -207,10 +207,22 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 	//flip a boolean on press and release of the following keys for movement!
-	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_UP) m_janitor.key_up();
-	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_DOWN) m_janitor.key_down();
-	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_LEFT) m_janitor.key_left();
-	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_RIGHT) m_janitor.key_right();
+	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_UP)
+	{
+		m_janitor.key_up();
+	}
+	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_DOWN)
+	{
+		m_janitor.key_down();
+	}
+	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_LEFT)
+	{
+		m_janitor.key_left();
+	}
+	if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_RIGHT)
+	{
+		m_janitor.key_right();
+	}
 
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)

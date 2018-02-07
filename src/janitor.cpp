@@ -85,15 +85,59 @@ void Janitor::destroy()
 
 void Janitor::update_current(float ms) 
 {
+	const float SPEED = 200.0f;
+	float timeFactor = ms / 1000;
+	
+	//UP
+	if (m_key_up)// && m_accel.y != SPEED) 
+	{ 
+		m_vel.y = -SPEED;
+	}
+	
+	//DOWN
+	else if (m_key_down)
+	{
+		m_vel.y = SPEED;
+	}
+
+	else
+	{
+		m_vel.y = 0;
+	}
+	//LEFT
+	if (m_key_left)
+	{
+		m_vel.x = -SPEED;
+	}
+	//RIGHT
+	else if (m_key_right) 
+	{
+		m_vel.x = SPEED;
+
+	}
+	else
+	{
+		m_vel.x = 0;
+	}
+
+	// Check wall here
+
+	m_position.x += m_vel.x * timeFactor;
+	m_position.y += m_vel.y * timeFactor;
+
+}
+/*
+void Janitor::update_current(float ms)
+{
 	//hard code errthang :/
 	const float MAX_ACCEL = 3.0f;
 	float delta_accel = 0.05f;
 	float delta_decel = 1.0f;
 	//Deceleration cancels itself out right now, I'm missing something - Sean
 	//UP
-	if (m_key_up && m_accel.y > -MAX_ACCEL) 
-	{ 
-		m_accel.y -= delta_accel; 
+	if (m_key_up && m_accel.y > -MAX_ACCEL)
+	{
+		m_accel.y -= delta_accel;
 		if (m_accel.y <= -MAX_ACCEL) m_accel.y = -MAX_ACCEL;
 	}
 	else m_accel.y += delta_decel;
@@ -105,14 +149,14 @@ void Janitor::update_current(float ms)
 	}
 	else m_accel.y -= delta_decel;
 	//LEFT
-	if (m_key_left && m_accel.x > -MAX_ACCEL) 
+	if (m_key_left && m_accel.x > -MAX_ACCEL)
 	{
 		m_accel.x -= delta_accel;
 		if (m_accel.x < -MAX_ACCEL) m_accel.x = -MAX_ACCEL;
 	}
 	else m_accel.x += delta_decel;
 	//RIGHT
-	if (m_key_right && m_accel.x > MAX_ACCEL) 
+	if (m_key_right && m_accel.x > MAX_ACCEL)
 	{
 		m_accel.x += delta_accel;
 		if (m_accel.x > MAX_ACCEL) m_accel.x = MAX_ACCEL;
@@ -127,6 +171,7 @@ void Janitor::update_current(float ms)
 	m_position.y += m_vel.y;
 
 }
+*/
 void Janitor::update_children(float ms) {}
 
 void Janitor::draw_current(const mat3& projection, const mat3& current_transform) 
@@ -176,7 +221,10 @@ void Janitor::draw_children(const mat3& projection, const mat3& current_transfor
 void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
 void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
 
-void Janitor::key_up() { m_key_up = !m_key_up; }
+void Janitor::key_up() 
+{ 
+	m_key_up = !m_key_up; 
+}
 void Janitor::key_down() { m_key_down = !m_key_down; }
 void Janitor::key_left() { m_key_left = !m_key_left; }
 void Janitor::key_right() { m_key_right = !m_key_right; }
