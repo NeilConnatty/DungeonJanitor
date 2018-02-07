@@ -14,4 +14,5 @@ private:
 private:
 	std::vector<vec2> wall_pos;
 	std::vector<vec2> floor_pos;
+	std::vector<vec2> puddle_pos;
 };
