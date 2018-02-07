@@ -121,80 +121,14 @@ void Janitor::update_current(float ms)
 		m_vel.x = 0;
 	}
 
-	//checkForWallCollision();
-
-	// Case 1: No collision -> New X, New Y
-	// Case 2: Horizontal collision -> At wall X, New Y
-	// Case 3: Vertical collision -> New X, At wall Y
-	// Case 4: Total collision -> at wall X, at wall Y
 	float new_position_x = m_position.x + m_vel.x * timeFactor;
 	float new_position_y = m_position.y + m_vel.y * timeFactor;
 
-	m_position.x += new_position_x;
-	m_position.y += new_position_y;
+	m_position.x = new_position_x;
+	m_position.y = new_position_y;
 
 }
-/*
-bool Janitor::collides_with(GameObject& object)
-{
-	float dx = m_position.x - object.get_pos().x;
-	float dy = m_position.y - object.get_pos().y;
-	float d_sq = dx * dx + dy * dy;
-	float other_r = std::max(object.get_bounding_box().x, object.get_bounding_box().y);
-	float my_r = std::max(m_scale.x, m_scale.y);
-	float r = std::max(other_r, my_r);
-	r *= 0.6f;
-	if (d_sq < r * r)
-		return true;
-	return false;
-}
-*/
-/*
-void Janitor::update_current(float ms)
-{
-	//hard code errthang :/
-	const float MAX_ACCEL = 3.0f;
-	float delta_accel = 0.05f;
-	float delta_decel = 1.0f;
-	//Deceleration cancels itself out right now, I'm missing something - Sean
-	//UP
-	if (m_key_up && m_accel.y > -MAX_ACCEL)
-	{
-		m_accel.y -= delta_accel;
-		if (m_accel.y <= -MAX_ACCEL) m_accel.y = -MAX_ACCEL;
-	}
-	else m_accel.y += delta_decel;
-	//DOWN
-	if (m_key_down && m_accel.y < MAX_ACCEL)
-	{
-		m_accel.y += delta_accel;
-		if (m_accel.y > MAX_ACCEL) m_accel.y = MAX_ACCEL;
-	}
-	else m_accel.y -= delta_decel;
-	//LEFT
-	if (m_key_left && m_accel.x > -MAX_ACCEL)
-	{
-		m_accel.x -= delta_accel;
-		if (m_accel.x < -MAX_ACCEL) m_accel.x = -MAX_ACCEL;
-	}
-	else m_accel.x += delta_decel;
-	//RIGHT
-	if (m_key_right && m_accel.x > MAX_ACCEL)
-	{
-		m_accel.x += delta_accel;
-		if (m_accel.x > MAX_ACCEL) m_accel.x = MAX_ACCEL;
-	}
-	else m_accel.x -= delta_decel;
 
-
-	m_vel.x += m_accel.x;
-	m_vel.y += m_accel.y;
-
-	m_position.x += m_vel.x;
-	m_position.y += m_vel.y;
-
-}
-*/
 void Janitor::update_children(float ms) {}
 
 void Janitor::draw_current(const mat3& projection, const mat3& current_transform) 
