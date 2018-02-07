@@ -24,6 +24,8 @@ public:
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
+	bool collides_with(GameObject& object);
+
 	void move(vec2 offset);
 
 	void update_current(float ms)override;
