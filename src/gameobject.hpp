@@ -17,7 +17,8 @@ public:
 	vec2 get_scale();
 	float get_rot();
 	//int get_z;
-	
+
+	void toggle_enable();
 	void update(float ms);
 	void draw(const mat3& projection, const mat3& parent_transform) override;
 
@@ -28,8 +29,11 @@ protected:
 	virtual void draw_children(const mat3& projection, const mat3& current_transform) = 0;
 
 protected:
+	bool    m_enabled;
+	int		m_z;
+	float	m_rotation;
 	vec2	m_position;
 	vec2	m_scale;
-	float	m_rotation;
-	int		m_z;
+	
+
 };

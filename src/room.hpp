@@ -4,6 +4,7 @@
 #include "gameobject.hpp"
 #include "floor.hpp"
 #include "wall.hpp"
+#include "Cleanable/puddle.hpp"
 
 #include <vector>
 #include <memory>
@@ -23,6 +24,7 @@ public:
 
 	bool add_walls(std::vector<vec2>& positions);
 	bool add_floors(std::vector<vec2>& positions);
+	bool add_cleanables(std::vector<vec2>& puddle_positions);
 
 private:
 	void update_current(float ms) override;
@@ -33,4 +35,5 @@ private:
 private:
 	std::vector<Floor>		m_floors;
 	std::vector<Wall>		m_walls;
+	std::vector<Puddle>     m_puddles;
 }; 

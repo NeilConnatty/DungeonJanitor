@@ -47,6 +47,8 @@ void Room::update_current(float ms)
 void Room::update_children(float ms)
 // at the moment the room's only children are walls and floors,
 // which do not need to be updated
+
+// puddles will need to be updated
 {}
 
 void Room::draw_current(const mat3& projection, const mat3& current_transform)
@@ -65,6 +67,11 @@ void Room::draw_children(const mat3& projection, const mat3& current_transform)
 	for (Wall w : m_walls)
 	{
 		w.draw(projection, current_transform);
+	}
+	
+	for (Puddle p : m_puddles)
+	{
+		p.draw(projection, current_transform);
 	}
 }
 
@@ -96,5 +103,19 @@ bool Room::add_walls(std::vector<vec2>& positions)
 		}
 	}
 
+	return true;
+}
+
+bool Room::add_cleanables(std::vector<vec2>& puddle_positions)
+{
+	for (vec2& pos : puddle_positions)
+	{
+		m_puddles.push_back({});
+		if (!m_puddles.back().init(pos * SPRITE_SIZE))
+
+		{
+			return false;
+		}
+	}
 	return true;
 }

@@ -31,6 +31,9 @@
     <ClCompile Include="..\src\janitor.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Cleanable\puddle.cpp">
+      <Filter>src\Cleanable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -60,6 +63,9 @@
     <ClInclude Include="..\src\janitor.hpp">
       <Filter>headers</Filter>
     </ClInclude>
+	<ClInclude Include="..\src\Cleanable\puddle.hpp">
+      <Filter>headers\Cleanable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -67,6 +73,12 @@
     </Filter>
     <Filter Include="headers">
       <UniqueIdentifier>{c4e4833b-1bf2-4d23-b065-832505bd0e4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers\Cleanable">
+      <UniqueIdentifier>{590b0228-f513-402e-a5f5-0354d52e4f79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Cleanable">
+      <UniqueIdentifier>{b3f0eb77-2f6d-486f-8fb4-791ca05ee1df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
