@@ -80,7 +80,7 @@ bool Room::add_floors(std::vector<vec2>& positions)
 {
 	for (vec2& pos : positions)
 	{
-		m_floors.push_back({});
+		m_floors.emplace_back();
 		if (!m_floors.back().init(pos * SPRITE_SIZE))	 // each position needed to be mult by 64 as each spite is 64x64 pixels
 														 // and 1 pixel = 1 in world coords
 		{
@@ -95,7 +95,7 @@ bool Room::add_walls(std::vector<vec2>& positions)
 {
 	for (vec2& pos : positions)
 	{
-		m_walls.push_back({});
+		m_walls.emplace_back();
 		if (!m_walls.back().init(pos * SPRITE_SIZE))    // each position needed to be mult by 64 as each spite is 64x64 pixels
 														// and 1 pixel = 1 in world coords
 		{
@@ -110,7 +110,7 @@ bool Room::add_cleanables(std::vector<vec2>& puddle_positions)
 {
 	for (vec2& pos : puddle_positions)
 	{
-		m_puddles.push_back({});
+		m_puddles.emplace_back();
 		if (!m_puddles.back().init(pos * SPRITE_SIZE))
 
 		{
