@@ -4,7 +4,7 @@
 #include "gameobject.hpp"
 #include "floor.hpp"
 #include "wall.hpp"
-#include "./Cleanable/puddle.hpp"
+#include "Cleanable/puddle.hpp"
 
 #include <vector>
 #include <memory>
