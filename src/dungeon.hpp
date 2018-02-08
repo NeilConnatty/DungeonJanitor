@@ -13,7 +13,7 @@ public:
 	~Dungeon();
 
 	bool init();
-	void setJanitor(Janitor janitor);
+	void setJanitor(Janitor* janitor);
 	void destroy();
 
 private:

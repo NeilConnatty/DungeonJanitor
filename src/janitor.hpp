@@ -34,13 +34,13 @@ public:
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 
 private:
-	//some acceleration value until you reach a max speed
-	vec2 m_accel;
-	vec2 m_vel;
-
 	bool m_key_up;
 	bool m_key_down;
 	bool m_key_left;
 	bool m_key_right;
+
+	//some acceleration value until you reach a max speed
+	vec2 m_accel;
+	vec2 m_vel;
 
 };

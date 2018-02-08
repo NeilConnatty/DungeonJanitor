@@ -90,7 +90,7 @@ void Janitor::update_current(float ms)
 	float timeFactor = ms / 1000;
 	
 	//UP
-	if (m_key_up)// && m_accel.y != SPEED) 
+	if (m_key_up)
 	{ 
 		m_vel.y = -SPEED;
 	}

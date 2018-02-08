@@ -31,9 +31,9 @@ bool Dungeon::init()
 	return true;
 }
 
-void Dungeon::setJanitor(Janitor janitor)
+void Dungeon::setJanitor(Janitor *janitor)
 {
-	m_janitor = std::make_unique<Janitor>(janitor);
+	m_janitor = std::make_unique<Janitor>(*janitor);
 }
 
 void Dungeon::destroy()

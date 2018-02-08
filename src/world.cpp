@@ -117,9 +117,12 @@ bool World::init(vec2 screen)
 
     vec2 janitor_position = { 100.f, 50.f };
 
-    m_dungeon.setJanitor(m_janitor);
+    
 
-    return m_janitor.init(janitor_position);
+    bool made_janitor = m_janitor.init(janitor_position);
+	Janitor * jan_ptr = &m_janitor;
+	m_dungeon.setJanitor(jan_ptr);
+	return made_janitor;
 }
 
 // Releases all the associated resources
