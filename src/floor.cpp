@@ -74,6 +74,13 @@ bool Floor::init(vec2 position)
 
 void Floor::destroy()
 {
+	glDeleteBuffers(1, &mesh.vbo);
+	glDeleteBuffers(1, &mesh.ibo);
+	glDeleteBuffers(1, &mesh.vao);
+
+	glDeleteShader(effect.vertex);
+	glDeleteShader(effect.fragment);
+	glDeleteShader(effect.program);
 }
 
 void Floor::draw_children(const mat3& projection, const mat3& current_transform)

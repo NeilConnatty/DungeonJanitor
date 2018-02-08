@@ -20,7 +20,7 @@ bool Dungeon::init()
 		return false;
 	}
 
-	new_room->set_position(
+	new_room->set_pos(
 		{128.f, 52.f});	  // temporary values, as we don't have a real camera yet,
 			              // so positions are in pixels. we will eventually have a
 				          // dungeon object that contains multiple rooms.

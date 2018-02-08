@@ -14,7 +14,7 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::set_position(vec2 pos)
+void GameObject::set_pos(vec2 pos)
 {
 	m_position = pos;
 }
@@ -29,10 +29,16 @@ void GameObject::set_rotation(float rotation)
 	m_rotation = rotation;
 }
 
+
+vec2 GameObject::get_pos() { return m_position; }
+vec2 GameObject::get_scale() { return m_scale; }
+float GameObject::get_rot() { return m_rotation; }
+
 void GameObject::toggle_enable()
 {
 	m_enabled = !m_enabled;
 }
+
 
 void GameObject::update(float ms)
 {

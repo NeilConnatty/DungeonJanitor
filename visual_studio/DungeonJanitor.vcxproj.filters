@@ -22,10 +22,13 @@
     <ClCompile Include="..\src\roomtextparser.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\drungeon.cpp">
+    <ClCompile Include="..\src\gameobject.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\gameobject.cpp">
+    <ClCompile Include="..\src\dungeon.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\janitor.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Cleanable\puddle.cpp">
@@ -57,7 +60,10 @@
     <ClInclude Include="..\src\gameobject.hpp">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Cleanable\puddle.hpp">
+    <ClInclude Include="..\src\janitor.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+	<ClInclude Include="..\src\Cleanable\puddle.hpp">
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
   </ItemGroup>

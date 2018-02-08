@@ -74,6 +74,7 @@ bool Puddle::init(vec2 position)
 
 void Puddle::destroy()
 {
+	glDeleteBuffers(1, &mesh.vbo);
 }
 
 void Puddle::draw_current(const mat3& projection, const mat3& current_transform)
