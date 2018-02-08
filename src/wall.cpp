@@ -83,6 +83,11 @@ void Wall::destroy()
 	glDeleteShader(effect.program);
 }
 
+vec2 Wall::get_bounding_box() const
+{
+	return { std::fabs(m_scale.x) * wall_texture.width, std::fabs(m_scale.y) * wall_texture.height };
+}
+
 void Wall::draw_children(const mat3& projection, const mat3& current_transform)
 {
 }

@@ -178,6 +178,24 @@ void Janitor::draw_children(const mat3& projection, const mat3& current_transfor
 void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
 void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
 
+bool Janitor::collides_with(Wall & wall)
+{
+	float dx = m_position.x - wall.get_pos().x;
+	float dy = m_position.y - wall.get_pos().y;
+	float d_sq = dx * dx + dy * dy;
+	float other_r = std::max(wall.get_bounding_box().x, wall.get_bounding_box().y);
+	float my_r = std::max(m_scale.x, m_scale.y);
+	float r = std::max(other_r, my_r);
+	r *= 0.6f;
+	
+	if (d_sq < r * r)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 void Janitor::key_up() 
 { 
 	m_key_up = !m_key_up; 

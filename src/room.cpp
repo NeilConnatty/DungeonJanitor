@@ -128,7 +128,9 @@ bool Room::handle_collision(Janitor player)
 	{
 		//if (player.collides_with(wall))
 		{
+			// Handle collision here
 			collision_detected = true;
+			
 		}
 	}
 

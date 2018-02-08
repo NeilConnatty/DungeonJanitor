@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "gameobject.hpp"
+#include "wall.hpp"
 
 class Janitor : public GameObject
 {
@@ -24,14 +25,14 @@ public:
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
-	//bool collides_with(GameObject& object);
+	bool collides_with(Wall& wall);
 
-	void move(vec2 offset);
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;
 	void draw_current(const mat3& projection, const mat3& current_transform)override;
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
+
 private:
 	//some acceleration value until you reach a max speed
 	vec2 m_accel;
