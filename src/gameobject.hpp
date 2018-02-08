@@ -16,7 +16,7 @@ public:
 	vec2 get_pos();
 	vec2 get_scale();
 	float get_rot();
-	//int get_z;
+
 
 	void toggle_enable();
 	void update(float ms);
