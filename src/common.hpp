@@ -2,6 +2,7 @@
 
 // stlib
 #include <fstream> // stdout, stderr..
+#include <memory> // smart pointers
 
 // glfw
 #define NOMINMAX

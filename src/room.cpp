@@ -1,6 +1,8 @@
 // room.cpp
 
 #include "room.hpp"
+#include <iostream>
+using namespace std;
 
 #define SPRITE_SIZE 64.f
 
@@ -76,7 +78,7 @@ void Room::draw_children(const mat3& projection, const mat3& current_transform)
 }
 
 
-bool Room::add_floors(std::vector<vec2>& positions)
+bool Room::add_floors(vector<vec2>& positions)
 {
 	for (vec2& pos : positions)
 	{
@@ -91,7 +93,7 @@ bool Room::add_floors(std::vector<vec2>& positions)
 	return true;
 }
 
-bool Room::add_walls(std::vector<vec2>& positions)
+bool Room::add_walls(vector<vec2>& positions)
 {
 	for (vec2& pos : positions)
 	{
@@ -106,7 +108,7 @@ bool Room::add_walls(std::vector<vec2>& positions)
 	return true;
 }
 
-bool Room::add_cleanables(std::vector<vec2>& puddle_positions)
+bool Room::add_cleanables(vector<vec2>& puddle_positions)
 {
 	for (vec2& pos : puddle_positions)
 	{
@@ -124,13 +126,13 @@ bool Room::handle_collision(Janitor player)
 {
 	bool collision_detected = false;
 
-	for (const auto& wall : m_walls)
+	for (auto& wall : m_walls)
 	{
-		//if (player.collides_with(wall))
+		if (player.collides_with(wall))
 		{
 			// Handle collision here
 			collision_detected = true;
-			
+			cout << "Collision Detected";
 		}
 	}
 

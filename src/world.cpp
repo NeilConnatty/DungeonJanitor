@@ -9,10 +9,10 @@
 // Same as static in c, local to compilation unit
 namespace
 {
-    const size_t MAX_TURTLES = 15;
+    /*const size_t MAX_TURTLES = 15;
     const size_t MAX_FISH = 5;
     const size_t TURTLE_DELAY_MS = 2000;
-    const size_t FISH_DELAY_MS = 5000;
+    const size_t FISH_DELAY_MS = 5000;*/
 
     namespace
     {
@@ -116,6 +116,9 @@ bool World::init(vec2 screen)
     }
 
     vec2 janitor_position = { 100.f, 50.f };
+
+    m_dungeon.setJanitor(m_janitor);
+
     return m_janitor.init(janitor_position);
 }
 

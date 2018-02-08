@@ -13,6 +13,7 @@ public:
 	~Dungeon();
 
 	bool init();
+	void setJanitor(Janitor janitor);
 	void destroy();
 
 private:
@@ -22,5 +23,6 @@ private:
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
 
 private:
+	std::unique_ptr<Janitor> m_janitor;
 	std::vector<Room::ptr>	m_rooms;  // unsure if this should be a vector of pointers or rooms
 };
