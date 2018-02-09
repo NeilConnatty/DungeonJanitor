@@ -16,7 +16,7 @@ Room::~Room()
 bool Room::init(vec2 position)
 {
 	m_position = position;
-	m_scale = { 1.f, 1.f };
+	m_scale = { 2.f, 2.f };
 
 	return true;
 }
@@ -73,32 +73,45 @@ void Room::draw_children(const mat3& projection, const mat3& current_transform)
 	}
 }
 
+bool Room::add_wall(wall_pair wall)
+{
+  m_walls.emplace_back();
+  if (!m_walls.back().init(wall.first, wall.second))
+  {
+    return false;
+  }
+}
+
+bool Room::add_floor(vec2 floor)
+{
+  m_floors.emplace_back();
+  if (!m_floors.back().init(floor))
+  {
+    return false;
+  }
+}
 
 bool Room::add_floors(std::vector<vec2>& positions)
 {
 	for (vec2& pos : positions)
 	{
-		m_floors.emplace_back();
-		if (!m_floors.back().init(pos * SPRITE_SIZE))	 // each position needed to be mult by 64 as each spite is 64x64 pixels
-														 // and 1 pixel = 1 in world coords
-		{
-			return false;
-		}
+    if (!add_floor(pos))
+    {
+      return false;
+    }
 	}
 
 	return true;
 }
 
-bool Room::add_walls(std::vector<vec2>& positions)
+bool Room::add_walls(std::vector<wall_pair>& walls)
 {
-	for (vec2& pos : positions)
+	for (wall_pair& pair : walls)
 	{
-		m_walls.emplace_back();
-		if (!m_walls.back().init(pos * SPRITE_SIZE))    // each position needed to be mult by 64 as each spite is 64x64 pixels
-														// and 1 pixel = 1 in world coords
-		{
-			return false;
-		}
+    if (!add_wall(pair))
+    {
+      return false;
+    }
 	}
 
 	return true;
@@ -109,7 +122,7 @@ bool Room::add_cleanables(std::vector<vec2>& puddle_positions)
 	for (vec2& pos : puddle_positions)
 	{
 		m_puddles.emplace_back();
-		if (!m_puddles.back().init(pos * SPRITE_SIZE))
+		if (!m_puddles.back().init(pos))
 
 		{
 			return false;

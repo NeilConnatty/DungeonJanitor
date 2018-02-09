@@ -9,6 +9,8 @@ private:
 	static Texture floor_texture;
 
 public:
+  static vec2 get_dimensions();
+
 	Floor();
 	~Floor();
 

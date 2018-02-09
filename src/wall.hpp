@@ -5,16 +5,21 @@
 
 class Wall : public GameObject
 {
-	static Texture wall_texture;
+  static Texture bottom_vert_t;
+  static Texture bottom_t;
+  static Texture top_t;
+  static Texture vert_t;
 
 public:
+  static vec2 get_dimensions(wall_edge edge);
+
 	Wall();
 	~Wall();
 
-	bool	init();
-	bool	init(vec2 position);
+	bool	init(vec2 position, wall_edge m_edge);
 	void	destroy();
 
+  void  set_wall_edge(wall_edge m_edge);
 	vec2	get_bounding_box() const;
 
 private:
@@ -22,4 +27,7 @@ private:
 	void update_children(float ms) override {}
 	void draw_current(const mat3& projection, const mat3& current_transform) override;
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
+
+  wall_edge m_edge;
+  Texture*  m_texture;
 };

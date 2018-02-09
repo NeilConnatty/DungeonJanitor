@@ -9,10 +9,10 @@ public:
 	bool parseRoom(Room& room, const char* filename);
 
 private:
-	bool parseLine(std::string& line, float y);
+	bool parseLine(std::string& line, float y, bool first_line);
 
 private:
-	std::vector<vec2> wall_pos;
+	std::vector<Room::wall_pair> wall_pairs;
 	std::vector<vec2> floor_pos;
 	std::vector<vec2> puddle_pos;
 };
