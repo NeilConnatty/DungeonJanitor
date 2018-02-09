@@ -39,6 +39,26 @@ void Dungeon::destroy()
 	}
 }
 
+void Dungeon::clean(vec2 janitor_pos)
+{
+	for (Room& room : m_rooms)
+	{
+		std::vector<Puddle> cleanables = room.get_cleanables();
+		for (Puddle& p : cleanables)
+		{
+			if (p.is_enabled())
+			{
+				vec2 p_pos = p.get_pos();
+				// Collision stuff goes here
+				if (true)
+				{
+					p.toggle_enable();
+				}
+			}
+		}
+	}
+}
+
 void Dungeon::update_current(float ms)
 {
 }

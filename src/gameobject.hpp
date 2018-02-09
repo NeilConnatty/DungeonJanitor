@@ -16,6 +16,7 @@ public:
 	vec2 get_pos();
 	vec2 get_scale();
 	float get_rot();
+	bool is_enabled();
 
 
 	void toggle_enable();

@@ -224,6 +224,11 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         m_janitor.key_right();
     }
 
+	if (action == GLFW_RELEASE && key == GLFW_KEY_SPACE)
+	{
+		m_dungeon.clean(m_janitor.get_pos());
+	}
+
     // Resetting game
     if (action == GLFW_RELEASE && key == GLFW_KEY_R)
     {

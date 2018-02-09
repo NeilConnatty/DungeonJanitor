@@ -119,3 +119,8 @@ bool Room::add_cleanables(std::vector<vec2>& puddle_positions)
 	}
 	return true;
 }
+
+std::vector<Puddle> Room::get_cleanables()
+{
+	return m_puddles;
+}
