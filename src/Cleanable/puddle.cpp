@@ -24,8 +24,7 @@ bool Puddle::init(vec2 position)
 		}
 	}
 	
-	m_position  = position;
-  m_scale     = { 0.5f, 0.5f };
+  m_position = position;
 
 	// The position corresponds to the center of the texture
 	float wr = puddle_texture.width * 0.5f;
