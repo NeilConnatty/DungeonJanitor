@@ -186,9 +186,9 @@ bool Janitor::collides_with(Wall & wall)
 	float other_r = std::max(wall.get_bounding_box().x, wall.get_bounding_box().y);
 	float my_r = std::max(m_scale.x, m_scale.y);
 	float r = std::max(other_r, my_r);
-	r *= 0.8f;
+	r *= 0.6f; // value from Fish Code
 	
-	float r_sq = r * r; // temp
+	float r_sq = r * r; // Jay: temp for debugging
 
 	if (d_sq < r_sq)
 	{
