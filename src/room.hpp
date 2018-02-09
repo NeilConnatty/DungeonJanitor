@@ -26,7 +26,8 @@ public:
 	bool add_walls(std::vector<vec2>& positions);
 	bool add_floors(std::vector<vec2>& positions);
 	bool add_cleanables(std::vector<vec2>& puddle_positions);
-	bool handle_collision(Janitor player);
+	//bool handle_collision(std::unique_ptr<Janitor> player);
+	bool handle_collision(Janitor * player);
 
 private:
 	void update_current(float ms) override;

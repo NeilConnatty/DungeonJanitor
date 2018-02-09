@@ -31,10 +31,6 @@ bool Dungeon::init()
 	return true;
 }
 
-void Dungeon::setJanitor(Janitor *janitor)
-{
-	m_janitor = std::make_unique<Janitor>(*janitor);
-}
 
 void Dungeon::destroy()
 {
@@ -53,11 +49,6 @@ void Dungeon::update_children(float ms)
 	for (Room::ptr& room : m_rooms)
 	{
 		room->update(ms);
-
-		if (m_janitor)
-		{
-			room->handle_collision(*m_janitor);
-		}
 	}
 }
 
@@ -70,5 +61,18 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
 	for (Room::ptr& room : m_rooms)
 	{
 		room->draw(projection, current_transform);
+	}
+}
+
+void Dungeon::handle_collisions(Janitor* player)
+{
+	if (player == nullptr)
+	{
+		return;
+	}
+
+	for (Room::ptr& room : m_rooms)
+	{
+		room->handle_collision(player);
 	}
 }

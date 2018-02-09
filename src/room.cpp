@@ -122,13 +122,13 @@ bool Room::add_cleanables(vector<vec2>& puddle_positions)
 	return true;
 }
 
-bool Room::handle_collision(Janitor player)
+bool Room::handle_collision(Janitor* player)
 {
 	bool collision_detected = false;
 
 	for (auto& wall : m_walls)
 	{
-		if (player.collides_with(wall))
+		if (player->collides_with(wall))
 		{
 			// Jay: Handle collision here
 			collision_detected = true;

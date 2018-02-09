@@ -120,9 +120,9 @@ bool World::init(vec2 screen)
     
 
     bool made_janitor = m_janitor.init(janitor_position);
-	Janitor * jan_ptr = &m_janitor;
-	m_dungeon.setJanitor(jan_ptr);
-	return made_janitor;
+    Janitor * jan_ptr = &m_janitor;
+    
+    return made_janitor;
 }
 
 // Releases all the associated resources
@@ -148,6 +148,7 @@ bool World::update(float elapsed_ms)
     vec2 screen = { (float)w, (float)h };
     m_janitor.update(elapsed_ms);
     m_dungeon.update(elapsed_ms);
+    m_dungeon.handle_collisions(&m_janitor);
 
     return true;
 }
