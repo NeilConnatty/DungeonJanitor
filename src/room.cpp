@@ -47,8 +47,6 @@ void Room::update_current(float ms)
 void Room::update_children(float ms)
 // at the moment the room's only children are walls and floors,
 // which do not need to be updated
-
-// puddles will need to be updated
 {}
 
 void Room::draw_current(const mat3& projection, const mat3& current_transform)
@@ -120,7 +118,7 @@ bool Room::add_cleanables(std::vector<vec2>& puddle_positions)
 	return true;
 }
 
-std::vector<Puddle> Room::get_cleanables()
+std::vector<Puddle>& Room::get_cleanables()
 {
 	return m_puddles;
 }

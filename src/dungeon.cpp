@@ -43,7 +43,7 @@ void Dungeon::clean(vec2 janitor_pos)
 {
 	for (Room& room : m_rooms)
 	{
-		std::vector<Puddle> cleanables = room.get_cleanables();
+		std::vector<Puddle>& cleanables = room.get_cleanables();
 		for (Puddle& p : cleanables)
 		{
 			if (p.is_enabled())

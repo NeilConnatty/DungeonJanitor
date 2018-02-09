@@ -43,7 +43,7 @@ void GameObject::toggle_enable()
 
 void GameObject::update(float ms)
 {
-	if (m_enabled) 
+	if (is_enabled()) 
 	{
 		update_current(ms);
 		update_children(ms);
@@ -52,7 +52,7 @@ void GameObject::update(float ms)
 
 void GameObject::draw(const mat3& projection, const mat3& parent_transform)
 {
-	if (m_enabled)
+	if (is_enabled())
 	{
 		// Transformation code, see Rendering and Transformation in the template specification for more info
 		// Incrementally updates transformation matrix, thus ORDER IS IMPORTANT

@@ -26,7 +26,7 @@ public:
 	bool add_floors(std::vector<vec2>& positions);
 	bool add_cleanables(std::vector<vec2>& puddle_positions);
 
-	std::vector<Puddle>  get_cleanables();
+	std::vector<Puddle>&  get_cleanables();
 
 private:
 	void update_current(float ms) override;
