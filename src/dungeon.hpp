@@ -14,6 +14,7 @@ public:
 
 	bool init();
 	void destroy();
+	void clean(vec2 janitor_pos);
 
 private:
 	void update_current(float ms) override;
