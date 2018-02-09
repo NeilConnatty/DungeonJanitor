@@ -48,7 +48,6 @@ void Dungeon::clean(vec2 janitor_pos)
 		{
 			if (p.is_enabled())
 			{
-				vec2 p_pos = p.get_pos();
 				// Collision stuff goes here
 				if (true)
 				{
