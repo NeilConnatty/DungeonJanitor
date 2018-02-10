@@ -38,7 +38,7 @@ vec2  normalize(vec2 v);
 
 enum wall_edge
 {
-  NONE = 0b000,
+  NONE      = 0b000,
   VERTICAL  = 0b001,
   TOP       = 0b010,
   BOTTOM    = 0b100

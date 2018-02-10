@@ -72,6 +72,7 @@ bool Room::add_wall(wall_pair wall)
   {
     return false;
   }
+  return true;
 }
 
 bool Room::add_floor(vec2 floor) 
@@ -81,6 +82,7 @@ bool Room::add_floor(vec2 floor)
   {
     return false;
   }
+  return true;
 }
 
 bool Room::add_floors(std::vector<vec2> &positions) 
