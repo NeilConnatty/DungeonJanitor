@@ -1,11 +1,14 @@
 #pragma once
 
 #include "common.hpp"
+#include "spritesheet.hpp"
 #include "gameobject.hpp"
+
+#include <vector>
 
 class Janitor : public GameObject
 {
-	static Texture placeholder_texture;
+	static Texture up1, up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4;
 public:
 	Janitor();
 	~Janitor();
@@ -33,9 +36,16 @@ public:
 	void draw_current(const mat3& projection, const mat3& current_transform)override;
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 private:
-	//some acceleration value until you reach a max speed
+	//Spritesheet m_up_sheet;
 	vec2 m_accel;
 	vec2 m_vel;
+	vec2 m_curr_tex;
+
+	//std::vector<Texture> m_tex_sheet;
+	Texture* m_tex_sheet;
+	int m_tex_index;
+	
+	int m_key_cycles;
 
 	bool m_key_up;
 	bool m_key_down;

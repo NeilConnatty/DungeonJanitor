@@ -1,7 +1,11 @@
 #include "janitor.hpp"
 #include <algorithm>
 
-Texture Janitor::placeholder_texture;
+//This makes me sad fam.
+Texture Janitor::up1; Texture Janitor::up2; Texture Janitor::up3; Texture Janitor::up4;
+Texture Janitor::down1; Texture Janitor::down2; Texture Janitor::down3; Texture Janitor::down4;
+Texture Janitor::left1; Texture Janitor::left2; Texture Janitor::left3; Texture Janitor::left4;
+Texture Janitor::right1; Texture Janitor::right2; Texture Janitor::right3; Texture Janitor::right4;
 
 Janitor::Janitor() : GameObject()
 {
@@ -14,17 +18,170 @@ bool Janitor::init() { return false; }
 bool Janitor::init(vec2 position) 
 {
 
-	if (!placeholder_texture.is_valid())
-	{
-		if (!placeholder_texture.load_from_file(textures_path("wall.png")))
+	std::string tex_names[16] = {
+		"up1.png", "up2.png", "up3.png", "up4.png",
+		"down1.png", "down2.png", "down3.png", "down4.png",
+		"left1.png",
+		"left2.png",
+		"left3.png",
+		"left4.png",
+		"right1.png",
+		"right2.png",
+		"right3.png",
+		"right4.png"
+	};
+	
+	/*
+	for (int i = 0; i < m_tex_sheet.size(); ++i) {
+		if (!m_tex_sheet.at(i).is_valid())
 		{
-			fprintf(stderr, "Failed to load wall texture\n");
+			if (!m_tex_sheet.at(i).load_from_file(textures_path()))
+			{
+				fprintf(stderr, "Failed to load texture\n");
+				return false;
+			}
+		}
+	}
+	*/
+	if (!up1.is_valid())
+	{
+		if (!!up1.load_from_file(textures_path("up1.png")))
+		{
+			fprintf(stderr, "Failed to load texture1\n");
 			return false;
 		}
 	}
-
-	float wr = placeholder_texture.width * 0.5f;
-	float hr = placeholder_texture.height * 0.5f;
+	if (!up2.is_valid())
+	{
+		if (!up2.load_from_file(textures_path("up2.png")))
+		{
+			fprintf(stderr, "Failed to load texture2\n");
+			return false;
+		}
+	}
+	if (!up3.is_valid())
+	{
+		if (!up3.load_from_file(textures_path("up3.png")))
+		{
+			fprintf(stderr, "Failed to load texture3\n");
+			return false;
+		}
+	}
+	if (!up4.is_valid())
+	{
+		if (!up4.load_from_file(textures_path("up4.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!down1.is_valid())
+	{
+		if (!down1.load_from_file(textures_path("down1.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!down2.is_valid())
+	{
+		if (!down2.load_from_file(textures_path("down2.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!down3.is_valid())
+	{
+		if (!down3.load_from_file(textures_path("down3.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!down4.is_valid())
+	{
+		if (!down4.load_from_file(textures_path("down4.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!left1.is_valid())
+	{
+		if (!left1.load_from_file(textures_path("left1.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!left2.is_valid())
+	{
+		if (!left2.load_from_file(textures_path("left2.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!left3.is_valid())
+	{
+		if (!left3.load_from_file(textures_path("left3.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!left4.is_valid())
+	{
+		if (!left4.load_from_file(textures_path("left4.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!right1.is_valid())
+	{
+		if (!right1.load_from_file(textures_path("right1.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!right2.is_valid())
+	{
+		if (!right2.load_from_file(textures_path("right2.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!right3.is_valid())
+	{
+		if (!right3.load_from_file(textures_path("right3.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	if (!right4.is_valid())
+	{
+		if (!right4.load_from_file(textures_path("right4.png")))
+		{
+			fprintf(stderr, "Failed to load texture\n");
+			return false;
+		}
+	}
+	//make an array of textures to iterate through and load
+	
+	//given a spritesheet, its dimensions, and the dimensions of the sprites it contains,
+	// return an array of sprites, which contain... 
+	//pointer-fu my nibbas.
+	//m_up_sheet = Spritesheet(&spritesheet_up, 22, 40);
+	//My intuition is that this just sets the variables for the mesh/geometry which is basic as fuck,
+	//since all the textures are the same size, and also square. 
+	//this affects the actual scale of the texture. 
+	float wr = up1.width * 0.5f;
+	float hr = up1.height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -63,7 +220,7 @@ bool Janitor::init(vec2 position)
 	//Initialize member variables
 	
 	m_position = position;
-
+	m_key_cycles = 0;
 	m_key_up = false;
 	m_key_down = false;
 	m_key_left = false;
@@ -88,19 +245,31 @@ void Janitor::update_current(float ms)
 {
 	const float SPEED = 200.0f;
 	float timeFactor = ms / 1000;
-	
+	if (!m_key_up && !m_key_down && !m_key_left && !m_key_right)
+		m_key_cycles = 0;
+	else m_key_cycles++;
 	//UP
 	if (m_key_up)// && m_accel.y != SPEED) 
 	{ 
 		m_vel.y = -SPEED;
+		m_tex_index = (1 * (m_key_cycles % 4));
+		if (m_tex_index == 1) m_tex_sheet = &up1;
+		if (m_tex_index == 2) m_tex_sheet = &up2;
+		if (m_tex_index == 3) m_tex_sheet = &up3;
+		if (m_tex_index == 4) m_tex_sheet = &up4;
 	}
 	
 	//DOWN
 	else if (m_key_down)
 	{
 		m_vel.y = SPEED;
+		m_tex_index = (2 * (m_key_cycles % 4));
+		if (m_tex_index == 5) m_tex_sheet = &down1;
+		if (m_tex_index == 6) m_tex_sheet = &down2;
+		if (m_tex_index == 7) m_tex_sheet = &down3;
+		if (m_tex_index == 8) m_tex_sheet = &down4;
 	}
-
+	
 	else
 	{
 		m_vel.y = 0;
@@ -109,11 +278,21 @@ void Janitor::update_current(float ms)
 	if (m_key_left)
 	{
 		m_vel.x = -SPEED;
+		m_tex_index = (3 * (m_key_cycles % 4));
+		if (m_tex_index == 9) m_tex_sheet = &left1;
+		if (m_tex_index == 10) m_tex_sheet = &left2;
+		if (m_tex_index == 11) m_tex_sheet = &left3;
+		if (m_tex_index == 12) m_tex_sheet = &left4;
 	}
 	//RIGHT
 	else if (m_key_right) 
 	{
 		m_vel.x = SPEED;
+		m_tex_index = (4 * (m_key_cycles % 4));
+		if (m_tex_index == 13) m_tex_sheet = &right1;
+		if (m_tex_index == 14) m_tex_sheet = &right2;
+		if (m_tex_index == 15) m_tex_sheet = &right3;
+		if (m_tex_index == 16) m_tex_sheet = &right4;
 
 	}
 	else
@@ -131,6 +310,7 @@ void Janitor::update_current(float ms)
 
 void Janitor::update_children(float ms) {}
 
+//Pass texcoord offsets to the shader
 void Janitor::draw_current(const mat3& projection, const mat3& current_transform) 
 {
 	// Setting shaders
@@ -153,14 +333,17 @@ void Janitor::draw_current(const mat3& projection, const mat3& current_transform
 	// Input data location as in the vertex buffer
 	GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
 	GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
+	
+
 	glEnableVertexAttribArray(in_position_loc);
 	glEnableVertexAttribArray(in_texcoord_loc);
+
 	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
 	glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
-
+	
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, placeholder_texture.id);
+	glBindTexture(GL_TEXTURE_2D, m_tex_sheet->id);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
@@ -178,10 +361,7 @@ void Janitor::draw_children(const mat3& projection, const mat3& current_transfor
 void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
 void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
 
-void Janitor::key_up() 
-{ 
-	m_key_up = !m_key_up; 
-}
+void Janitor::key_up() { m_key_up = !m_key_up; }
 void Janitor::key_down() { m_key_down = !m_key_down; }
 void Janitor::key_left() { m_key_left = !m_key_left; }
 void Janitor::key_right() { m_key_right = !m_key_right; }

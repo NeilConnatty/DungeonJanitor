@@ -115,7 +115,7 @@ bool World::init(vec2 screen)
         return false;
     }
 
-    vec2 janitor_position = { 100.f, 50.f };
+    vec2 janitor_position = { 200.f, 100.f };
     return m_janitor.init(janitor_position);
 }
 

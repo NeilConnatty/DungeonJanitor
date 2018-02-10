@@ -500,9 +500,8 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-
     <ClCompile Include="..\src\dungeon.cpp" />
-    <ClCompile Include="..\src\Cleanable\puddle.cpp" /> 
+    <ClCompile Include="..\src\Cleanable\puddle.cpp" />
     <ClCompile Include="..\src\floor.cpp" />
     <ClCompile Include="..\src\gameobject.cpp" />
     <ClCompile Include="..\src\janitor.cpp" />
@@ -511,6 +510,7 @@
     <ClCompile Include="$(ProjectDir)..\src\world.cpp" />
     <ClCompile Include="..\src\room.cpp" />
     <ClCompile Include="..\src\roomtextparser.cpp" />
+    <ClCompile Include="..\src\spritesheet.cpp" />
     <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -522,6 +522,7 @@
     <ClInclude Include="..\src\janitor.hpp" />
     <ClInclude Include="..\src\room.hpp" />
     <ClInclude Include="..\src\roomtextparser.hpp" />
+    <ClInclude Include="..\src\spritesheet.hpp" />
     <ClInclude Include="..\src\wall.hpp" />
     <ClInclude Include="..\src\world.hpp" />
   </ItemGroup>
