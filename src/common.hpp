@@ -36,6 +36,14 @@ mat3  mul(const mat3& l, const mat3& r);
 mat3  operator*(const mat3& l, const mat3& r);
 vec2  normalize(vec2 v);
 
+enum wall_edge
+{
+  NONE = 0b000,
+  VERTICAL  = 0b001,
+  TOP       = 0b010,
+  BOTTOM    = 0b100
+};
+
 // OpenGL utilities
 // cleans error buffer
 void gl_flush_errors();

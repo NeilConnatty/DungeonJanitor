@@ -4,6 +4,11 @@
 
 Texture Floor::floor_texture;
 
+vec2 Floor::get_dimensions()
+{
+  return { 35.f, 25.f };
+}
+
 Floor::Floor() {}
 
 Floor::~Floor() {}
@@ -17,7 +22,7 @@ bool Floor::init(vec2 position)
 {
 	if (!floor_texture.is_valid())
 	{
-		if (!floor_texture.load_from_file(textures_path("floor.png")))
+		if (!floor_texture.load_from_file(textures_path("dungeon1/temp/temp_floor.png")))
 		{
 			fprintf(stderr, "Failed to load floor texture\n");
 			return false;

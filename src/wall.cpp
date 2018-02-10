@@ -2,33 +2,95 @@
 
 #include "wall.hpp"
 
-Texture Wall::wall_texture;
+Texture Wall::bottom_vert_t;
+Texture Wall::bottom_t;
+Texture Wall::top_t;
+Texture Wall::vert_t;
 
-Wall::Wall() {}
+vec2 Wall::get_dimensions(wall_edge edge)
+{
+  if ((edge & (VERTICAL | BOTTOM)) == (VERTICAL | BOTTOM) ||
+      (edge & (VERTICAL | TOP)) == (VERTICAL | TOP)) 
+  {
+    return { 10.f, 25.f };
+  }
+  if ((edge & VERTICAL) == VERTICAL)
+  {
+    return { 10.f, 25.f };
+  }
+  if ((edge & BOTTOM) == BOTTOM || (edge & TOP) == TOP)
+  {
+    return { 35.f, 60.f };
+  }
+}
+
+Wall::Wall() : m_texture(nullptr) {}
 
 Wall::~Wall() {}
 
-bool Wall::init()
+bool Wall::init(vec2 position, wall_edge edge)
 {
-	return init({ 0.f, 0.f });
-}
-
-bool Wall::init(vec2 position)
-{
-	if (!wall_texture.is_valid())
+	if (!bottom_vert_t.is_valid())
 	{
-		if (!wall_texture.load_from_file(textures_path("wall.png")))
+		if (!bottom_vert_t.load_from_file(textures_path("dungeon1/temp/bottom_vert.png")))
 		{
 			fprintf(stderr, "Failed to load wall texture\n");
 			return false;
 		}
+
+    if (!bottom_t.load_from_file(textures_path("dungeon1/temp/bottom.png")))
+    {
+      fprintf(stderr, "Failed to load wall texture\n");
+      return false;
+    }
+
+    if (!top_t.load_from_file(textures_path("dungeon1/temp/temp_top.png")))
+    {
+      fprintf(stderr, "Failed to load wall texture\n");
+      return false;
+    }
+
+    if (!vert_t.load_from_file(textures_path("dungeon1/temp/vert.png")))
+    {
+      fprintf(stderr, "Failed to load wall texture\n");
+      return false;
+    }
 	}
 
 	m_position = position;
 
+  if ((edge & (VERTICAL | BOTTOM)) == (VERTICAL | BOTTOM))
+  {
+    m_texture = &bottom_vert_t;
+  }
+  else if ((edge & (VERTICAL | TOP)) == (VERTICAL | TOP))
+  {
+    m_texture = &vert_t;
+    m_position.x = position.x - 13.f;
+  }
+  else if ((edge & VERTICAL) == VERTICAL)
+  {
+    m_position.x = position.x - 13.f;
+    m_texture = &vert_t;
+  }
+  else if ((edge & BOTTOM) == BOTTOM)
+  {
+    m_texture = &bottom_t;
+  }
+  else if ((edge & TOP) == TOP)
+  {
+    m_texture = &top_t;
+  }
+
+  if (!m_texture)
+  {
+    fprintf(stderr, "Failed to set m_texture\n");
+    return false;
+  }
+
 	// The position corresponds to the center of the texture
-	float wr = wall_texture.width * 0.5f;
-	float hr = wall_texture.height * 0.5f;
+	float wr = m_texture->width * 0.5f;
+	float hr = m_texture->height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -116,7 +178,7 @@ void Wall::draw_current(const mat3& projection, const mat3& current_transform)
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, wall_texture.id);
+	glBindTexture(GL_TEXTURE_2D, m_texture->id);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
