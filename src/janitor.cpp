@@ -1,12 +1,12 @@
 #include "janitor.hpp"
 #include <algorithm>
-
-//This makes me sad fam.
-Texture Janitor::up1; Texture Janitor::up2; Texture Janitor::up3; Texture Janitor::up4;
+#include <iostream>
+//This is ugly.
+//Texture Janitor::up1;
+Texture Janitor::up2; Texture Janitor::up3; Texture Janitor::up4;
 Texture Janitor::down1; Texture Janitor::down2; Texture Janitor::down3; Texture Janitor::down4;
 Texture Janitor::left1; Texture Janitor::left2; Texture Janitor::left3; Texture Janitor::left4;
 Texture Janitor::right1; Texture Janitor::right2; Texture Janitor::right3; Texture Janitor::right4;
-
 Janitor::Janitor() : GameObject()
 {
 }
@@ -17,40 +17,7 @@ Janitor::~Janitor() {}
 bool Janitor::init() { return false; }
 bool Janitor::init(vec2 position) 
 {
-
-	std::string tex_names[16] = {
-		"up1.png", "up2.png", "up3.png", "up4.png",
-		"down1.png", "down2.png", "down3.png", "down4.png",
-		"left1.png",
-		"left2.png",
-		"left3.png",
-		"left4.png",
-		"right1.png",
-		"right2.png",
-		"right3.png",
-		"right4.png"
-	};
 	
-	/*
-	for (int i = 0; i < m_tex_sheet.size(); ++i) {
-		if (!m_tex_sheet.at(i).is_valid())
-		{
-			if (!m_tex_sheet.at(i).load_from_file(textures_path()))
-			{
-				fprintf(stderr, "Failed to load texture\n");
-				return false;
-			}
-		}
-	}
-	*/
-	if (!up1.is_valid())
-	{
-		if (!!up1.load_from_file(textures_path("up1.png")))
-		{
-			fprintf(stderr, "Failed to load texture1\n");
-			return false;
-		}
-	}
 	if (!up2.is_valid())
 	{
 		if (!up2.load_from_file(textures_path("up2.png")))
@@ -171,17 +138,11 @@ bool Janitor::init(vec2 position)
 			return false;
 		}
 	}
-	//make an array of textures to iterate through and load
-	
-	//given a spritesheet, its dimensions, and the dimensions of the sprites it contains,
-	// return an array of sprites, which contain... 
-	//pointer-fu my nibbas.
-	//m_up_sheet = Spritesheet(&spritesheet_up, 22, 40);
-	//My intuition is that this just sets the variables for the mesh/geometry which is basic as fuck,
-	//since all the textures are the same size, and also square. 
-	//this affects the actual scale of the texture. 
-	float wr = up1.width * 0.5f;
-	float hr = up1.height * 0.5f;
+
+	//scale of the texture and resulting mesh
+	//all the player textures are the same size so it's fine to pick one arbitrarily
+	float wr = up2.width * 0.5f;
+	float hr = up2.height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -225,7 +186,7 @@ bool Janitor::init(vec2 position)
 	m_key_down = false;
 	m_key_left = false;
 	m_key_right = false;
-
+	m_tex_sheet = &up2;
 	return true;
 }
 
@@ -236,6 +197,8 @@ void Janitor::destroy()
 	glDeleteBuffers(1, &mesh.ibo);
 	glDeleteBuffers(1, &mesh.vao);
 
+
+
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);
 	glDeleteShader(effect.program);
@@ -244,30 +207,33 @@ void Janitor::destroy()
 void Janitor::update_current(float ms) 
 {
 	const float SPEED = 200.0f;
+	//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
+	const float Y_SPEED = SPEED * (24.f / 35.f);
 	float timeFactor = ms / 1000;
 	if (!m_key_up && !m_key_down && !m_key_left && !m_key_right)
 		m_key_cycles = 0;
-	else m_key_cycles++;
+	const int MOD = 16;
+	//const int animationseg = MOD / 4;
+	m_tex_index = m_key_cycles % MOD;
 	//UP
 	if (m_key_up)// && m_accel.y != SPEED) 
 	{ 
-		m_vel.y = -SPEED;
-		m_tex_index = (1 * (m_key_cycles % 4));
-		if (m_tex_index == 1) m_tex_sheet = &up1;
-		if (m_tex_index == 2) m_tex_sheet = &up2;
-		if (m_tex_index == 3) m_tex_sheet = &up3;
-		if (m_tex_index == 4) m_tex_sheet = &up4;
+		m_vel.y = -Y_SPEED;
+		
+		if (m_tex_index <= 3)					   m_tex_sheet = &up2;
+		if (m_tex_index >= 5 && m_tex_index <= 8)  m_tex_sheet = &up2;
+		if (m_tex_index >= 9 && m_tex_index <= 12) m_tex_sheet = &up3;
+		if (m_tex_index >= 13)					   m_tex_sheet = &up4;
 	}
 	
 	//DOWN
 	else if (m_key_down)
 	{
-		m_vel.y = SPEED;
-		m_tex_index = (2 * (m_key_cycles % 4));
-		if (m_tex_index == 5) m_tex_sheet = &down1;
-		if (m_tex_index == 6) m_tex_sheet = &down2;
-		if (m_tex_index == 7) m_tex_sheet = &down3;
-		if (m_tex_index == 8) m_tex_sheet = &down4;
+		m_vel.y = Y_SPEED;
+		if (m_tex_index <= 3)					   m_tex_sheet = &down1;
+		if (m_tex_index >= 5 && m_tex_index <= 8)  m_tex_sheet = &down2;
+		if (m_tex_index >= 9 && m_tex_index <= 12) m_tex_sheet = &down3;
+		if (m_tex_index >= 13)					   m_tex_sheet = &down4;
 	}
 	
 	else
@@ -278,28 +244,27 @@ void Janitor::update_current(float ms)
 	if (m_key_left)
 	{
 		m_vel.x = -SPEED;
-		m_tex_index = (3 * (m_key_cycles % 4));
-		if (m_tex_index == 9) m_tex_sheet = &left1;
-		if (m_tex_index == 10) m_tex_sheet = &left2;
-		if (m_tex_index == 11) m_tex_sheet = &left3;
-		if (m_tex_index == 12) m_tex_sheet = &left4;
+		if (m_tex_index <= 3)					   m_tex_sheet = &left1;
+		if (m_tex_index >= 5 && m_tex_index <= 8)  m_tex_sheet = &left2;
+		if (m_tex_index >= 9 && m_tex_index <= 12) m_tex_sheet = &left3;
+		if (m_tex_index >= 13)					   m_tex_sheet = &left4;
 	}
 	//RIGHT
 	else if (m_key_right) 
 	{
 		m_vel.x = SPEED;
-		m_tex_index = (4 * (m_key_cycles % 4));
-		if (m_tex_index == 13) m_tex_sheet = &right1;
-		if (m_tex_index == 14) m_tex_sheet = &right2;
-		if (m_tex_index == 15) m_tex_sheet = &right3;
-		if (m_tex_index == 16) m_tex_sheet = &right4;
+		if (m_tex_index <= 3)					   m_tex_sheet = &right1;
+		if (m_tex_index >= 5 && m_tex_index <= 8)  m_tex_sheet = &right2;
+		if (m_tex_index >= 9 && m_tex_index <= 12) m_tex_sheet = &right3;
+		if (m_tex_index >= 13)					   m_tex_sheet = &right4;
 
 	}
 	else
 	{
 		m_vel.x = 0;
 	}
-
+	m_key_cycles++;
+	//std::cout << m_tex_index;
 	float new_position_x = m_position.x + m_vel.x * timeFactor;
 	float new_position_y = m_position.y + m_vel.y * timeFactor;
 
@@ -343,6 +308,7 @@ void Janitor::draw_current(const mat3& projection, const mat3& current_transform
 	
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
+	//dereferencing a null pointer ic ic.
 	glBindTexture(GL_TEXTURE_2D, m_tex_sheet->id);
 
 	// Setting uniform values to the currently bound program
