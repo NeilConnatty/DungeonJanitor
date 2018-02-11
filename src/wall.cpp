@@ -6,22 +6,30 @@ Texture Wall::bottom_vert_t;
 Texture Wall::bottom_t;
 Texture Wall::top_t;
 Texture Wall::vert_t;
+Texture Wall::horz_t;
+Texture Wall::corner_t;
 
 vec2 Wall::get_dimensions(wall_edge edge)
 {
+  vec2 pos;
   if ((edge & (VERTICAL | BOTTOM)) == (VERTICAL | BOTTOM) ||
       (edge & (VERTICAL | TOP)) == (VERTICAL | TOP)) 
   {
-    return { 10.f, 25.f };
+    pos = { 10.f, 60.f };
   }
-  if ((edge & VERTICAL) == VERTICAL)
+  else if ((edge & VERTICAL) == VERTICAL)
   {
-    return { 10.f, 25.f };
+    pos = { 10.f, 25.f };
   }
-  if ((edge & BOTTOM) == BOTTOM || (edge & TOP) == TOP)
+  else if ((edge & BOTTOM) == BOTTOM || (edge & TOP) == TOP)
   {
-    return { 35.f, 60.f };
+    pos = { 35.f, 60.f };
   }
+  else // edge is NONE, this is a weird case in the text parser, but the equivalent is BOTTOM
+  {
+    pos = { 35.f, 60.f };
+  }
+  return pos;
 }
 
 Wall::Wall() : m_texture(nullptr) {}
@@ -37,20 +45,22 @@ bool Wall::init(vec2 position, wall_edge edge)
 			fprintf(stderr, "Failed to load wall texture\n");
 			return false;
 		}
-
-    if (!bottom_t.load_from_file(textures_path("dungeon1/temp/bottom.png")))
+    if (!bottom_t.load_from_file(textures_path("dungeon1/temp/topbot.png")))
     {
       fprintf(stderr, "Failed to load wall texture\n");
       return false;
     }
-
-    if (!top_t.load_from_file(textures_path("dungeon1/temp/temp_top.png")))
+    if (!top_t.load_from_file(textures_path("dungeon1/temp/topbot.png")))
     {
       fprintf(stderr, "Failed to load wall texture\n");
       return false;
     }
-
     if (!vert_t.load_from_file(textures_path("dungeon1/temp/vert.png")))
+    {
+      fprintf(stderr, "Failed to load wall texture\n");
+      return false;
+    }
+    if (!corner_t.load_from_file(textures_path("dungeon1/temp/top_vert.png")))
     {
       fprintf(stderr, "Failed to load wall texture\n");
       return false;
@@ -58,27 +68,35 @@ bool Wall::init(vec2 position, wall_edge edge)
 	}
 
 	m_position = position;
+  TexturedVertex vertices[8]; // we use a max of 8 vertices for this object
+  uint16_t indices[18];       // max of 6 triangles (i.e. 6 triangles * 3 indices)
+  size_t numVertices, numIndices = 0;
 
   if ((edge & (VERTICAL | BOTTOM)) == (VERTICAL | BOTTOM))
   {
+    m_position.x = position.x - 12.5f;
+    m_position.y = position.y + 17.5f;
     m_texture = &bottom_vert_t;
   }
   else if ((edge & (VERTICAL | TOP)) == (VERTICAL | TOP))
   {
-    m_texture = &vert_t;
-    m_position.x = position.x - 13.f;
+    m_texture = &corner_t;
+    m_position.y = position.y + 17.5f;
+    m_position.x = position.x - 12.5f;
   }
   else if ((edge & VERTICAL) == VERTICAL)
   {
-    m_position.x = position.x - 13.f;
+    m_position.x = position.x - 12.5f;
     m_texture = &vert_t;
   }
   else if ((edge & BOTTOM) == BOTTOM)
   {
+    m_position.y = position.y + 17.5f;
     m_texture = &bottom_t;
   }
   else if ((edge & TOP) == TOP)
   {
+    m_position.y = position.y + 17.5f;
     m_texture = &top_t;
   }
 
@@ -87,23 +105,8 @@ bool Wall::init(vec2 position, wall_edge edge)
     fprintf(stderr, "Failed to set m_texture\n");
     return false;
   }
-
-	// The position corresponds to the center of the texture
-	float wr = m_texture->width * 0.5f;
-	float hr = m_texture->height * 0.5f;
-
-	TexturedVertex vertices[4];
-	vertices[0].position = { -wr, +hr, -0.02f };
-	vertices[0].texcoord = { 0.f, 1.f };
-	vertices[1].position = { +wr, +hr, -0.02f };
-	vertices[1].texcoord = { 1.f, 1.f };
-	vertices[2].position = { +wr, -hr, -0.02f };
-	vertices[2].texcoord = { 1.f, 0.f };
-	vertices[3].position = { -wr, -hr, -0.02f };
-	vertices[3].texcoord = { 0.f, 0.f };
-
-	// counterclockwise as it's the default opengl front winding direction
-	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+  
+  set_vertices_top_bottom(vertices, numVertices, indices, numIndices);
 
 	// Clearing errors
 	gl_flush_errors();
@@ -111,12 +114,12 @@ bool Wall::init(vec2 position, wall_edge edge)
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * numVertices, vertices, GL_STATIC_DRAW);
 
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * numIndices, indices, GL_STATIC_DRAW);
 
 	// Vertex Array (Container for Vertex + Index buffer)
 	glGenVertexArrays(1, &mesh.vao);
@@ -132,6 +135,35 @@ bool Wall::init(vec2 position, wall_edge edge)
 	m_scale.y = 1.f;
 
 	return true;
+}
+
+void Wall::set_vertices_top_bottom(TexturedVertex *vertices,
+                                   size_t &numVertices, uint16_t *indices,
+                                   size_t &numIndices) 
+{
+  if (m_texture == nullptr)
+  {
+    return;
+  }
+
+  // The position corresponds to the center of the texture
+  float wr = m_texture->width * 0.5f;
+  float hr = m_texture->height * 0.5f;
+
+  numVertices = 4;
+  numIndices = 6;
+  // counterclockwise as it's the default opengl front winding direction
+  indices[0] = 0; indices[1] = 3; indices[2] = 1; 
+  indices[3] = 1; indices[4] = 3; indices[5] = 2;
+
+  vertices[0].position = { -wr, +hr, -0.02f };
+  vertices[0].texcoord = { 0.f, 1.f };
+  vertices[1].position = { +wr, +hr, -0.02f };
+  vertices[1].texcoord = { 1.f, 1.f };
+  vertices[2].position = { +wr, -hr, -0.02f };
+  vertices[2].texcoord = { 1.f, 0.f };
+  vertices[3].position = { -wr, -hr, -0.02f };
+  vertices[3].texcoord = { 0.f, 0.f };
 }
 
 void Wall::destroy()
