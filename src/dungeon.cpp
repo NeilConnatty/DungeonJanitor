@@ -26,7 +26,7 @@ bool Dungeon::init()
 				          // dungeon object that contains multiple rooms.
 
 	RoomParser parser;
-  if (!parser.parseRoom(new_room, "../data/rooms/1.rm"))
+  if (!parser.parseRoom(new_room, room_path("1.rm")))
   {
     return false;
   }
