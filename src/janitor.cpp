@@ -210,30 +210,37 @@ void Janitor::update_current(float ms)
 	//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
 	const float Y_SPEED = SPEED * (24.f / 35.f);
 	float timeFactor = ms / 1000;
+	
+	//m_key_cycles represents how many consecutive times update has been called with a key pressed
+	//Therefore it resets whenever there is no key pressed
 	if (!m_key_up && !m_key_down && !m_key_left && !m_key_right)
 		m_key_cycles = 0;
+	//m_tex_index can take any value less than MOD, and the cases for each 
+	//frame of animation are divided evenly as MOD/number of frames
+	//Higher values of MOD (and associated constants in the conditionals)
+	//results in slower animation cycles.
 	const int MOD = 16;
-	//const int animationseg = MOD / 4;
 	m_tex_index = m_key_cycles % MOD;
+
 	//UP
-	if (m_key_up)// && m_accel.y != SPEED) 
+	if (m_key_up)
 	{ 
 		m_vel.y = -Y_SPEED;
 		
-		if (m_tex_index <= 3)					   m_tex_sheet = &up2;
-		if (m_tex_index >= 5 && m_tex_index <= 8)  m_tex_sheet = &up2;
-		if (m_tex_index >= 9 && m_tex_index <= 12) m_tex_sheet = &up3;
-		if (m_tex_index >= 13)					   m_tex_sheet = &up4;
+		if (m_tex_index <= 3)						m_tex_sheet = &up2;
+		if (m_tex_index >= 5 && m_tex_index <= 8)	m_tex_sheet = &up2;
+		if (m_tex_index >= 9 && m_tex_index <= 12)	m_tex_sheet = &up3;
+		if (m_tex_index >= 13)						m_tex_sheet = &up4;
 	}
 	
 	//DOWN
 	else if (m_key_down)
 	{
 		m_vel.y = Y_SPEED;
-		if (m_tex_index <= 3)					   m_tex_sheet = &down1;
-		if (m_tex_index >= 5 && m_tex_index <= 8)  m_tex_sheet = &down2;
-		if (m_tex_index >= 9 && m_tex_index <= 12) m_tex_sheet = &down3;
-		if (m_tex_index >= 13)					   m_tex_sheet = &down4;
+		if (m_tex_index <= 3)						m_tex_sheet = &down1;
+		if (m_tex_index >= 5 && m_tex_index <= 8)	m_tex_sheet = &down2;
+		if (m_tex_index >= 9 && m_tex_index <= 12)	m_tex_sheet = &down3;
+		if (m_tex_index >= 13)						m_tex_sheet = &down4;
 	}
 	
 	else
@@ -244,19 +251,19 @@ void Janitor::update_current(float ms)
 	if (m_key_left)
 	{
 		m_vel.x = -SPEED;
-		if (m_tex_index <= 3)					   m_tex_sheet = &left1;
-		if (m_tex_index >= 5 && m_tex_index <= 8)  m_tex_sheet = &left2;
-		if (m_tex_index >= 9 && m_tex_index <= 12) m_tex_sheet = &left3;
-		if (m_tex_index >= 13)					   m_tex_sheet = &left4;
+		if (m_tex_index <= 3)						m_tex_sheet = &left1;
+		if (m_tex_index >= 5 && m_tex_index <= 8)	m_tex_sheet = &left2;
+		if (m_tex_index >= 9 && m_tex_index <= 12)	m_tex_sheet = &left3;
+		if (m_tex_index >= 13)						m_tex_sheet = &left4;
 	}
 	//RIGHT
 	else if (m_key_right) 
 	{
 		m_vel.x = SPEED;
-		if (m_tex_index <= 3)					   m_tex_sheet = &right1;
-		if (m_tex_index >= 5 && m_tex_index <= 8)  m_tex_sheet = &right2;
-		if (m_tex_index >= 9 && m_tex_index <= 12) m_tex_sheet = &right3;
-		if (m_tex_index >= 13)					   m_tex_sheet = &right4;
+		if (m_tex_index <= 3)						m_tex_sheet = &right1;
+		if (m_tex_index >= 5 && m_tex_index <= 8)	m_tex_sheet = &right2;
+		if (m_tex_index >= 9 && m_tex_index <= 12)	m_tex_sheet = &right3;
+		if (m_tex_index >= 13)						m_tex_sheet = &right4;
 
 	}
 	else

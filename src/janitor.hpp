@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.hpp"
-#include "spritesheet.hpp"
 #include "gameobject.hpp"
 
 #include <vector>
