@@ -22,7 +22,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!up2.load_from_file(textures_path("up2.png")))
 		{
-			fprintf(stderr, "Failed to load texture2\n");
+			fprintf(stderr, "Failed to load texture up2\n");
 			return false;
 		}
 	}
@@ -30,7 +30,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!up3.load_from_file(textures_path("up3.png")))
 		{
-			fprintf(stderr, "Failed to load texture3\n");
+			fprintf(stderr, "Failed to load texture up3\n");
 			return false;
 		}
 	}
@@ -38,7 +38,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!up4.load_from_file(textures_path("up4.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture up4\n");
 			return false;
 		}
 	}
@@ -46,7 +46,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!down1.load_from_file(textures_path("down1.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture down1\n");
 			return false;
 		}
 	}
@@ -54,7 +54,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!down2.load_from_file(textures_path("down2.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture down2\n");
 			return false;
 		}
 	}
@@ -62,7 +62,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!down3.load_from_file(textures_path("down3.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture down3\n");
 			return false;
 		}
 	}
@@ -70,7 +70,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!down4.load_from_file(textures_path("down4.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture down4\n");
 			return false;
 		}
 	}
@@ -78,7 +78,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!left1.load_from_file(textures_path("left1.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture left1\n");
 			return false;
 		}
 	}
@@ -86,7 +86,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!left2.load_from_file(textures_path("left2.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture left2\n");
 			return false;
 		}
 	}
@@ -94,7 +94,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!left3.load_from_file(textures_path("left3.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture left3\n");
 			return false;
 		}
 	}
@@ -102,7 +102,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!left4.load_from_file(textures_path("left4.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture left4\n");
 			return false;
 		}
 	}
@@ -110,7 +110,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!right1.load_from_file(textures_path("right1.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture right1\n");
 			return false;
 		}
 	}
@@ -118,7 +118,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!right2.load_from_file(textures_path("right2.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture right2\n");
 			return false;
 		}
 	}
@@ -126,7 +126,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!right3.load_from_file(textures_path("right3.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture right3\n");
 			return false;
 		}
 	}
@@ -134,7 +134,7 @@ bool Janitor::init(vec2 position)
 	{
 		if (!right4.load_from_file(textures_path("right4.png")))
 		{
-			fprintf(stderr, "Failed to load texture\n");
+			fprintf(stderr, "Failed to load texture right4\n");
 			return false;
 		}
 	}
