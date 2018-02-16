@@ -63,7 +63,7 @@
     <ClInclude Include="..\src\janitor.hpp">
       <Filter>headers</Filter>
     </ClInclude>
-	<ClInclude Include="..\src\Cleanable\puddle.hpp">
+    <ClInclude Include="..\src\Cleanable\puddle.hpp">
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
   </ItemGroup>

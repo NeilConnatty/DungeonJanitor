@@ -106,12 +106,15 @@ Texture::~Texture()
 
 bool Texture::load_from_file(const char* path)
 {
-	if (path == nullptr) 
+	if (path == nullptr)
 		return false;
 	
 	stbi_uc* data = stbi_load(path, &width, &height, NULL, 4);
-	if (data == NULL)
+	if (data == NULL) {
+		fprintf(stderr, "data is null");
 		return false;
+	}
+		
 
 	gl_flush_errors();
 	glGenTextures(1, &id);

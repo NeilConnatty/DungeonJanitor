@@ -109,13 +109,13 @@ bool World::init(vec2 screen)
     */
 
     //actually put something like return m_janitor.init();
-    if (!m_dungeon.init())
-    {
-        fprintf(stderr, "Failed to init Dungeon.\n");
-        return false;
+	if (!m_dungeon.init())
+	{
+		fprintf(stderr, "Failed to init Dungeon.\n");
+		return false;
     }
 
-    vec2 janitor_position = { 100.f, 50.f };
+    vec2 janitor_position = { 500.f, 100.f };
     return m_janitor.init(janitor_position);
 }
 

@@ -500,9 +500,8 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-
     <ClCompile Include="..\src\dungeon.cpp" />
-    <ClCompile Include="..\src\Cleanable\puddle.cpp" /> 
+    <ClCompile Include="..\src\Cleanable\puddle.cpp" />
     <ClCompile Include="..\src\floor.cpp" />
     <ClCompile Include="..\src\gameobject.cpp" />
     <ClCompile Include="..\src\janitor.cpp" />

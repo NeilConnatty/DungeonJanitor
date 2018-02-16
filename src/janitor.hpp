@@ -3,9 +3,13 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 
+#include <vector>
+
 class Janitor : public GameObject
 {
-	static Texture placeholder_texture;
+	//up1 is a sadboi and doesn't want to play with the others. 
+	//static Texture up1;
+	static Texture up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4;
 public:
 	Janitor();
 	~Janitor();
@@ -26,16 +30,20 @@ public:
 
 	//bool collides_with(GameObject& object);
 
-	void move(vec2 offset);
-
 	void update_current(float ms)override;
 	void update_children(float ms)override;
 	void draw_current(const mat3& projection, const mat3& current_transform)override;
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 private:
-	//some acceleration value until you reach a max speed
 	vec2 m_accel;
 	vec2 m_vel;
+	vec2 m_curr_tex;
+
+	//Potentially make this a vector of pointers later.
+	Texture* m_tex_sheet;
+	int m_tex_index;
+	
+	int m_key_cycles;
 
 	bool m_key_up;
 	bool m_key_down;
