@@ -122,6 +122,9 @@ bool World::init(vec2 screen)
     return false;
   }
   m_janitor.set_scale({ 3.f, 3.f });
+
+  // Make camera follow janitor
+  m_camera.follow_object(&m_janitor);
   
   return true;
 }

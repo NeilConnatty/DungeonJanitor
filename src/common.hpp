@@ -35,6 +35,8 @@ vec2  operator*(const vec2& vec, const float& n);
 mat3  mul(const mat3& l, const mat3& r);
 mat3  operator*(const mat3& l, const mat3& r);
 vec2  normalize(vec2 v);
+mat3  inverse(mat3 m);
+float det(mat3 m);
 
 enum wall_edge
 {

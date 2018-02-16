@@ -13,10 +13,10 @@ public:
 	void set_rotation(float rotation);
 	//void set_z(int newz);
 	//can probably just evaluate this from m_position.y % tile_y_size
-	vec2 get_pos();
-	vec2 get_scale();
-	float get_rot();
-	bool is_enabled();
+	vec2 get_pos() const;
+	vec2 get_scale() const;
+	float get_rot() const;
+	bool is_enabled() const;
 
 
 	void toggle_enable();

@@ -94,6 +94,16 @@ vec2 normalize(vec2 v)
 	return { v.x / m, v.y / m };
 }
 
+float det(mat3 m)
+{
+    
+}
+
+mat3 inverse(mat3 m)
+{
+
+}
+
 Texture::Texture()
 {
 
