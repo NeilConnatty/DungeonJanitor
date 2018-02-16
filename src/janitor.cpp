@@ -227,20 +227,20 @@ void Janitor::update_current(float ms)
 	{ 
 		m_vel.y = -Y_SPEED;
 		
-		if (m_tex_index <= 3)						m_tex_sheet = &up2;
+		if (m_tex_index <= 3)				m_tex_sheet = &up2;
 		if (m_tex_index >= 5 && m_tex_index <= 8)	m_tex_sheet = &up2;
 		if (m_tex_index >= 9 && m_tex_index <= 12)	m_tex_sheet = &up3;
-		if (m_tex_index >= 13)						m_tex_sheet = &up4;
+		if (m_tex_index >= 13)				m_tex_sheet = &up4;
 	}
 	
 	//DOWN
 	else if (m_key_down)
 	{
 		m_vel.y = Y_SPEED;
-		if (m_tex_index <= 3)						m_tex_sheet = &down1;
+		if (m_tex_index <= 3)				m_tex_sheet = &down1;
 		if (m_tex_index >= 5 && m_tex_index <= 8)	m_tex_sheet = &down2;
 		if (m_tex_index >= 9 && m_tex_index <= 12)	m_tex_sheet = &down3;
-		if (m_tex_index >= 13)						m_tex_sheet = &down4;
+		if (m_tex_index >= 13)				m_tex_sheet = &down4;
 	}
 	
 	else
@@ -251,19 +251,19 @@ void Janitor::update_current(float ms)
 	if (m_key_left)
 	{
 		m_vel.x = -SPEED;
-		if (m_tex_index <= 3)						m_tex_sheet = &left1;
+		if (m_tex_index <= 3)				m_tex_sheet = &left1;
 		if (m_tex_index >= 5 && m_tex_index <= 8)	m_tex_sheet = &left2;
 		if (m_tex_index >= 9 && m_tex_index <= 12)	m_tex_sheet = &left3;
-		if (m_tex_index >= 13)						m_tex_sheet = &left4;
+		if (m_tex_index >= 13)				m_tex_sheet = &left4;
 	}
 	//RIGHT
 	else if (m_key_right) 
 	{
 		m_vel.x = SPEED;
-		if (m_tex_index <= 3)						m_tex_sheet = &right1;
+		if (m_tex_index <= 3)				m_tex_sheet = &right1;
 		if (m_tex_index >= 5 && m_tex_index <= 8)	m_tex_sheet = &right2;
 		if (m_tex_index >= 9 && m_tex_index <= 12)	m_tex_sheet = &right3;
-		if (m_tex_index >= 13)						m_tex_sheet = &right4;
+		if (m_tex_index >= 13)				m_tex_sheet = &right4;
 
 	}
 	else

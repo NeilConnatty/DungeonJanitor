@@ -510,7 +510,6 @@
     <ClCompile Include="$(ProjectDir)..\src\world.cpp" />
     <ClCompile Include="..\src\room.cpp" />
     <ClCompile Include="..\src\roomtextparser.cpp" />
-    <ClCompile Include="..\src\spritesheet.cpp" />
     <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -522,7 +521,6 @@
     <ClInclude Include="..\src\janitor.hpp" />
     <ClInclude Include="..\src\room.hpp" />
     <ClInclude Include="..\src\roomtextparser.hpp" />
-    <ClInclude Include="..\src\spritesheet.hpp" />
     <ClInclude Include="..\src\wall.hpp" />
     <ClInclude Include="..\src\world.hpp" />
   </ItemGroup>
