@@ -113,10 +113,17 @@ bool World::init(vec2 screen)
 	{
 		fprintf(stderr, "Failed to init Dungeon.\n");
 		return false;
-    }
+  }
 
-    vec2 janitor_position = { 500.f, 100.f };
-    return m_janitor.init(janitor_position);
+  vec2 janitor_position = { 500.f, 100.f };
+  if (!m_janitor.init(janitor_position))
+  {
+    fprintf(stderr, "Failed to init Janitor.\n");
+    return false;
+  }
+  m_janitor.set_scale({ 3.f, 3.f });
+  
+  return true;
 }
 
 // Releases all the associated resources

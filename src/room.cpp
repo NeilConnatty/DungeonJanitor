@@ -120,6 +120,7 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
     {
       return false;
     }
+    m_puddles.back().set_scale({ 0.5f, 0.5f });
   }
   return true;
 }
