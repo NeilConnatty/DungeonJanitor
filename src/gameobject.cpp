@@ -30,10 +30,10 @@ void GameObject::set_rotation(float rotation)
 }
 
 
-vec2 GameObject::get_pos() { return m_position; }
-vec2 GameObject::get_scale() { return m_scale; }
-float GameObject::get_rot() { return m_rotation; }
-bool GameObject::is_enabled() { return m_enabled; }
+vec2 GameObject::get_pos() const { return m_position; }
+vec2 GameObject::get_scale() const { return m_scale; }
+float GameObject::get_rot() const { return m_rotation; }
+bool GameObject::is_enabled() const { return m_enabled; }
 
 void GameObject::toggle_enable()
 {
