@@ -44,7 +44,7 @@ private:
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 
 private:
-	// Window handle
+	// Window handled
 	GLFWwindow* m_window;
 
 	// Dungeon

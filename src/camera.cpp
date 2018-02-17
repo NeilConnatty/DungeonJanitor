@@ -36,14 +36,18 @@ mat3 Camera::get_transform()
 {
   if (m_follow == nullptr)
   {
-    return transform;
+    transform_begin();
+    transform_translate({ 500.f, 500.f });
+    transform_end();
+
+    return inverse(transform);
   }
 
   transform_begin();
   transform_translate(m_follow->get_pos());
   transform_end();
 
-  return transform;
+  return inverse(transform);
 }
 
 void Camera::follow_object(const GameObject* object)
