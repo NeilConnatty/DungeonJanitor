@@ -76,6 +76,7 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
   puddle_pos.clear();
 
   float y = 0.f;
+  int numLines = 0;
   bool first_line = true;
   bool last_line = !std::getline(file, line);
   while (!last_line) 
@@ -85,10 +86,13 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
       fprintf(stderr, "Error parsing room file: %s.\n", filename);
       return false;
     }
+	numLines++;
 
     if (first_line)
     {
       y = y + 60.f;
+	  room.set_width(line.size() / 2 - 1);
+
       first_line = false;
     }
     else
@@ -118,6 +122,7 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
     floor_pos.clear();
     puddle_pos.clear();
   }
+  room.set_height(numLines - 2);
 
   return true;
 }

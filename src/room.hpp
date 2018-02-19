@@ -22,12 +22,15 @@ public:
 	bool init(vec2 position);
 	void destroy();
 
-  bool add_wall(wall_pair wall);
-  bool add_floor(vec2 floor);
+	bool add_wall(wall_pair wall);
+	bool add_floor(vec2 floor);
 	bool add_walls(std::vector<wall_pair>& walls);
 	bool add_floors(std::vector<vec2>& positions);
 	bool add_cleanables(std::vector<vec2>& puddle_positions);
 
+	void set_height(int h);
+	void set_width(int w);
+	
 	std::vector<Puddle>&  get_cleanables();
 
 private:
@@ -37,6 +40,8 @@ private:
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
 
 private:
+	int height; // These don't include walls
+	int width; // Assuming no random walls/blockers in the middle of a room
 	std::vector<Floor>		m_floors;
 	std::vector<Wall>		  m_walls;
 	std::vector<Puddle>   m_puddles;

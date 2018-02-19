@@ -13,6 +13,8 @@ bool Room::init(vec2 position)
 {
   m_position = position;
   m_scale = {2.f, 2.f};
+  height = 0;
+  width = 0;
 
   return true;
 }
@@ -126,3 +128,19 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
 }
 
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
+
+void Room::set_height(int h) 
+{
+	if (height == 0)
+	{
+		height = h;
+	}
+}
+
+void Room::set_width(int w)
+{
+	if (width == 0)
+	{
+		width = w;
+	}
+}
