@@ -16,6 +16,7 @@ public:
 	
 	void initialize(vector<Room> rooms);
 	void updateValues();
+	Room * getNextRoom(Room* current_room);
 
 
 private:

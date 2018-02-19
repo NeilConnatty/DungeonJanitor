@@ -7,6 +7,7 @@
 #define BOSS_VALUE 1
 #define ARTIFACT_VALUE 0.5
 #define DISCOUNT_FACTOR 1
+#define LOW_NUMBER_HACK -100
 
 using namespace std;
 
@@ -38,7 +39,6 @@ void ValueIteration::updateValues()
 	{
 		Room* room_ptr = &room;
 
-		//list<float> neighbor_values;
 		vector<float> neighbor_values;
 
 		if (room_ptr->getNorthRoom() != nullptr)
@@ -64,6 +64,53 @@ void ValueIteration::updateValues()
 
 		VI_current.emplace(room_ptr, new_value);
 	}
+}
+
+Room * ValueIteration::getNextRoom(Room * current_room)
+{
+	float north_value = LOW_NUMBER_HACK;
+	float south_value = LOW_NUMBER_HACK;
+	float east_value = LOW_NUMBER_HACK;
+	float west_value = LOW_NUMBER_HACK;
+
+	// Load room values
+	if (current_room->getNorthRoom() != nullptr)
+	{
+		north_value = VI_current.at(current_room->getNorthRoom());
+	}
+	if (current_room->getSouthRoom() != nullptr)
+	{
+		south_value = VI_current.at(current_room->getSouthRoom());
+	}
+	if (current_room->getEastRoom() != nullptr)
+	{
+		east_value = VI_current.at(current_room->getEastRoom());
+	}
+	if (current_room->getWestRoom() != nullptr)
+	{
+		west_value = VI_current.at(current_room->getWestRoom());
+	}
+
+	// Return best room
+	if ((north_value != -100) && (north_value > south_value) && (north_value > east_value) && north_value > west_value)
+	{
+		return current_room->getNorthRoom();
+	}
+	
+	if ((south_value != -100) && (south_value > north_value) && (south_value > east_value) && south_value > west_value)
+	{
+		return current_room->getSouthRoom();
+	}
+	
+	if ((east_value != -100) && (east_value > south_value) && (east_value > north_value) && east_value > west_value)
+	{
+		return current_room->getEastRoom();
+	}
+	else
+	{
+		return current_room->getWestRoom();
+	}
+	
 }
 
 float ValueIteration::CalculateInitialRoomValue(Room * room)
@@ -96,3 +143,4 @@ float ValueIteration::CalculateRoomReward(Room* room)
 	return reward;
 
 }
+
