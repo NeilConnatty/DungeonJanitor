@@ -12,7 +12,10 @@ Dungeon::~Dungeon() {}
 
 bool Dungeon::init() 
 {
-	m_rooms.emplace_back();
+  RoomParser parser;
+
+  /**************1st Room ****************/
+  m_rooms.emplace_back();
 	Room& new_room = m_rooms.back();
 	if (!new_room.init()) 
 	{
@@ -20,13 +23,27 @@ bool Dungeon::init()
 		return false;
 	}
 
-	new_room.set_pos(
-		{128.f, 52.f});	  // temporary values, as we don't have a real camera yet,
-			              // so positions are in pixels. we will eventually have a
-				          // dungeon object that contains multiple rooms.
+  new_room.set_pos(
+      {128.f, 52.f}); // temporary values, eventually we will want to have
+                      // a parser that creates the dungeon layouts
 
-	RoomParser parser;
   if (!parser.parseRoom(new_room, room_path("1.rm")))
+  {
+    return false;
+  }
+
+  /**************2nd Room ****************/
+  m_rooms.emplace_back();
+  Room& new_room_2 = m_rooms.back();
+  if (!new_room_2.init())
+  {
+    fprintf(stderr, "Failed to init room.\n");
+    return false;
+  }
+
+  new_room_2.set_pos({ 128.f, -800.f }); // temporary values, eventually we will want to have
+                                     // a parser that creates the dungeon layouts
+  if (!parser.parseRoom(new_room_2, room_path("1.rm")))
   {
     return false;
   }

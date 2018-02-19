@@ -8,6 +8,9 @@ public:
 	GameObject();
 	~GameObject();
 
+  virtual bool init() = 0;
+  virtual void destroy() = 0;
+
 	void set_pos(vec2 pos);
 	void set_scale(vec2 scale);
 	void set_rotation(float rotation);
@@ -30,11 +33,9 @@ protected:
 	virtual void draw_children(const mat3& projection, const mat3& current_transform) = 0;
 
 protected:
-	bool    m_enabled;
+	bool  m_enabled;
 	int		m_z;
 	float	m_rotation;
 	vec2	m_position;
 	vec2	m_scale;
-	
-
 };
