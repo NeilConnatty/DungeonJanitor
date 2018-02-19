@@ -99,7 +99,7 @@ void Janitor::update_current(float ms)
 		m_time_pressed = 0;
 	m_tex_index = m_time_pressed;
 	const int NUM_FRAMES = 4;	//4 frames of animation per direction
-	const int FRAME_TIMING = 80; //50 ms per frame of animation (20fps)
+	const int FRAME_TIMING = 80; //80 ms per frame of animation (12.5fps)
 	//UP
 	if (m_key_up)
 	{ 
@@ -109,24 +109,24 @@ void Janitor::update_current(float ms)
 		{
 			m_vel.x = SPEED;
 			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &up_right1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_right2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_right3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_right4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_right2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_right3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_right4;
 		}
 		else if (m_key_left)
 		{
 			m_vel.x = -SPEED;
 			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &up_left1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_left2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_left3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_left4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_left2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_left3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_left4;
 		}
 		else 
 		{
 			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &up1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up4;
 		}		
 	}
 	//DOWN
@@ -137,24 +137,24 @@ void Janitor::update_current(float ms)
 		{
 			m_vel.x = SPEED;
 			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &down_right1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_right2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_right3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_right4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_right2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_right3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_right4;
 		}
 		else if (m_key_left)
 		{
 			m_vel.x = -SPEED;
 			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &down_left1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_left2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_left3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_left4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_left2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_left3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_left4;
 		}
 		else
 		{
 			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &down1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down4;
 		}
 	}
 	else
@@ -169,24 +169,24 @@ void Janitor::update_current(float ms)
 		{
 			m_vel.y = -Y_SPEED;
 			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &up_left1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_left2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_left3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_left4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_left2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_left3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_left4;
 		}
 		else if (m_key_down)
 		{
 			m_vel.y = Y_SPEED;
 			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &down_left1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_left2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_left3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_left4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_left2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_left3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_left4;
 		}
 		else
 		{
 			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &left1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &left2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &left3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &left4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &left2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &left3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &left4;
 		}
 	}
 	//RIGHT
@@ -198,24 +198,24 @@ void Janitor::update_current(float ms)
 		{
 			m_vel.y = -Y_SPEED;
 			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &up_right1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_right2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_right3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_right4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_right2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_right3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_right4;
 		}
 		else if (m_key_down)
 		{
 			m_vel.y = Y_SPEED;
 			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &down_right1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_right2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_right3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_right4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_right2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_right3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_right4;
 		}
 		else 
 		{
 			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &right1;
-			if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &right2;
-			if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &right3;
-			if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &right4;
+			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &right2;
+			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &right3;
+			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &right4;
 		}
 	}
 	else
