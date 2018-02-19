@@ -7,15 +7,16 @@ else ifeq ($(OS), Linux)
     CXXFLAGS = -Iext/gl3w -std=c++11 -Wall -pedantic -DENABLE_SOUND
     LIB = -lglfw -lGL -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -ldl -lSDL -lSDL_mixer -lSDLmain
 else
-    $(error Your OS $(OS) is not supported.) 
+    $(error Your OS $(OS) is not supported.)
     exit 1
 endif
 
-BIN=a1
-OBJ=$(BIN).o common.o world.o
+BIN=main
+OBJ=$(BIN).o common.o world.o dungeon.o floor.o gameobject.o janitor.o room.o roomtextparser.o wall.o $(CURDIR)/src/Cleanable/puddle.o
+
 
 default: build
-	
+
 build: $(BIN)
 
 test: build
