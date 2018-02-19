@@ -8,6 +8,12 @@ Hero::Hero() {}
 
 Hero::~Hero() {}
 
+#define PENALTY_VALUE -1
+#define ARTIFACT_VALUE 5
+#define BOSS_VALUE 10
+
+
+
 bool Hero::init()
 {
 	return init({ 0.f, 0.f });
@@ -77,6 +83,11 @@ void Hero::destroy()
 	glDeleteBuffers(1, &mesh.vbo);
 }
 
+void Hero::setRoom(Room * room)
+{
+	m_currentRoom = room;
+}
+
 void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 {
 	// Setting shaders
@@ -118,3 +129,19 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 	printf("%d\n", 1);
 }
+
+void Hero::calculate_room_rewards()
+{
+	Room * room;
+
+	room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
+}
+
+Room * Hero::calculate_best_neighbor_room(Room * room)
+{
+	int test[3][2];
+	test[0][1] = 1;
+	return room;
+}
+
+

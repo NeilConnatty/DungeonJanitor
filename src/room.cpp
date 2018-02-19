@@ -138,3 +138,13 @@ bool Room::add_hero(vec2 hero_position)
 }
 
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
+
+double Room::getReward()
+{
+	return heroRewardValue;
+}
+
+void Room::setReward(double reward)
+{
+	heroRewardValue = reward;
+}

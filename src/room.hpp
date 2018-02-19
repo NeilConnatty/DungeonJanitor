@@ -24,8 +24,8 @@ public:
 	bool init(vec2 position);
 	void destroy();
 
-  bool add_wall(wall_pair wall);
-  bool add_floor(vec2 floor);
+	bool add_wall(wall_pair wall);
+	bool add_floor(vec2 floor);
 	bool add_walls(vector<wall_pair>& walls);
 	bool add_floors(vector<vec2>& positions);
 	bool add_cleanables(vector<vec2>& puddle_positions);
@@ -34,6 +34,9 @@ public:
 
 	vector<Puddle>&  get_cleanables();
 
+	double getReward();
+	void setReward(double reward);
+
 private:
 	void update_current(float ms) override;
 	void update_children(float ms) override;
@@ -41,6 +44,8 @@ private:
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
 
 private:
+	double heroRewardValue;
+	Room * northRoom, * southRoom, * westRoom, * eastRoom;
 	vector<Floor>		m_floors;
 	vector<Wall>		  m_walls;
 	vector<Puddle>   m_puddles;
