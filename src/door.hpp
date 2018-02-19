@@ -24,5 +24,5 @@ protected:
   void draw_children(const mat3& projection, const mat3& current_transform) override;
 
 private:
-  std::array<Floor, 2> m_floors;
+  std::array<Floor, 3> m_floors;
 };

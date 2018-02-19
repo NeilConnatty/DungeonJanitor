@@ -5,10 +5,11 @@
 #include <fstream>
 #include <string>
 
-#define SPACE ' '
-#define WALL 'w'
-#define FLOOR 'f'
-#define PUDDLE 'p'
+#define SPACE   ' '
+#define WALL    'w'
+#define FLOOR   'f'
+#define PUDDLE  'p'
+#define DOOR    'd'
 
 bool RoomParser::parseLine(std::string &line, float y, bool first_line) 
 {
@@ -53,6 +54,12 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
       tile_dim = Floor::get_dimensions();
       x = x + tile_dim.x;
     } 
+    else if (ch == DOOR)
+    {
+      door_pos.push_back({ x,y });
+      tile_dim = Floor::get_dimensions();
+      x = x + tile_dim.x;
+    }
     else 
     {
       fprintf(stderr,
@@ -74,6 +81,7 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
   wall_pairs.clear();
   floor_pos.clear();
   puddle_pos.clear();
+  door_pos.clear();
 
   float y = 0.f;
   bool first_line = true;
@@ -109,6 +117,7 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
 
     if (!(room.add_floors(floor_pos) && 
           room.add_walls(wall_pairs) &&
+          room.add_doors(door_pos) &&
           room.add_cleanables(puddle_pos))) 
     {
       fprintf(stderr, "Issue parsing room file: %s.\n", filename);
@@ -117,6 +126,7 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
     wall_pairs.clear();
     floor_pos.clear();
     puddle_pos.clear();
+    door_pos.clear();
   }
 
   return true;
