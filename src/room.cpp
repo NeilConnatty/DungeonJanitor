@@ -31,6 +31,16 @@ void Room::destroy()
   {
     w.destroy();
   }
+
+  for (Puddle p : m_puddles)
+  {
+    p.destroy();
+  }
+
+  for (Door d : m_doors)
+  {
+    d.destroy();
+  }
 }
 
 void Room::update_current(float ms) {}
@@ -63,6 +73,11 @@ void Room::draw_children(const mat3 &projection,
   {
     p.draw(projection, current_transform);
   }
+
+  for (Door d : m_doors)
+  {
+    d.draw(projection, current_transform);
+  }
 }
 
 bool Room::add_wall(wall_pair wall) 
@@ -85,6 +100,16 @@ bool Room::add_floor(vec2 floor)
   return true;
 }
 
+bool Room::add_door(vec2 pos)
+{
+  m_doors.emplace_back();
+  if (!m_doors.back().init(pos))
+  {
+    return false;
+  }
+  return true;
+}
+
 bool Room::add_floors(std::vector<vec2> &positions) 
 {
   for (vec2 &pos : positions) 
@@ -97,6 +122,20 @@ bool Room::add_floors(std::vector<vec2> &positions)
 
   return true;
 }
+
+bool Room::add_doors(std::vector<vec2> &positions)
+{
+  for (vec2 &pos : positions)
+  {
+    if (!add_door(pos))
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 
 bool Room::add_walls(std::vector<wall_pair> &walls) 
 {

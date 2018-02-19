@@ -4,6 +4,7 @@
 #include "gameobject.hpp"
 #include "floor.hpp"
 #include "wall.hpp"
+#include "door.hpp"
 #include "Cleanable/puddle.hpp"
 
 #include <vector>
@@ -21,11 +22,12 @@ public:
 	bool init();
 	bool init(vec2 position);
 	void destroy();
-	
-	bool add_wall(wall_pair wall);
-	bool add_floor(vec2 floor);
+  bool add_wall(wall_pair wall);
+  bool add_floor(vec2 pos);
+  bool add_door(vec2 pod);
 	bool add_walls(std::vector<wall_pair>& walls);
-	bool add_floors(std::vector<vec2>& positions);
+  bool add_floors(std::vector<vec2>& positions);
+  bool add_doors(std::vector<vec2>& positions);
 	bool add_cleanables(std::vector<vec2>& puddle_positions);
 
 	std::vector<Puddle>&  get_cleanables();
@@ -46,4 +48,5 @@ private:
 	std::vector<Floor>		m_floors;
 	std::vector<Wall>		  m_walls;
 	std::vector<Puddle>   m_puddles;
-}; 
+  std::vector<Door>     m_doors;
+ }; 
