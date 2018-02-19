@@ -150,3 +150,23 @@ bool Room::containsArtifact()
     // stub
     return false;
 }
+
+Room * Room::getNorthRoom()
+{
+	return northRoom;
+}
+
+Room * Room::getSouthRoom()
+{
+	return southRoom;
+}
+
+Room * Room::getWestRoom()
+{
+	return westRoom;
+}
+
+Room * Room::getEastRoom()
+{
+	return eastRoom;
+}

@@ -37,6 +37,10 @@ public:
 
 	bool containsBoss();
 	bool containsArtifact();
+	Room* getNorthRoom();
+	Room* getSouthRoom();
+	Room* getWestRoom();
+	Room* getEastRoom();
 
 private:
 	void update_current(float ms) override;
@@ -45,8 +49,10 @@ private:
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
 
 private:
+	bool bossHere; // update as Boss moves
+	bool artifactHere; // update when artifact a) fixed by player or b) discovered by hero
 	double heroRewardValue;
-	Room * northRoom, * southRoom, * westRoom, * eastRoom;
+	Room * northRoom, * southRoom, * westRoom, * eastRoom; // Can Be Nullptr
 	vector<Floor>		m_floors;
 	vector<Wall>		  m_walls;
 	vector<Puddle>   m_puddles;
