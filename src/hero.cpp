@@ -133,7 +133,7 @@ void Hero::calculate_room_rewards()
 {
 	Room * room;
 
-	room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
+	//room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
 }
 
 Room * Hero::calculate_best_neighbor_room(Room * room)

@@ -37,6 +37,12 @@
     <ClCompile Include="..\src\hero.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\boss.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ValueIteration.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -70,6 +76,12 @@
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
     <ClInclude Include="..\src\hero.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\boss.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ValueIteration.hpp">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -35,6 +35,9 @@ public:
 	double getReward();
 	void setReward(double reward);
 
+	bool containsBoss();
+	bool containsArtifact();
+
 private:
 	void update_current(float ms) override;
 	void update_children(float ms) override;
