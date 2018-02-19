@@ -8,10 +8,6 @@ Hero::Hero() {}
 
 Hero::~Hero() {}
 
-#define PENALTY_VALUE -1
-#define ARTIFACT_VALUE 5
-#define BOSS_VALUE 10
-
 
 
 bool Hero::init()
@@ -201,7 +197,7 @@ void Hero::update_current(float ms)
 
 void Hero::calculate_room_rewards()
 {
-	Room * room;
+	//Room * room;
 
 	//room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
 }
