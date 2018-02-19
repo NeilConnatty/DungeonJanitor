@@ -148,7 +148,7 @@ void Hero::update_current(float ms)
 	// only move if a destination is set
 	if (m_destination.x > 0 && m_destination.y > 0)
 	{
-		float step_size = 50.f;
+		float step_size = 10.f; // should probably replace this with collisions 
 		const float SPEED = 100.0f;
 		//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
 		const float Y_SPEED = SPEED * (24.f / 35.f);
@@ -162,7 +162,7 @@ void Hero::update_current(float ms)
 
 		if (s_x - d_x > step_size)
 		{
-			will_move = false;
+			will_move = true;
 			m_vel.x = -SPEED;
 		}
 		else if (d_x - s_x > step_size)
@@ -174,12 +174,12 @@ void Hero::update_current(float ms)
 		if (s_y - d_y > step_size)
 		{
 			will_move = true;
-			m_vel.y = -SPEED;
+			m_vel.y = -Y_SPEED;
 		}
 		else if (d_y - s_y > step_size)
 		{
 			will_move = true;
-			m_vel.y = SPEED;
+			m_vel.y = Y_SPEED;
 		}
 
 		if (will_move) 
