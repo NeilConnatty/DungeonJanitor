@@ -127,11 +127,13 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
 
 bool Room::add_boss(vec2 boss_position)
 {
+	// stub
     return false;
 }
 
 bool Room::add_hero(vec2 hero_position)
 {
+	// stub
     return false;
 }
 
