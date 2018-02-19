@@ -5,15 +5,15 @@
 
 #include <vector>
 
-class Hero : public GameObject
+class Boss : public GameObject
 {
 
 private:
-	static Texture hero_texture;
+	static Texture boss_texture;
 
 public:
-	Hero();
-	~Hero();
+	Boss();
+	~Boss();
 
 	bool	init();
 	bool	init(vec2 position);
@@ -21,7 +21,7 @@ public:
 
 private:
 	void update_current(float ms) override {};
-	void update_children(float ms) override {};
+	void update_children(float ms) override {}; 
 	void draw_current(const mat3& projection, const mat3& current_transform) override;
 	void draw_children(const mat3& projection, const mat3& current_transform) override {};
 };

@@ -9,11 +9,6 @@
 // Same as static in c, local to compilation unit
 namespace
 {
-    const size_t MAX_TURTLES = 15;
-    const size_t MAX_FISH = 5;
-    const size_t TURTLE_DELAY_MS = 2000;
-    const size_t FISH_DELAY_MS = 5000;
-
     namespace
     {
         void glfw_err_cb(int error, const char* desc)
@@ -115,24 +110,43 @@ bool World::init(vec2 screen)
 		return false;
   }
 
-  vec2 janitor_position = { 500.f, 100.f };
-  if (!m_janitor.init(janitor_position))
-  {
-    fprintf(stderr, "Failed to init Janitor.\n");
-    return false;
-  }
-  m_janitor.set_scale({ 3.f, 3.f });
-
-  vec2 hero_position = { 500.f, 200.f };
-  if (!m_hero.init(hero_position))
-  {
-	  fprintf(stderr, "Failed to init Hero. \n");
-	  return false;
-
-  }
-  m_hero.set_scale({ 3.f, 3.f });
+	if (!init_creatures())
+	{
+		fprintf(stderr, "Failed to init Creatures. \n");
+		return false;
+	}
   
   return true;
+}
+
+bool World::init_creatures()
+{
+	vec2 janitor_position = { 500.f, 100.f };
+	if (!m_janitor.init(janitor_position))
+	{
+		fprintf(stderr, "Failed to init Janitor.\n");
+		return false;
+	}
+	m_janitor.set_scale({ 3.f, 3.f });
+
+	vec2 hero_position = { 500.f, 200.f };
+	if (!m_hero.init(hero_position))
+	{
+		fprintf(stderr, "Failed to init Hero. \n");
+		return false;
+
+	}
+	m_hero.set_scale({ 3.f, 3.f });
+
+	vec2 boss_position = { 800.f, 300.f };
+	if (!m_boss.init(boss_position))
+	{
+		fprintf(stderr, "Failed to init Boss. \n");
+		return false;
+	}
+	m_boss.set_scale({ 3.f , 3.f });
+
+	return true;
 }
 
 // Releases all the associated resources
@@ -147,6 +161,7 @@ void World::destroy()
     m_dungeon.destroy();
     m_janitor.destroy();
 	m_hero.destroy();
+	m_boss.destroy();
     //Destructors for game objects here
     glfwDestroyWindow(m_window);
 }
@@ -159,6 +174,7 @@ bool World::update(float elapsed_ms)
     vec2 screen = { (float)w, (float)h };
     m_janitor.update(elapsed_ms);
 	m_hero.update(elapsed_ms);
+	m_boss.update(elapsed_ms);
     m_dungeon.update(elapsed_ms);
 
     return true;
@@ -205,6 +221,7 @@ void World::draw()
     m_dungeon.draw(projection_2D, identity_transform);
     m_janitor.draw(projection_2D, identity_transform);
 	m_hero.draw(projection_2D, identity_transform);
+	m_boss.draw(projection_2D, identity_transform);
     // Presenting
     glfwSwapBuffers(m_window);
 }
