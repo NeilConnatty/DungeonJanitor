@@ -9,6 +9,8 @@
 #define WALL 'w'
 #define FLOOR 'f'
 #define PUDDLE 'p'
+#define HERO 'h'
+#define BOSS 'b'
 
 bool RoomParser::parseLine(std::string &line, float y, bool first_line) 
 {
@@ -53,6 +55,20 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
       tile_dim = Floor::get_dimensions();
       x = x + tile_dim.x;
     } 
+    else if (ch == HERO)
+    {
+        hero_pos = { x, y };
+        floor_pos.push_back({ x, y });
+        tile_dim = Floor::get_dimensions();
+        x = x + tile_dim.x;
+    }
+    else if (ch == BOSS)
+    {
+        boss_pos = { x, y };
+        floor_pos.push_back({ x, y });
+        tile_dim = Floor::get_dimensions();
+        x = x + tile_dim.x;
+    }
     else 
     {
       fprintf(stderr,
@@ -66,14 +82,28 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
   return true;
 }
 
+void RoomParser::clearPositions()
+{
+    wall_pairs.clear();
+    floor_pos.clear();
+    puddle_pos.clear();
+    hero_pos = { -1, -1 }; // Jay: placeholder
+    boss_pos = { -1, -1 }; // Jay: placeholder
+}
+
+bool RoomParser::populateRoom(Room &room, vector<Room::wall_pair> wall_pairs, vector<vec2> floor_pos, vector<vec2> puddle_pos, vec2 hero_pos, vec2 boss_pos)
+{
+    room.add_boss(boss_pos);
+    room.add_hero(hero_pos);
+    return (room.add_floors(floor_pos) && room.add_walls(wall_pairs) && room.add_cleanables(puddle_pos));
+}
+
 bool RoomParser::parseRoom(Room &room, const char *filename) 
 {
   std::string line;
   std::ifstream file(filename);
 
-  wall_pairs.clear();
-  floor_pos.clear();
-  puddle_pos.clear();
+  clearPositions();
 
   float y = 0.f;
   bool first_line = true;
@@ -107,16 +137,13 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
       }
     }
 
-    if (!(room.add_floors(floor_pos) && 
-          room.add_walls(wall_pairs) &&
-          room.add_cleanables(puddle_pos))) 
+    if (!populateRoom(room, wall_pairs, floor_pos, puddle_pos, hero_pos, boss_pos)) 
     {
       fprintf(stderr, "Issue parsing room file: %s.\n", filename);
       return false;
     }
-    wall_pairs.clear();
-    floor_pos.clear();
-    puddle_pos.clear();
+
+    clearPositions();
   }
 
   return true;
