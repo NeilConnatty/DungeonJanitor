@@ -5,6 +5,7 @@
 #include "dungeon.hpp"
 #include "janitor.hpp"
 #include "hero.hpp"
+#include "boss.hpp"
 // stlib
 #include <vector>
 #include <random>
@@ -23,6 +24,8 @@ public:
 
 	// Creates a window, sets up events and begins the game
 	bool init(vec2 screen);
+
+	bool init_creatures();
 
 	// Releases all associated resources
 	void destroy();
@@ -58,6 +61,9 @@ private:
 
 	// Hero
 	Hero m_hero;
+
+	// Boss
+	Boss m_boss;
 
 	// C++ rng
 	std::default_random_engine m_rng;

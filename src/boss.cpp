@@ -1,31 +1,25 @@
-// hero.cpp
+// boss.cpp
 
-#include "hero.hpp"
+#include "boss.hpp"
 
-Texture Hero::hero_texture;
+Texture Boss::boss_texture;
 
-Hero::Hero() {}
+Boss::Boss() {}
 
-Hero::~Hero() {}
+Boss::~Boss() {}
 
-#define PENALTY_VALUE -1
-#define ARTIFACT_VALUE 5
-#define BOSS_VALUE 10
-
-
-
-bool Hero::init()
+bool Boss::init()
 {
 	return init({ 0.f, 0.f });
 }
 
-bool Hero::init(vec2 position)
+bool Boss::init(vec2 position)
 {
-	if (!hero_texture.is_valid())
+	if (!boss_texture.is_valid())
 	{
-		if (!hero_texture.load_from_file(textures_path("hero_placeholder.png")))
+		if (!boss_texture.load_from_file(textures_path("boss_placeholder.png")))
 		{
-			fprintf(stderr, "Failed to load hero texture\n");
+			fprintf(stderr, "Failed to load boss texture\n");
 			return false;
 		}
 	}
@@ -33,8 +27,8 @@ bool Hero::init(vec2 position)
 	m_position = position;
 
 	// The position corresponds to the center of the texture
-	float wr = hero_texture.width * 0.5f;
-	float hr = hero_texture.height * 0.5f;
+	float wr = boss_texture.width * 0.5f;
+	float hr = boss_texture.height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -78,17 +72,12 @@ bool Hero::init(vec2 position)
 	return true;
 }
 
-void Hero::destroy()
+void Boss::destroy()
 {
 	glDeleteBuffers(1, &mesh.vbo);
 }
 
-void Hero::setRoom(Room * room)
-{
-	m_currentRoom = room;
-}
-
-void Hero::draw_current(const mat3& projection, const mat3& current_transform)
+void Boss::draw_current(const mat3& projection, const mat3& current_transform)
 {
 	// Setting shaders
 	glUseProgram(effect.program);
@@ -117,7 +106,7 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, hero_texture.id);
+	glBindTexture(GL_TEXTURE_2D, boss_texture.id);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
@@ -128,19 +117,3 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
-
-void Hero::calculate_room_rewards()
-{
-	Room * room;
-
-	room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
-}
-
-Room * Hero::calculate_best_neighbor_room(Room * room)
-{
-	int test[3][2];
-	test[0][1] = 1;
-	return room;
-}
-
-
