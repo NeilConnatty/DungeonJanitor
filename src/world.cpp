@@ -178,7 +178,7 @@ void World::draw()
     glClearDepth(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    mat3 identity_transform{ {0.3f, 0.f, 0.f}, {0.f, 0.3f, 0.f}, {0.f, 0.f, 0.3f} };
+    mat3 identity_transform{ {1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}, {0.f, 0.f, 1.f} };
     mat3 projection_2D = m_camera.get_projection(m_window);
     mat3 transform = m_camera.get_transform();
 
