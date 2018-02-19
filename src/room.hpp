@@ -29,8 +29,6 @@ public:
 	bool add_walls(vector<wall_pair>& walls);
 	bool add_floors(vector<vec2>& positions);
 	bool add_cleanables(vector<vec2>& puddle_positions);
-	bool add_boss(vec2 boss_position);
-	bool add_hero(vec2 hero_position);
 
 	vector<Puddle>&  get_cleanables();
 

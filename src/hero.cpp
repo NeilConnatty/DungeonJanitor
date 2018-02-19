@@ -116,5 +116,4 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
-	printf("%d\n", 1);
 }

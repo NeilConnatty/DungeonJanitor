@@ -113,28 +113,18 @@ bool Room::add_walls(std::vector<wall_pair> &walls)
 
 bool Room::add_cleanables(std::vector<vec2> &puddle_positions) 
 {
-  for (vec2 &pos : puddle_positions) 
-  {
-    m_puddles.emplace_back();
-    if (!m_puddles.back().init(pos))
-    {
-      return false;
-    }
-    m_puddles.back().set_scale({ 0.5f, 0.5f });
-  }
+	if (!puddle_positions.empty()) {
+		for (vec2 &pos : puddle_positions)
+		{
+			m_puddles.emplace_back();
+			if (!m_puddles.back().init(pos))
+			{
+				return false;
+			}
+			m_puddles.back().set_scale({ 0.5f, 0.5f });
+		}
+	}
   return true;
-}
-
-bool Room::add_boss(vec2 boss_position)
-{
-	// stub
-    return false;
-}
-
-bool Room::add_hero(vec2 hero_position)
-{
-	// stub
-    return false;
 }
 
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
