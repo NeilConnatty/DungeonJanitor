@@ -31,6 +31,8 @@ bool Hero::init(vec2 position)
 	}
 
 	m_position = position;
+	m_vel = { 0.f, 0.f };
+	reset_destination();
 
 	// The position corresponds to the center of the texture
 	float wr = hero_texture.width * 0.5f;
@@ -88,6 +90,17 @@ void Hero::setRoom(Room * room)
 	m_currentRoom = room;
 }
 
+void Hero::set_destination(vec2 destination)
+{
+	m_destination = destination;
+}
+
+// call to stop hero movement
+void Hero::reset_destination()
+{
+	m_destination = { -10.f, -10.f };
+}
+
 void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 {
 	// Setting shaders
@@ -129,11 +142,68 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
+
+void Hero::update_current(float ms)
+{
+	// only move if a destination is set
+	if (m_destination.x > 0 && m_destination.y > 0)
+	{
+		float step_size = 50.f;
+		const float SPEED = 100.0f;
+		//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
+		const float Y_SPEED = SPEED * (24.f / 35.f);
+		float timeFactor = ms / 1000;
+		bool will_move = false;
+
+		float s_x = m_position.x;
+		float s_y = m_position.y;
+		float d_x = m_destination.x;
+		float d_y = m_destination.y;
+
+		if (s_x - d_x > step_size)
+		{
+			will_move = false;
+			m_vel.x = -SPEED;
+		}
+		else if (d_x - s_x > step_size)
+		{
+			will_move = true;
+			m_vel.x = SPEED;
+		}
+
+		if (s_y - d_y > step_size)
+		{
+			will_move = true;
+			m_vel.y = -SPEED;
+		}
+		else if (d_y - s_y > step_size)
+		{
+			will_move = true;
+			m_vel.y = SPEED;
+		}
+
+		if (will_move) 
+		{
+			float new_position_x = m_position.x + m_vel.x * timeFactor;
+			float new_position_y = m_position.y + m_vel.y * timeFactor;
+
+			m_position.x = new_position_x;
+			m_position.y = new_position_y;
+		} 
+		else
+		{
+			reset_destination();
+		}
+	}
+	
+}
+
+
 void Hero::calculate_room_rewards()
 {
 	Room * room;
 
-	room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
+	//room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
 }
 
 Room * Hero::calculate_best_neighbor_room(Room * room)
