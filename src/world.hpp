@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "dungeon.hpp"
 #include "janitor.hpp"
+#include "hero.hpp"
 // stlib
 #include <vector>
 #include <random>
@@ -54,6 +55,10 @@ private:
 
 	//Janitor
 	Janitor m_janitor;
+
+	// Hero
+	Hero m_hero;
+
 	// C++ rng
 	std::default_random_engine m_rng;
 	std::uniform_real_distribution<float> m_dist; // default 0..1

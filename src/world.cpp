@@ -122,6 +122,15 @@ bool World::init(vec2 screen)
     return false;
   }
   m_janitor.set_scale({ 3.f, 3.f });
+
+  vec2 hero_position = { 500.f, 200.f };
+  if (!m_hero.init(hero_position))
+  {
+	  fprintf(stderr, "Failed to init Hero. \n");
+	  return false;
+
+  }
+  m_hero.set_scale({ 3.f, 3.f });
   
   return true;
 }
@@ -137,6 +146,7 @@ void World::destroy()
     
     m_dungeon.destroy();
     m_janitor.destroy();
+	m_hero.destroy();
     //Destructors for game objects here
     glfwDestroyWindow(m_window);
 }
@@ -148,6 +158,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w, (float)h };
     m_janitor.update(elapsed_ms);
+	m_hero.update(elapsed_ms);
     m_dungeon.update(elapsed_ms);
 
     return true;
@@ -193,6 +204,7 @@ void World::draw()
     // Drawing entities
     m_dungeon.draw(projection_2D, identity_transform);
     m_janitor.draw(projection_2D, identity_transform);
+	m_hero.draw(projection_2D, identity_transform);
     // Presenting
     glfwSwapBuffers(m_window);
 }

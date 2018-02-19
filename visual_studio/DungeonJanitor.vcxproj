@@ -504,6 +504,7 @@
     <ClCompile Include="..\src\Cleanable\puddle.cpp" />
     <ClCompile Include="..\src\floor.cpp" />
     <ClCompile Include="..\src\gameobject.cpp" />
+    <ClCompile Include="..\src\hero.cpp" />
     <ClCompile Include="..\src\janitor.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\common.cpp" />
@@ -518,6 +519,7 @@
     <ClInclude Include="..\src\dungeon.hpp" />
     <ClInclude Include="..\src\floor.hpp" />
     <ClInclude Include="..\src\gameobject.hpp" />
+    <ClInclude Include="..\src\hero.hpp" />
     <ClInclude Include="..\src\janitor.hpp" />
     <ClInclude Include="..\src\room.hpp" />
     <ClInclude Include="..\src\roomtextparser.hpp" />
