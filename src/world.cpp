@@ -137,6 +137,7 @@ bool World::init_creatures()
 
 	}
 	m_hero.set_scale({ 3.f, 3.f });
+	m_hero.set_destination({ 800.f, 400.f });
 
 	vec2 boss_position = { 800.f, 300.f };
 	if (!m_boss.init(boss_position))
