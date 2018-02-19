@@ -57,6 +57,7 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
     } 
     else if (ch == HERO)
     {
+        heroFound = true;
         hero_pos = { x, y };
         floor_pos.push_back({ x, y });
         tile_dim = Floor::get_dimensions();
@@ -64,6 +65,7 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
     }
     else if (ch == BOSS)
     {
+        bossFound = true;
         boss_pos = { x, y };
         floor_pos.push_back({ x, y });
         tile_dim = Floor::get_dimensions();
@@ -87,15 +89,15 @@ void RoomParser::clearPositions()
     wall_pairs.clear();
     floor_pos.clear();
     puddle_pos.clear();
-    hero_pos = { -1, -1 }; // Jay: placeholder
-    boss_pos = { -1, -1 }; // Jay: placeholder
+    heroFound = false;
+    bossFound = false;
 }
 
 bool RoomParser::populateRoom(Room &room, vector<Room::wall_pair> wall_pairs, vector<vec2> floor_pos, vector<vec2> puddle_pos, vec2 hero_pos, vec2 boss_pos)
 {
-    room.add_boss(boss_pos);
-    room.add_hero(hero_pos);
-    return (room.add_floors(floor_pos) && room.add_walls(wall_pairs) && room.add_cleanables(puddle_pos));
+    if (bossFound) { room.add_boss(boss_pos); }
+    if (heroFound) { room.add_hero(hero_pos); }
+    return (room.add_floors(floor_pos) && room.add_walls(wall_pairs) && room.add_cleanables(puddle_pos)); // Jay: need puddles to be outside this return call
 }
 
 bool RoomParser::parseRoom(Room &room, const char *filename) 
