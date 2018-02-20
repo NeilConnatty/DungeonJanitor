@@ -24,7 +24,7 @@ bool Dungeon::init()
 	}
 
   new_room.set_pos(
-      {128.f, 52.f}); // temporary values, eventually we will want to have
+      {128.f, 70.f}); // temporary values, eventually we will want to have
                       // a parser that creates the dungeon layouts
 
   if (!parser.parseRoom(new_room, room_path("1.rm")))
@@ -41,7 +41,7 @@ bool Dungeon::init()
     return false;
   }
 
-  new_room_2.set_pos({ 128.f, -800.f }); // temporary values, eventually we will want to have
+  new_room_2.set_pos({ 128.f, -820.f }); // temporary values, eventually we will want to have
                                      // a parser that creates the dungeon layouts
   if (!parser.parseRoom(new_room_2, room_path("2.rm")))
   {
@@ -53,7 +53,7 @@ bool Dungeon::init()
 
   /************** Hallway ****************/
   m_hallways.emplace_back();
-  if (!m_hallways.back().init())
+  if (!m_hallways.back().init({new_room_2.get_pos().x + 420.f, new_room_2.get_pos().y + 620.f}))
   {
     fprintf(stderr, "Failed to init hallway.\n");
     return false;

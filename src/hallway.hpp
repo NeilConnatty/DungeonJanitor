@@ -7,7 +7,8 @@
 class Hallway : public GameObject
 {
 public:
-  bool init() override;
+  bool init() override { return init({ 0.f, 0.f }); }
+  bool init(vec2 pos);
   void destroy() override;
 
 protected:

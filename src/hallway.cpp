@@ -3,7 +3,7 @@
 #include "hallway.hpp"
 #include "roomtextparser.hpp"
 
-bool Hallway::init()
+bool Hallway::init(vec2 pos)
 {
   RoomParser parser;
   m_room.init();
@@ -13,6 +13,8 @@ bool Hallway::init()
     fprintf(stderr, "Failed to parse hallway.\n");
     return false;
   }
+
+  m_position = pos;
 
   return true;
 }
