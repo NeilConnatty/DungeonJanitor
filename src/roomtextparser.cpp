@@ -9,6 +9,7 @@
 #define WALL 'w'
 #define FLOOR 'f'
 #define PUDDLE 'p'
+#define ARTIFACT 'a'
 
 bool RoomParser::parseLine(std::string &line, float y, bool first_line) 
 {
@@ -52,7 +53,15 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
       floor_pos.push_back({x, y});
       tile_dim = Floor::get_dimensions();
       x = x + tile_dim.x;
-    } 
+    }
+	else if (ch == ARTIFACT) // At most one per room
+	{
+		has_artifact = true;
+		artifact_pos = { x, y };
+		floor_pos.push_back({ x, y });
+		tile_dim = Floor::get_dimensions();
+		x = x + tile_dim.x;
+	}
     else 
     {
       fprintf(stderr,
@@ -73,9 +82,9 @@ void RoomParser::clearPositions()
     puddle_pos.clear();
 }
 
-bool RoomParser::populateRoom(Room &room, vector<Room::wall_pair> wall_pairs, vector<vec2> floor_pos, vector<vec2> puddle_pos)
+bool RoomParser::populateRoom(Room &room, vector<Room::wall_pair> wall_pairs, vector<vec2> floor_pos, vector<vec2> puddle_pos, vec2 artifact_pos)
 {
-    return (room.add_floors(floor_pos) && room.add_walls(wall_pairs) && room.add_cleanables(puddle_pos)); 
+    return (room.add_floors(floor_pos) && room.add_walls(wall_pairs) && room.add_cleanables(puddle_pos) && room.add_artifact(has_artifact, artifact_pos)); 
 }
 
 bool RoomParser::parseRoom(Room &room, const char *filename) 
@@ -117,7 +126,7 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
       }
     }
 
-    if (!populateRoom(room, wall_pairs, floor_pos, puddle_pos)) 
+    if (!populateRoom(room, wall_pairs, floor_pos, puddle_pos, artifact_pos)) 
     {
       fprintf(stderr, "Issue parsing room file: %s.\n", filename);
       return false;

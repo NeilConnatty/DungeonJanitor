@@ -43,6 +43,9 @@
     <ClCompile Include="..\src\ValueIteration.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Cleanable\artifact.cpp">
+      <Filter>src\Cleanable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -83,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="..\src\ValueIteration.hpp">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Cleanable\artifact.hpp">
+      <Filter>headers\Cleanable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

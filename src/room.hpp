@@ -5,6 +5,7 @@
 #include "floor.hpp"
 #include "wall.hpp"
 #include "Cleanable/puddle.hpp"
+#include "Cleanable/artifact.hpp"
 
 #include <vector>
 #include <memory>
@@ -29,6 +30,7 @@ public:
 	bool add_walls(vector<wall_pair>& walls);
 	bool add_floors(vector<vec2>& positions);
 	bool add_cleanables(vector<vec2>& puddle_positions);
+	bool add_artifact(bool has_artifact, vec2 artifact_pos);
 
 	vector<Puddle>&  get_cleanables();
 
@@ -62,4 +64,5 @@ private:
 	vector<Floor>		m_floors;
 	vector<Wall>		  m_walls;
 	vector<Puddle>   m_puddles;
+	Artifact		m_artifact;
 }; 

@@ -12,7 +12,7 @@ else
 endif
 
 BIN=main
-OBJ=$(BIN).o common.o world.o dungeon.o floor.o gameobject.o janitor.o room.o roomtextparser.o wall.o hero.o boss.o $(CURDIR)/src/Cleanable/puddle.o
+OBJ=$(BIN).o common.o world.o dungeon.o floor.o gameobject.o janitor.o room.o roomtextparser.o wall.o hero.o boss.o $(CURDIR)/src/Cleanable/puddle.o ValueIteration.o $(CURDIR)/src/Cleanable/artifact.o
 
 
 default: build
