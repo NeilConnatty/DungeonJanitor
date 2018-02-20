@@ -58,7 +58,6 @@ void Room::draw_current(const mat3 &projection, const mat3 &current_transform)
 void Room::draw_children(const mat3 &projection,
                          const mat3 &current_transform) 
 {
-
   for (Floor f : m_floors) 
   {
     f.draw(projection, current_transform);

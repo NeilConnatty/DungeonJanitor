@@ -8,6 +8,7 @@
 #include "Cleanable/puddle.hpp"
 
 #include <vector>
+#include <array>
 #include <memory>
 
 class Room : public GameObject
@@ -63,5 +64,5 @@ private:
 	std::vector<Puddle>   m_puddles;
   std::vector<Door>     m_doors;
 
-  std::array<Room*, 4>   m_adjacent_rooms;
+  std::array<Room*, 4>   m_adjacent_rooms; // implemented as array so that it can be iterated through
  }; 
