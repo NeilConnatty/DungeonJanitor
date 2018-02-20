@@ -15,6 +15,14 @@ class Room : public GameObject
 public: 
   using wall_pair = std::pair<vec2, wall_edge>;
 
+  enum directions
+  {
+    NORTH = 0,
+    SOUTH = 1,
+    EAST  = 2,
+    WEST  = 3
+  };
+
 public:
 	Room();
 	~Room();
@@ -36,6 +44,11 @@ public:
 	void decrement_cleanables();
 
 
+  void set_north_room(Room* rm);
+  void set_south_room(Room* rm);
+  void set_east_room(Room* rm);
+  void set_west_room(Room* rm);
+
 private:
 	void update_current(float ms) override;
 	void update_children(float ms) override;
@@ -49,4 +62,6 @@ private:
 	std::vector<Wall>		  m_walls;
 	std::vector<Puddle>   m_puddles;
   std::vector<Door>     m_doors;
+
+  std::array<Room*, 4>   m_adjacent_rooms;
  }; 
