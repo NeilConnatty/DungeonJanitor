@@ -29,9 +29,11 @@ public:
 	void key_down();
 	void key_left();
 	void key_right();
-
+	enum DIRECTION { //they all equal 1 rn RIP
+		up, up_right, up_left, down, down_right, down_left, left, right
+	};
 	bool validate_textures();
-
+	void pick_movement_tex(DIRECTION dir, const int FRAME_TIMING);
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
@@ -47,7 +49,6 @@ private:
 
 	//Potentially make this a vector of pointers later.
 	Texture* m_curr_tex;
-	int m_tex_index;
 	float m_time_pressed;
 	bool m_key_up;
 	bool m_key_down;

@@ -97,7 +97,6 @@ void Janitor::update_current(float ms)
 	//ms is how long it's been since the previous iteration, ranges from 10 - 30, generally.
 	if (!m_key_up && !m_key_down && !m_key_left && !m_key_right)
 		m_time_pressed = 0;
-	m_tex_index = m_time_pressed;
 	const int NUM_FRAMES = 4;	//4 frames of animation per direction
 	const int FRAME_TIMING = 80; //80 ms per frame of animation (12.5fps)
 	//UP
@@ -108,25 +107,17 @@ void Janitor::update_current(float ms)
 		if (m_key_right)
 		{
 			m_vel.x = SPEED;
-			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &up_right1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_right2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_right3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_right4;
+			pick_movement_tex(up_right, FRAME_TIMING);
+
 		}
 		else if (m_key_left)
 		{
 			m_vel.x = -SPEED;
-			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &up_left1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_left2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_left3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_left4;
+			pick_movement_tex(up_left, FRAME_TIMING);
 		}
 		else 
 		{
-			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &up1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up4;
+			pick_movement_tex(up, FRAME_TIMING);
 		}		
 	}
 	//DOWN
@@ -136,25 +127,16 @@ void Janitor::update_current(float ms)
 		if (m_key_right)
 		{
 			m_vel.x = SPEED;
-			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &down_right1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_right2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_right3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_right4;
+			pick_movement_tex(down_right, FRAME_TIMING);
 		}
 		else if (m_key_left)
 		{
 			m_vel.x = -SPEED;
-			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &down_left1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_left2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_left3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_left4;
+			pick_movement_tex(down_left, FRAME_TIMING);
 		}
 		else
 		{
-			if (m_tex_index < FRAME_TIMING)						m_curr_tex = &down1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down4;
+			pick_movement_tex(down, FRAME_TIMING);
 		}
 	}
 	else
@@ -168,25 +150,16 @@ void Janitor::update_current(float ms)
 		if (m_key_up)
 		{
 			m_vel.y = -Y_SPEED;
-			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &up_left1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_left2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_left3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_left4;
+			pick_movement_tex(up_left, FRAME_TIMING);
 		}
 		else if (m_key_down)
 		{
 			m_vel.y = Y_SPEED;
-			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &down_left1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_left2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_left3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_left4;
+			pick_movement_tex(down_left, FRAME_TIMING);
 		}
 		else
 		{
-			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &left1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &left2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &left3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &left4;
+			pick_movement_tex(left, FRAME_TIMING);
 		}
 	}
 	//RIGHT
@@ -197,25 +170,16 @@ void Janitor::update_current(float ms)
 		if (m_key_up)
 		{
 			m_vel.y = -Y_SPEED;
-			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &up_right1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &up_right2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &up_right3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &up_right4;
+			pick_movement_tex(up_right, FRAME_TIMING);
 		}
 		else if (m_key_down)
 		{
 			m_vel.y = Y_SPEED;
-			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &down_right1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &down_right2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &down_right3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &down_right4;
+			pick_movement_tex(down_right, FRAME_TIMING);
 		}
 		else 
 		{
-			if (m_tex_index < FRAME_TIMING)				m_curr_tex = &right1;
-			else if (m_tex_index >= FRAME_TIMING && m_tex_index < 2 * FRAME_TIMING)	m_curr_tex = &right2;
-			else if (m_tex_index >= 2 * FRAME_TIMING && m_tex_index < 3 * FRAME_TIMING)	m_curr_tex = &right3;
-			else if (m_tex_index >= 3 * FRAME_TIMING)				m_curr_tex = &right4;
+			pick_movement_tex(right, FRAME_TIMING);
 		}
 	}
 	else
@@ -227,7 +191,7 @@ void Janitor::update_current(float ms)
 		m_time_pressed = 0;
 	else m_time_pressed += ms;
 
-	//std::cout << m_tex_index;
+	//std::cout << m_time_pressed;
 	float new_position_x = m_position.x + m_vel.x * time_factor;
 	float new_position_y = m_position.y + m_vel.y * time_factor;
 
@@ -294,6 +258,119 @@ void Janitor::key_up() { m_key_up = !m_key_up; }
 void Janitor::key_down() { m_key_down = !m_key_down; }
 void Janitor::key_left() { m_key_left = !m_key_left; }
 void Janitor::key_right() { m_key_right = !m_key_right; }
+
+//Helper function for draw_current
+//sets *m_curr_tex = &some_tex where some_tex is based on timing and key(s) pressed
+void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
+	switch (dir)
+	{
+		fprintf(stderr, "%i\n", dir);
+		case up:
+		{
+			fprintf(stderr, "up\n");
+			if (m_time_pressed < FRAME_TIMING)	
+				m_curr_tex = &up1;
+			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+				m_curr_tex = &up2;
+			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+				m_curr_tex = &up3;
+			else if (m_time_pressed >= 3 * FRAME_TIMING)
+				m_curr_tex = &up4;
+			break;
+		}
+		case up_right:
+		{
+			fprintf(stderr, "up_right\n");
+			if (m_time_pressed < FRAME_TIMING)						
+				m_curr_tex = &up_right1;
+			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+				m_curr_tex = &up_right2;
+			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+				m_curr_tex = &up_right3;
+			else if (m_time_pressed >= 3 * FRAME_TIMING)				
+				m_curr_tex = &up_right4;
+			break;
+		}
+		case up_left:
+		{
+			fprintf(stderr, "up_left\n");
+			if (m_time_pressed < FRAME_TIMING)
+				m_curr_tex = &up_left1;
+			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)
+				m_curr_tex = &up_left2;
+			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)
+				m_curr_tex = &up_left3;
+			else if (m_time_pressed >= 3 * FRAME_TIMING)	
+				m_curr_tex = &up_left4;
+			break;
+		}
+		case down:
+		{
+			fprintf(stderr, "down\n");
+			if (m_time_pressed < FRAME_TIMING)
+				m_curr_tex = &down1;
+			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)
+				m_curr_tex = &down2;
+			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)
+				m_curr_tex = &down3;
+			else if (m_time_pressed >= 3 * FRAME_TIMING)
+				m_curr_tex = &down4;
+			break;
+		}
+		case down_right:
+		{
+			fprintf(stderr, "down_right\n");
+			if (m_time_pressed < FRAME_TIMING)	
+				m_curr_tex = &down_right1;
+			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+				m_curr_tex = &down_right2;
+			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+				m_curr_tex = &down_right3;
+			else if (m_time_pressed >= 3 * FRAME_TIMING)
+				m_curr_tex = &down_right4;
+			break;
+		}
+		case down_left:
+		{
+			fprintf(stderr, "down_left\n");
+			if (m_time_pressed < FRAME_TIMING)	
+				m_curr_tex = &down_left1;
+			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+				m_curr_tex = &down_left2;
+			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+				m_curr_tex = &down_left3;
+			else if (m_time_pressed >= 3 * FRAME_TIMING)				
+				m_curr_tex = &down_left4;
+			break;
+		}
+		case right:
+		{
+			fprintf(stderr, "right\n");
+			if (m_time_pressed < FRAME_TIMING)	
+				m_curr_tex = &right1;
+			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+				m_curr_tex = &right2;
+			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+				m_curr_tex = &right3;
+			else if (m_time_pressed >= 3 * FRAME_TIMING)
+				m_curr_tex = &right4;
+			break;
+		}
+		case left:
+		{
+			fprintf(stderr, "left\n");
+			if (m_time_pressed < FRAME_TIMING)	
+				m_curr_tex = &left1;
+			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+				m_curr_tex = &left2;
+			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+				m_curr_tex = &left3;
+			else if (m_time_pressed >= 3 * FRAME_TIMING) 
+				m_curr_tex = &left4;
+		}
+	}
+}
+//Loads and validates texture files via hardcoded path names
 bool Janitor::validate_textures()
 {
 	if (!up1.is_valid())
