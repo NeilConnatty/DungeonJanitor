@@ -7,9 +7,14 @@
 
 class Janitor : public GameObject
 {
-	//up1 is a sadboi and doesn't want to play with the others. 
-	//static Texture up1;
-	static Texture up2, up3, up4, down1, down2, down3, down4, left1, left2, left3, left4, right1, right2, right3, right4;
+	static Texture up1, up2, up3, up4,
+		up_right1, up_right2, up_right3, up_right4,
+		up_left1, up_left2, up_left3, up_left4,
+		down1, down2, down3, down4,
+		down_right1, down_right2, down_right3, down_right4,
+		down_left1, down_left2, down_left3, down_left4,
+		left1, left2, left3, left4, 
+		right1, right2, right3, right4;
 public:
 	Janitor();
 	~Janitor();
@@ -24,7 +29,11 @@ public:
 	void key_down();
 	void key_left();
 	void key_right();
-
+	enum DIRECTION {
+		up, up_right, up_left, down, down_right, down_left, left, right
+	};
+	bool validate_textures();
+	void pick_movement_tex(DIRECTION dir, const int FRAME_TIMING);
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
@@ -37,14 +46,10 @@ public:
 private:
 	vec2 m_accel;
 	vec2 m_vel;
-	vec2 m_curr_tex;
 
 	//Potentially make this a vector of pointers later.
-	Texture* m_tex_sheet;
-	int m_tex_index;
-	
-	int m_key_cycles;
-
+	Texture* m_curr_tex;
+	float m_time_pressed;
 	bool m_key_up;
 	bool m_key_down;
 	bool m_key_left;
