@@ -43,8 +43,19 @@ bool Dungeon::init()
 
   new_room_2.set_pos({ 128.f, -800.f }); // temporary values, eventually we will want to have
                                      // a parser that creates the dungeon layouts
-  if (!parser.parseRoom(new_room_2, room_path("1.rm")))
+  if (!parser.parseRoom(new_room_2, room_path("2.rm")))
   {
+    return false;
+  }
+
+  new_room.set_north_room(&new_room_2);
+  new_room_2.set_south_room(&new_room);
+
+  /************** Hallway ****************/
+  m_hallways.emplace_back();
+  if (!m_hallways.back().init())
+  {
+    fprintf(stderr, "Failed to init hallway.\n");
     return false;
   }
 
@@ -88,6 +99,11 @@ void Dungeon::update_children(float ms)
 	{
 		room.update(ms);
 	}
+
+  for (Hallway& hallway : m_hallways)
+  {
+    hallway.update(ms);
+  }
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
@@ -100,4 +116,9 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
 	{
 		room.draw(projection, current_transform);
 	}
+
+  for (Hallway& hall : m_hallways)
+  {
+    hall.draw(projection, current_transform);
+  }
 }

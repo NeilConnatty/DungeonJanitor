@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
+#include "hallway.hpp"
 
 #include <vector>
 
@@ -23,5 +24,6 @@ private:
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
 
 private:
-	std::vector<Room>	m_rooms;  // unsure if this should be a vector of pointers or rooms
+	std::vector<Room>	m_rooms;  
+  std::vector<Hallway> m_hallways;
 };
