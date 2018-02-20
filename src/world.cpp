@@ -124,7 +124,7 @@ bool World::init(vec2 screen)
   m_janitor.set_scale({ 3.f, 3.f });
 
   // Make camera follow janitor
-  //m_camera.follow_object(&m_janitor);
+  m_camera.follow_object(&m_janitor);
   
   return true;
 }
@@ -179,8 +179,8 @@ void World::draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     mat3 identity_transform{ {1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}, {0.f, 0.f, 1.f} };
-    mat3 projection_2D = m_camera.get_projection(m_window);
-    mat3 transform = m_camera.get_transform();
+    mat3 projection_2D = m_camera.get_projection(w, h);
+    mat3 transform = m_camera.get_transform(w, h);
 
     // Drawing entities
     m_dungeon.draw(projection_2D, transform);

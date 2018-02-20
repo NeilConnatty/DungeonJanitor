@@ -117,9 +117,9 @@ mat3 mat_of_cofactors(mat3 m)
 mat3 adjucate(mat3 m)
 {
   vec3 c0, c1, c2;
-  c0 = { m.c0.x, m.c1.x, m.c2.z };
+  c0 = { m.c0.x, m.c1.x, m.c2.x };
   c1 = { m.c0.y, m.c1.y, m.c2.y };
-  c2 = { m.c0.x, m.c1.z, m.c2.z };
+  c2 = { m.c0.z, m.c1.z, m.c2.z };
 
   return { c0, c1, c2 };
 }
