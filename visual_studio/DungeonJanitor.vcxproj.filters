@@ -60,9 +60,6 @@
     <ClInclude Include="..\src\Cleanable\puddle.hpp">
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\camera.hpp">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\dungeon.hpp">
       <Filter>headers\Dungeon</Filter>
     </ClInclude>
@@ -83,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="..\src\hallway.hpp">
       <Filter>headers\Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\camera.hpp">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
