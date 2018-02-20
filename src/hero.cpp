@@ -202,11 +202,16 @@ void Hero::calculate_room_rewards()
 	//room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
 }
 
-Room * Hero::calculate_best_neighbor_room(Room * room)
+vec2 Hero::get_next_door_position()
 {
-	int test[3][2];
-	test[0][1] = 1;
-	return room;
+	Room* target_room = ValueIteration::getNextRoom(m_currentRoom);
+ 
+	vec2 target_door_position;
+
+	// Jay stub
+	// need to access doors that are in m_currentRoom
+	// check every door for the room they lead to
+	// if a door lead to the target_room, return that door's position
+
+	return target_door_position;
 }
-
-

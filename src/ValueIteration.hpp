@@ -14,18 +14,18 @@ class ValueIteration
 {
 public:
 	
-	void initialize(vector<Room> rooms);
-	void updateValues();
-	Room * getNextRoom(Room* current_room);
+	static void initialize(vector<Room> rooms);
+	static void updateValues();
+	static Room * getNextRoom(Room* current_room);
 
 
 private:
-	vector<Room> m_rooms;
-	map<Room*, float> VI_current;
-	map<Room*, float> VI_previous;
+	static vector<Room> m_rooms;
+	static map<Room*, float> VI_current;
+	static map<Room*, float> VI_previous;
 
-	float calculateInitialRoomValue(Room* room);
-	float calculateRoomReward(Room* room);
-	float calculateHighestNeighborValue(Room* room);
+	static float calculateInitialRoomValue(Room* room);
+	static float calculateRoomReward(Room* room);
+	static float calculateHighestNeighborValue(Room* room);
 
 };

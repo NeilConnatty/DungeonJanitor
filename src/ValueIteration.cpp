@@ -11,6 +11,10 @@
 
 using namespace std;
 
+vector<Room> ValueIteration::m_rooms;
+map<Room*, float> ValueIteration::VI_current;
+map<Room*, float> ValueIteration::VI_previous;
+
 void ValueIteration::initialize(vector<Room> rooms)
 {
 	m_rooms = rooms;
@@ -22,7 +26,6 @@ void ValueIteration::initialize(vector<Room> rooms)
 		VI_current.emplace(room_ptr, calculateRoomReward(room_ptr));
 	}
 }
-//
 
 void ValueIteration::updateValues()
 {

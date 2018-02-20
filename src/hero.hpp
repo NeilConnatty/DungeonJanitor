@@ -3,7 +3,7 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
-
+#include "ValueIteration.hpp"
 #include <vector>
 
 class Hero : public GameObject
@@ -32,5 +32,5 @@ private:
 	void draw_current(const mat3& projection, const mat3& current_transform) override;
 	void draw_children(const mat3& projection, const mat3& current_transform) override {};
 	void calculate_room_rewards();
-	Room * calculate_best_neighbor_room(Room * room);
+	vec2 get_next_door_position();
 };
