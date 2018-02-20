@@ -220,3 +220,13 @@ void Room::setWestRoom(Room * room)
 {
 	m_WestRoom = room;
 }
+
+int Room::getRoomID()
+{
+	return m_ID;
+}
+
+void Room::setRoomID(int id)
+{
+	m_ID = id;
+}

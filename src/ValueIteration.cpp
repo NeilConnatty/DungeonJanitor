@@ -2,11 +2,11 @@
 
 #include "ValueIteration.hpp"
 
-#define INITIAL_VALUE 0
-#define NORMAL_ROOM_VALUE -0.04
-#define BOSS_VALUE 1
-#define ARTIFACT_VALUE 0.5
-#define DISCOUNT_FACTOR 1
+#define INITIAL_VALUE 0 // Fixed at 0
+#define NORMAL_ROOM_VALUE -0.04 // Fixed at -0.04
+#define BOSS_VALUE 1 // Fixed at 1
+#define ARTIFACT_VALUE 0.50 // Fixed at 0.50
+#define DISCOUNT_FACTOR 0.8 // Can play with
 #define LOW_NUMBER_HACK -100
 
 #include <fstream> // for testing
@@ -15,8 +15,10 @@
 using namespace std;
 
 //vector<Room>* ValueIteration::m_rooms;
-map<Room*, float> ValueIteration::VI_current;
-map<Room*, float> ValueIteration::VI_previous;
+//map<Room*, float> ValueIteration::VI_current;
+//map<Room*, float> ValueIteration::VI_previous;
+map<int, float> ValueIteration::VI_current;
+map<int, float> ValueIteration::VI_previous;
 
 void ValueIteration::initialize(vector<Room> rooms)
 {
@@ -28,16 +30,20 @@ void ValueIteration::initialize(vector<Room> rooms)
 		
 		float value = calculateInitialRoomValue(room_ptr);
 
-		VI_current.emplace(room_ptr, value);
+		VI_current.emplace(room_ptr->getRoomID(), value);
 
 		//for testing
-		printf("The initial value for this room is %f \n", value);
+		printf("The initial value for room %d is %f \n", room_ptr->getRoomID(), value);
 	}
 
-	updateValues(rooms);
+	updateValues(rooms, 0.5);
+	updateValues(rooms, 0.5);
+	updateValues(rooms, 0.5);
+	updateValues(rooms, 0.5);
+	
 }
 
-void ValueIteration::updateValues(vector<Room> rooms)
+void ValueIteration::updateValues(vector<Room> rooms, float artifact_probability)
 {
 	VI_previous = VI_current;
 	VI_current.clear();
@@ -50,14 +56,24 @@ void ValueIteration::updateValues(vector<Room> rooms)
 	
 	for (Room room : rooms)
 	{
-		float V = calculateHighestNeighborValue(&room);
+		float new_value;
 
-		float new_value = calculateRoomReward(&room) + DISCOUNT_FACTOR * V;
+		if (room.containsBoss())
+		{
+			new_value = 1.0;
+		}
+		else
+		{
 
-		VI_current.emplace(&room, new_value);
+			float V = calculateHighestNeighborValue(&room);
+
+			new_value = calculateRoomReward(&room, artifact_probability) + DISCOUNT_FACTOR * V;
+		}
+
+		VI_current.emplace(room.getRoomID(), new_value);
 		
 		//for testing
-		printf("The new value for this room is %f \n", new_value);
+		printf("The new value for room %d is %f \n", room.getRoomID(), new_value);
 	}
 }
 
@@ -71,19 +87,19 @@ Room * ValueIteration::getNextRoom(Room * current_room)
 	// Load room values
 	if (current_room->getNorthRoom() != nullptr)
 	{
-		north_value = VI_current.at(current_room->getNorthRoom());
+		north_value = VI_current.at(current_room->getNorthRoom()->getRoomID());
 	}
 	if (current_room->getSouthRoom() != nullptr)
 	{
-		south_value = VI_current.at(current_room->getSouthRoom());
+		south_value = VI_current.at(current_room->getSouthRoom()->getRoomID());
 	}
 	if (current_room->getEastRoom() != nullptr)
 	{
-		east_value = VI_current.at(current_room->getEastRoom());
+		east_value = VI_current.at(current_room->getEastRoom()->getRoomID());
 	}
 	if (current_room->getWestRoom() != nullptr)
 	{
-		west_value = VI_current.at(current_room->getWestRoom());
+		west_value = VI_current.at(current_room->getWestRoom()->getRoomID());
 	}
 
 	// Return best room
@@ -114,21 +130,23 @@ float ValueIteration::calculateHighestNeighborValue(Room * room)
 
 	if (room->getNorthRoom() !=	nullptr)
 	{
-		neighbor_values.push_back(VI_previous.at(room->getNorthRoom()));
+		neighbor_values.push_back(VI_previous.at(room->getNorthRoom()->getRoomID()));
 	}
 	if (room->getSouthRoom() != nullptr)
 	{
-		neighbor_values.push_back(VI_previous.at(room->getSouthRoom()));
+		neighbor_values.push_back(VI_previous.at(room->getSouthRoom()->getRoomID()));
 	}
 	if (room->getEastRoom() != nullptr)
 	{
 		Room* eastRoom = room->getEastRoom();
-		float eastValue = VI_previous.at(eastRoom);
+		auto it = VI_previous.find(eastRoom->getRoomID());
+		auto pair = *it;
+		float eastValue = pair.second;
 		neighbor_values.push_back(eastValue);
 	}
 	if (room->getWestRoom() != nullptr)
 	{
-		neighbor_values.push_back(VI_previous.at(room->getWestRoom()));
+		neighbor_values.push_back(VI_previous.at(room->getWestRoom()->getRoomID()));
 	}
 
 	return *max_element(neighbor_values.begin(), neighbor_values.end());;
@@ -146,7 +164,7 @@ float ValueIteration::calculateInitialRoomValue(Room * room)
 	return reward;
 }
 
-float ValueIteration::calculateRoomReward(Room* room)
+float ValueIteration::calculateRoomReward(Room* room, float artifact_probability)
 {
 	float reward = NORMAL_ROOM_VALUE;
 
@@ -158,7 +176,7 @@ float ValueIteration::calculateRoomReward(Room* room)
 	// If room has both boss and artifact, treated as only having Boss
 	else if (room->containsArtifact())
 	{
-		reward = ARTIFACT_VALUE;
+		reward = ARTIFACT_VALUE * artifact_probability;
 	}
 
 	return reward;

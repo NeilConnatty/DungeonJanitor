@@ -41,14 +41,19 @@ public:
 	bool containsArtifact();
 	void setBossInRoom(bool bossInRoom);
 	void setArtifactInRoom(bool artifactInRoom);
+	
 	Room* getNorthRoom();
 	Room* getSouthRoom();
 	Room* getWestRoom();
 	Room* getEastRoom();
+
 	void setNorthRoom(Room* room);
 	void setSouthRoom(Room* room);
 	void setEastRoom(Room* room);
 	void setWestRoom(Room* room);
+
+	int getRoomID();
+	void setRoomID(int id);
 
 private:
 	void update_current(float ms) override;
@@ -59,6 +64,7 @@ private:
 private:
 	bool m_BossHere; // update as Boss moves
 	bool m_ArtifactHere; // update when artifact a) fixed by player or b) discovered by hero
+	int m_ID; // unique room id
 	double heroRewardValue;
 	Room * m_NorthRoom, * m_SouthRoom, * m_WestRoom, * m_EastRoom; // Can Be Nullptr
 	vector<Floor>		m_floors;
