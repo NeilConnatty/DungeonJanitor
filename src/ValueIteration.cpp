@@ -8,6 +8,7 @@
 #define ARTIFACT_VALUE 0.50 // Fixed at 0.50
 #define DISCOUNT_FACTOR 0.8 // Can play with
 #define LOW_NUMBER_HACK -100
+#define MAX_ERROR 0.01 // Can play with
 
 #include <fstream> // for testing
 #include <string>// for testing
@@ -17,8 +18,10 @@ using namespace std;
 //vector<Room>* ValueIteration::m_rooms;
 //map<Room*, float> ValueIteration::VI_current;
 //map<Room*, float> ValueIteration::VI_previous;
+float ValueIteration::m_difference;
 map<int, float> ValueIteration::VI_current;
 map<int, float> ValueIteration::VI_previous;
+
 
 void ValueIteration::initialize(vector<Room> rooms)
 {
@@ -37,16 +40,21 @@ void ValueIteration::initialize(vector<Room> rooms)
 	}
 
 	updateValues(rooms, 0.5);
-	updateValues(rooms, 0.5);
-	updateValues(rooms, 0.5);
-	updateValues(rooms, 0.5);
-	
+
+	int test_number_of_cycles = 1;
+	while (continueValueIterating())
+	{
+		updateValues(rooms, 0.5);
+		test_number_of_cycles++;
+	}
+	printf("Value Iteration Ended After %d Cycles.\n", test_number_of_cycles);
 }
 
 void ValueIteration::updateValues(vector<Room> rooms, float artifact_probability)
 {
 	VI_previous = VI_current;
 	VI_current.clear();
+	m_difference = 0;
 	
 	//for each room in VI_current, the new value for that room should be
 	// the max value of each of that room's neighbors in VI_previous (V)
@@ -71,6 +79,13 @@ void ValueIteration::updateValues(vector<Room> rooms, float artifact_probability
 		}
 
 		VI_current.emplace(room.getRoomID(), new_value);
+
+		float old_value = VI_previous.at(room.getRoomID());
+
+		if (abs(new_value - old_value) > m_difference)
+		{
+			m_difference = abs(new_value - old_value);
+		}
 		
 		//for testing
 		printf("The new value for room %d is %f \n", room.getRoomID(), new_value);
@@ -150,6 +165,12 @@ float ValueIteration::calculateHighestNeighborValue(Room * room)
 	}
 
 	return *max_element(neighbor_values.begin(), neighbor_values.end());;
+}
+
+bool ValueIteration::continueValueIterating()
+{
+	float error = (MAX_ERROR * (1 - DISCOUNT_FACTOR) / DISCOUNT_FACTOR);
+	return (m_difference >= error);
 }
 
 float ValueIteration::calculateInitialRoomValue(Room * room)

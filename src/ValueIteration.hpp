@@ -3,7 +3,6 @@
 #include "common.hpp"
 #include "room.hpp"
 #include <map>
-//#include <vector>
 #include <algorithm>
 #include <list>
 
@@ -20,14 +19,13 @@ public:
 
 
 private:
-	//static vector<Room>* m_rooms;
-	//static map<Room*, float> VI_current;
-	//static map<Room*, float> VI_previous;
+	static float m_difference;
 	static map<int, float> VI_current;
 	static map<int, float> VI_previous;
 
 	static float calculateInitialRoomValue(Room* room);
 	static float calculateRoomReward(Room* room, float artifact_probability);
 	static float calculateHighestNeighborValue(Room* room);
+	static bool continueValueIterating();
 
 };
