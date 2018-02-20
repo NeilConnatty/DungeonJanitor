@@ -19,7 +19,7 @@ void ValueIteration::initialize(vector<Room> rooms)
 	{	
 		Room* room_ptr = &room;
 		
-		VI_current.emplace(room_ptr, CalculateRoomReward(room_ptr));
+		VI_current.emplace(room_ptr, calculateRoomReward(room_ptr));
 	}
 }
 //
@@ -32,35 +32,16 @@ void ValueIteration::updateValues()
 	//for each room in VI_current, the new value for that room should be
 	// the max value of each of that room's neighbors in VI_previous (V)
 	// times the discount factor (g)
-	// plus the room's inherent Reward R
+	// plus the room's inherent reward (R)
 	// new_value = R + g * V;
 	
 	for (Room& room : m_rooms)
 	{
 		Room* room_ptr = &room;
 
-		vector<float> neighbor_values;
+		float V = calculateHighestNeighborValue(room_ptr);
 
-		if (room_ptr->getNorthRoom() != nullptr)
-		{
-			neighbor_values.push_back(VI_previous.at(room_ptr->getNorthRoom()));
-		}
-		if (room_ptr->getSouthRoom() != nullptr)
-		{
-			neighbor_values.push_back(VI_previous.at(room_ptr->getSouthRoom()));
-		}
-		if (room_ptr->getEastRoom() != nullptr)
-		{
-			neighbor_values.push_back(VI_previous.at(room_ptr->getEastRoom()));
-		}
-		if (room_ptr->getWestRoom() != nullptr)
-		{
-			neighbor_values.push_back(VI_previous.at(room_ptr->getWestRoom()));
-		}
-
-
-		float V = *max_element(neighbor_values.begin(), neighbor_values.end());
-		float new_value = CalculateRoomReward(room_ptr) + DISCOUNT_FACTOR * V;
+		float new_value = calculateRoomReward(room_ptr) + DISCOUNT_FACTOR * V;
 
 		VI_current.emplace(room_ptr, new_value);
 	}
@@ -113,7 +94,31 @@ Room * ValueIteration::getNextRoom(Room * current_room)
 	
 }
 
-float ValueIteration::CalculateInitialRoomValue(Room * room)
+float ValueIteration::calculateHighestNeighborValue(Room * room)
+{
+	vector<float> neighbor_values;
+
+	if (room->getNorthRoom() != nullptr)
+	{
+		neighbor_values.push_back(VI_previous.at(room->getNorthRoom()));
+	}
+	if (room->getSouthRoom() != nullptr)
+	{
+		neighbor_values.push_back(VI_previous.at(room->getSouthRoom()));
+	}
+	if (room->getEastRoom() != nullptr)
+	{
+		neighbor_values.push_back(VI_previous.at(room->getEastRoom()));
+	}
+	if (room->getWestRoom() != nullptr)
+	{
+		neighbor_values.push_back(VI_previous.at(room->getWestRoom()));
+	}
+
+	return *max_element(neighbor_values.begin(), neighbor_values.end());;
+}
+
+float ValueIteration::calculateInitialRoomValue(Room * room)
 {
 	float reward = INITIAL_VALUE;
 
@@ -125,7 +130,7 @@ float ValueIteration::CalculateInitialRoomValue(Room * room)
 	return reward;
 }
 
-float ValueIteration::CalculateRoomReward(Room* room)
+float ValueIteration::calculateRoomReward(Room* room)
 {
 	float reward = NORMAL_ROOM_VALUE;
 

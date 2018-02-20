@@ -24,7 +24,8 @@ private:
 	map<Room*, float> VI_current;
 	map<Room*, float> VI_previous;
 
-	float ValueIteration::CalculateInitialRoomValue(Room* room);
-	float ValueIteration::CalculateRoomReward(Room* room);
+	float calculateInitialRoomValue(Room* room);
+	float calculateRoomReward(Room* room);
+	float calculateHighestNeighborValue(Room* room);
 
 };
