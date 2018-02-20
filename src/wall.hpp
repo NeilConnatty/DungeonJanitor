@@ -18,6 +18,7 @@ public:
 	Wall();
 	~Wall();
 
+  bool  init() override { return init({ 0.f, 0.f }, NONE); };
 	bool	init(vec2 position, wall_edge m_edge);
 	void	destroy();
 

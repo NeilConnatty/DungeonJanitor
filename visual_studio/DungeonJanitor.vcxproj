@@ -500,6 +500,8 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\camera.cpp" />
+    <ClCompile Include="..\src\door.cpp" />
     <ClCompile Include="..\src\dungeon.cpp" />
     <ClCompile Include="..\src\Cleanable\puddle.cpp" />
     <ClCompile Include="..\src\floor.cpp" />
@@ -513,8 +515,10 @@
     <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\camera.hpp" />
     <ClInclude Include="..\src\Cleanable\puddle.hpp" />
     <ClInclude Include="..\src\common.hpp" />
+    <ClInclude Include="..\src\door.hpp" />
     <ClInclude Include="..\src\dungeon.hpp" />
     <ClInclude Include="..\src\floor.hpp" />
     <ClInclude Include="..\src\gameobject.hpp" />

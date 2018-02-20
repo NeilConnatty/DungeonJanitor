@@ -8,15 +8,18 @@ public:
 	GameObject();
 	~GameObject();
 
+  virtual bool init() = 0;
+  virtual void destroy() = 0;
+
 	void set_pos(vec2 pos);
 	void set_scale(vec2 scale);
 	void set_rotation(float rotation);
 	//void set_z(int newz);
 	//can probably just evaluate this from m_position.y % tile_y_size
-	vec2 get_pos();
-	vec2 get_scale();
-	float get_rot();
-	bool is_enabled();
+	vec2 get_pos() const;
+	vec2 get_scale() const;
+	float get_rot() const;
+	bool is_enabled() const;
 
 
 	void toggle_enable();
@@ -30,11 +33,9 @@ protected:
 	virtual void draw_children(const mat3& projection, const mat3& current_transform) = 0;
 
 protected:
-	bool    m_enabled;
+	bool  m_enabled;
 	int		m_z;
 	float	m_rotation;
 	vec2	m_position;
 	vec2	m_scale;
-	
-
 };

@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "dungeon.hpp"
 #include "janitor.hpp"
+#include "camera.hpp"
 // stlib
 #include <vector>
 #include <random>
@@ -43,7 +44,7 @@ private:
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 
 private:
-	// Window handle
+	// Window handled
 	GLFWwindow* m_window;
 
 	// Dungeon
@@ -54,6 +55,9 @@ private:
 
 	//Janitor
 	Janitor m_janitor;
+  //Camera
+  Camera m_camera;
+
 	// C++ rng
 	std::default_random_engine m_rng;
 	std::uniform_real_distribution<float> m_dist; // default 0..1
