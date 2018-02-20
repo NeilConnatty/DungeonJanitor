@@ -165,3 +165,23 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
 }
 
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
+
+void Room::set_north_room(Room* rm)
+{
+  m_adjacent_rooms[NORTH] = rm;
+}
+
+void Room::set_south_room(Room* rm)
+{
+  m_adjacent_rooms[SOUTH] = rm;
+}
+
+void Room::set_east_room(Room* rm)
+{
+  m_adjacent_rooms[EAST] = rm;
+}
+
+void Room::set_west_room(Room* rm)
+{
+  m_adjacent_rooms[WEST] = rm;
+}
