@@ -29,7 +29,7 @@ public:
 	void key_down();
 	void key_left();
 	void key_right();
-	enum DIRECTION { //they all equal 1 rn RIP
+	enum DIRECTION {
 		up, up_right, up_left, down, down_right, down_left, left, right
 	};
 	bool validate_textures();

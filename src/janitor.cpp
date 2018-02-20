@@ -264,10 +264,8 @@ void Janitor::key_right() { m_key_right = !m_key_right; }
 void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 	switch (dir)
 	{
-		//fprintf(stderr, "%i\n", dir);
 		case up:
 		{
-			//fprintf(stderr, "up\n");
 			if (m_time_pressed < FRAME_TIMING)	
 				m_curr_tex = &up1;
 			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
@@ -280,7 +278,6 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		}
 		case up_right:
 		{
-			//fprintf(stderr, "up_right\n");
 			if (m_time_pressed < FRAME_TIMING)						
 				m_curr_tex = &up_right1;
 			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
@@ -293,7 +290,6 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		}
 		case up_left:
 		{
-			//fprintf(stderr, "up_left\n");
 			if (m_time_pressed < FRAME_TIMING)
 				m_curr_tex = &up_left1;
 			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)
@@ -306,7 +302,6 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		}
 		case down:
 		{
-			//fprintf(stderr, "down\n");
 			if (m_time_pressed < FRAME_TIMING)
 				m_curr_tex = &down1;
 			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)
@@ -319,7 +314,6 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		}
 		case down_right:
 		{
-			//fprintf(stderr, "down_right\n");
 			if (m_time_pressed < FRAME_TIMING)	
 				m_curr_tex = &down_right1;
 			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
@@ -332,7 +326,6 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		}
 		case down_left:
 		{
-			//fprintf(stderr, "down_left\n");
 			if (m_time_pressed < FRAME_TIMING)	
 				m_curr_tex = &down_left1;
 			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
@@ -345,7 +338,6 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		}
 		case right:
 		{
-			//fprintf(stderr, "right\n");
 			if (m_time_pressed < FRAME_TIMING)	
 				m_curr_tex = &right1;
 			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
@@ -358,7 +350,6 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		}
 		case left:
 		{
-			//fprintf(stderr, "left\n");
 			if (m_time_pressed < FRAME_TIMING)	
 				m_curr_tex = &left1;
 			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
