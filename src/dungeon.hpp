@@ -22,6 +22,8 @@ private:
 	void draw_current(const mat3& projection, const mat3& current_transform) override;
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
 
+	void test_value_iteration(); // for testing Jay
+
 private:
 	std::vector<Room>	m_rooms;  // unsure if this should be a vector of pointers or rooms
 };

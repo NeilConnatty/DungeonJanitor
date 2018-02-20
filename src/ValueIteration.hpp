@@ -15,12 +15,12 @@ class ValueIteration
 public:
 	
 	static void initialize(vector<Room> rooms);
-	static void updateValues();
+	static void updateValues(vector<Room> rooms);
 	static Room * getNextRoom(Room* current_room);
 
 
 private:
-	static vector<Room> m_rooms;
+	//static vector<Room>* m_rooms;
 	static map<Room*, float> VI_current;
 	static map<Room*, float> VI_previous;
 

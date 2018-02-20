@@ -142,31 +142,62 @@ void Room::setReward(double reward)
 bool Room::containsBoss()
 {
     // stub
-    return false;
+    return m_BossHere;
 }
 
 bool Room::containsArtifact()
 {
     // stub
-    return false;
+    return m_ArtifactHere;
+}
+
+void Room::setBossInRoom(bool bossInRoom)
+{
+	m_BossHere = bossInRoom;
+}
+
+void Room::setArtifactInRoom(bool artifactInRoom)
+{
+	m_ArtifactHere = artifactInRoom;
 }
 
 Room * Room::getNorthRoom()
 {
-	return northRoom;
+	return m_NorthRoom;
 }
 
 Room * Room::getSouthRoom()
 {
-	return southRoom;
+	return m_SouthRoom;
 }
 
 Room * Room::getWestRoom()
 {
-	return westRoom;
+	return m_WestRoom;
 }
 
 Room * Room::getEastRoom()
 {
-	return eastRoom;
+	return m_EastRoom;
+}
+
+void Room::setNorthRoom(Room * room)
+{
+	m_NorthRoom = room;
+
+}
+
+void Room::setSouthRoom(Room * room)
+{
+	m_SouthRoom = room;
+}
+
+void Room::setEastRoom(Room * room)
+{
+	m_EastRoom = room;
+}
+
+void Room::setWestRoom(Room * room)
+{
+	m_WestRoom = room;
 }

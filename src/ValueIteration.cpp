@@ -9,25 +9,35 @@
 #define DISCOUNT_FACTOR 1
 #define LOW_NUMBER_HACK -100
 
+#include <fstream> // for testing
+#include <string>// for testing
+
 using namespace std;
 
-vector<Room> ValueIteration::m_rooms;
+//vector<Room>* ValueIteration::m_rooms;
 map<Room*, float> ValueIteration::VI_current;
 map<Room*, float> ValueIteration::VI_previous;
 
 void ValueIteration::initialize(vector<Room> rooms)
 {
-	m_rooms = rooms;
+	//m_rooms = &rooms;
 
 	for (Room& room : rooms)
 	{	
 		Room* room_ptr = &room;
 		
-		VI_current.emplace(room_ptr, calculateRoomReward(room_ptr));
+		float value = calculateInitialRoomValue(room_ptr);
+
+		VI_current.emplace(room_ptr, value);
+
+		//for testing
+		printf("The initial value for this room is %f \n", value);
 	}
+
+	updateValues(rooms);
 }
 
-void ValueIteration::updateValues()
+void ValueIteration::updateValues(vector<Room> rooms)
 {
 	VI_previous = VI_current;
 	VI_current.clear();
@@ -38,15 +48,16 @@ void ValueIteration::updateValues()
 	// plus the room's inherent reward (R)
 	// new_value = R + g * V;
 	
-	for (Room& room : m_rooms)
+	for (Room room : rooms)
 	{
-		Room* room_ptr = &room;
+		float V = calculateHighestNeighborValue(&room);
 
-		float V = calculateHighestNeighborValue(room_ptr);
+		float new_value = calculateRoomReward(&room) + DISCOUNT_FACTOR * V;
 
-		float new_value = calculateRoomReward(room_ptr) + DISCOUNT_FACTOR * V;
-
-		VI_current.emplace(room_ptr, new_value);
+		VI_current.emplace(&room, new_value);
+		
+		//for testing
+		printf("The new value for this room is %f \n", new_value);
 	}
 }
 
@@ -101,7 +112,7 @@ float ValueIteration::calculateHighestNeighborValue(Room * room)
 {
 	vector<float> neighbor_values;
 
-	if (room->getNorthRoom() != nullptr)
+	if (room->getNorthRoom() !=	nullptr)
 	{
 		neighbor_values.push_back(VI_previous.at(room->getNorthRoom()));
 	}
@@ -111,7 +122,9 @@ float ValueIteration::calculateHighestNeighborValue(Room * room)
 	}
 	if (room->getEastRoom() != nullptr)
 	{
-		neighbor_values.push_back(VI_previous.at(room->getEastRoom()));
+		Room* eastRoom = room->getEastRoom();
+		float eastValue = VI_previous.at(eastRoom);
+		neighbor_values.push_back(eastValue);
 	}
 	if (room->getWestRoom() != nullptr)
 	{
