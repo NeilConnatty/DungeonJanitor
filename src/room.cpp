@@ -63,6 +63,11 @@ void Room::draw_children(const mat3 &projection,
   {
     p.draw(projection, current_transform);
   }
+
+  if (artifactHere)
+  {
+	  m_artifact.draw(projection, current_transform);
+  }
 }
 
 bool Room::add_wall(wall_pair wall) 
@@ -127,6 +132,20 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
   return true;
 }
 
+bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
+{
+	if (has_artifact)
+	{
+		if (!m_artifact.init(artifact_pos))
+		{
+			return false;
+		}
+		m_artifact.set_scale({ 0.5f, 0.5f });
+		artifactHere = true;
+	}
+	return true;
+}
+
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
 
 double Room::getReward()
@@ -147,8 +166,7 @@ bool Room::containsBoss()
 
 bool Room::containsArtifact()
 {
-    // stub
-    return false;
+	return artifactHere;
 }
 
 Room * Room::getNorthRoom()
