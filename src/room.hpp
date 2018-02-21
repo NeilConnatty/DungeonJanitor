@@ -33,11 +33,11 @@ public:
 	void destroy();
   bool add_wall(wall_pair wall);
   bool add_floor(vec2 pos);
-  bool add_door(vec2 pod);
-	bool add_walls(std::vector<wall_pair>& walls);
+  bool add_door(vec2 pos);
+  bool add_walls(std::vector<wall_pair>& walls);
   bool add_floors(std::vector<vec2>& positions);
   bool add_doors(std::vector<vec2>& positions);
-	bool add_cleanables(std::vector<vec2>& puddle_positions);
+  bool add_cleanables(std::vector<vec2>& puddle_positions);
 
 	std::vector<Puddle>&  get_cleanables();
 	int get_num_cleanables();

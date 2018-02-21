@@ -10,6 +10,9 @@
 class Door : public GameObject
 {
 public:
+  static Texture door_texture;
+
+public:
   Door();
   ~Door();
 

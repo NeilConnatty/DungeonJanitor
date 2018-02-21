@@ -75,7 +75,7 @@ void Room::draw_children(const mat3 &projection,
 
   for (Door d : m_doors)
   {
-    //d.draw(projection, current_transform);
+    d.draw(projection, current_transform);
   }
 }
 
