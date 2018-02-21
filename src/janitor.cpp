@@ -77,13 +77,13 @@ bool Janitor::init(vec2 position)
 //Destroy graphics resources
 void Janitor::destroy() 
 {
-	glDeleteBuffers(1, &mesh.vbo);
-	glDeleteBuffers(1, &mesh.ibo);
-	glDeleteBuffers(1, &mesh.vao);
+  glDeleteBuffers(1, &mesh.vbo);
+  glDeleteBuffers(1, &mesh.ibo);
+  glDeleteBuffers(1, &mesh.vao);
 
   glDeleteShader(effect.vertex);
-	glDeleteShader(effect.fragment);
-	glDeleteShader(effect.program);
+  glDeleteShader(effect.fragment);
+  glDeleteShader(effect.program);
 }
 
 void Janitor::update_current(float ms) 
