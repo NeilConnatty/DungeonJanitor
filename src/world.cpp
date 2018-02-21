@@ -122,6 +122,9 @@ bool World::init(vec2 screen)
     return false;
   }
   m_janitor.set_scale({ 3.f, 3.f });
+
+  // Make camera follow janitor
+  m_camera.follow_object(&m_janitor);
   
   return true;
 }
@@ -163,7 +166,6 @@ void World::draw()
     int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
 
-
     // Updating window title with points
     std::stringstream title_ss;
     glfwSetWindowTitle(m_window, title_ss.str().c_str());
@@ -176,23 +178,13 @@ void World::draw()
     glClearDepth(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Fake projection matrix, scales with respect to window coordinates
-    // PS: 1.f / w in [1][1] is correct.. do you know why ? (:
-    float left = 0.f;// *-0.5;
-    float top = 0.f;// (float)h * -0.5;
-    float right = (float)w;// *0.5;
-    float bottom = (float)h;// *0.5;
-
-    float sx = 2.f / (right - left);
-    float sy = 2.f / (top - bottom);
-    float tx = -(right + left) / (right - left);
-    float ty = -(top + bottom) / (top - bottom);
-    mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
     mat3 identity_transform{ {1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}, {0.f, 0.f, 1.f} };
+    mat3 projection_2D = m_camera.get_projection(w, h);
+    mat3 transform = m_camera.get_transform(w, h);
 
     // Drawing entities
-    m_dungeon.draw(projection_2D, identity_transform);
-    m_janitor.draw(projection_2D, identity_transform);
+    m_dungeon.draw(projection_2D, transform);
+    m_janitor.draw(projection_2D, transform);
     // Presenting
     glfwSwapBuffers(m_window);
 }

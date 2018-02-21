@@ -88,10 +88,84 @@ vec2 operator*(const vec2& vec, const float& n)
     return {vec.x * n, vec.y * n};
 }
 
+vec3 operator*(const vec3& vec, const float& n)
+{
+  return { vec.x * n, vec.y * n, vec.z*n };
+}
+
+mat3 operator*(const mat3& m, const float& f)
+{
+  return { m.c0 * f, m.c1 * f, m.c2 * f };
+}
+
 vec2 normalize(vec2 v)
 {
 	float m = sqrtf(dot(v, v));
 	return { v.x / m, v.y / m };
+}
+
+mat3 mat_of_cofactors(mat3 m)
+{
+  vec3 c0, c1, c2;
+  c0 = { m.c0.x,      -1 * m.c0.y,      m.c0.z };
+  c1 = { -1 * m.c1.x,      m.c1.y, -1 * m.c1.z };
+  c2 = { m.c2.x,      -1 * m.c2.y,      m.c2.z };
+
+  return { c0, c1, c2 };
+}
+
+mat3 adjucate(mat3 m)
+{
+  vec3 c0, c1, c2;
+  c0 = { m.c0.x, m.c1.x, m.c2.x };
+  c1 = { m.c0.y, m.c1.y, m.c2.y };
+  c2 = { m.c0.z, m.c1.z, m.c2.z };
+
+  return { c0, c1, c2 };
+}
+
+mat3 mat_of_minor(mat3 m)
+{
+  vec3 c0, c1, c2;
+  
+  c0.x = m.c1.y * m.c2.z - m.c1.z * m.c2.y;
+  c0.y = m.c1.x * m.c2.z - m.c1.z * m.c2.x;
+  c0.z = m.c1.x * m.c2.y - m.c1.y * m.c2.x;
+
+  c1.x = m.c0.y * m.c2.z - m.c0.z * m.c2.y;
+  c1.y = m.c0.x * m.c2.z - m.c0.z * m.c2.x;
+  c1.z = m.c0.x * m.c2.y - m.c0.y * m.c2.x;
+
+  c2.x = m.c0.y * m.c1.z - m.c0.z * m.c1.y;
+  c2.y = m.c0.x * m.c1.z - m.c0.z * m.c1.x;
+  c2.z = m.c0.x * m.c1.y - m.c0.y * m.c1.x;
+
+  return { c0, c1, c2 };
+}
+
+float det(mat3 m, mat3 minors) 
+{
+  return m.c0.x * minors.c0.x - m.c1.x * minors.c1.x + m.c1.z * minors.c1.z;
+}
+
+float det(mat3 m)
+{
+  mat3 minors = mat_of_minor(m);
+  return det(m, minors);
+}
+
+mat3 inverse(mat3 m)
+{
+  // The lovely process for calculating the inverse was taken from here:
+  // https://www.mathsisfun.com/algebra/matrix-inverse-minors-cofactors-adjugate.html
+
+  mat3 minors = mat_of_minor(m);
+  mat3 cofactors = mat_of_cofactors(minors);
+  mat3 adj = adjucate(cofactors);
+
+  float detoverone = 1 / det(m, minors);
+
+  return adj * detoverone;
 }
 
 Texture::Texture()
