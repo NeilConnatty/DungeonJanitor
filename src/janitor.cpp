@@ -366,7 +366,6 @@ bool Janitor::validate_textures()
 {
 	if (!up1.is_valid())
 	{
-		char* up = "up1.png";
 		if (!up1.load_from_file(textures_path("up1.png")))
 		{
 			fprintf(stderr, "Failed to load texture up1\n");
