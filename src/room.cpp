@@ -17,8 +17,7 @@ bool Room::init(vec2 position)
   return true;
 }
 
-bool Room::init() 
-{ return init({0.f, 0.f}); }
+bool Room::init() { return init({0.f, 0.f}); }
 
 // Releases all associated resources
 void Room::destroy() 
