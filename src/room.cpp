@@ -124,5 +124,7 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
   }
   return true;
 }
-
+int Room::get_num_cleanables() { return m_num_cleanables; }
+float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
+void Room::decrement_cleanables() { m_num_cleanables--; }
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
