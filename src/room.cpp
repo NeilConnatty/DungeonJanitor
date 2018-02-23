@@ -13,7 +13,8 @@ bool Room::init(vec2 position)
 {
   m_position = position;
   m_scale = {2.f, 2.f};
-  m_num_cleanables = { 0, 0 };
+  m_num_cleanables = 0;
+  m_total_cleanables = 0;
   return true;
 }
 
@@ -120,13 +121,13 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
     {
       return false;
     }
-	m_num_cleanables.x++;
-	m_num_cleanables.y++;
+	m_num_cleanables++;
+	m_total_cleanables++;
     m_puddles.back().set_scale({ 0.5f, 0.5f });
   }
   return true;
 }
-vec2 Room::get_cleanable_counts() { return m_num_cleanables; }
-float Room::get_clean_percent() { return m_num_cleanables.x / m_num_cleanables.y; }
-void Room::decrement_cleanables() { m_num_cleanables.x--; }
+int Room::get_num_cleanables() { return m_num_cleanables; }
+float Room::get_clean_percent() { return m_num_cleanables / m_total_cleanables; }
+void Room::decrement_cleanables() { m_num_cleanables--; }
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }

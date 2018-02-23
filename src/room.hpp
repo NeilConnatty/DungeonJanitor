@@ -29,7 +29,7 @@ public:
 	bool add_cleanables(std::vector<vec2>& puddle_positions);
 
 	float Room::get_clean_percent();
-	vec2 Room::get_cleanable_counts();
+	int Room::get_num_cleanables();
 	std::vector<Puddle>&  get_cleanables();
 
 private:
@@ -39,7 +39,8 @@ private:
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
 
 private:
-	vec2 m_num_cleanables;
+	int m_num_cleanables;
+	int m_total_cleanables;
 	std::vector<Floor>		m_floors;
 	std::vector<Wall>		  m_walls;
 	std::vector<Puddle>   m_puddles;
