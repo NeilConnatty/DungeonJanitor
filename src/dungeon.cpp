@@ -55,20 +55,10 @@ void Dungeon::clean(vec2 janitor_pos)
 				if (true)
 				{
 					p.toggle_enable();
-					room.decrement_cleanables();
 				}
 			}
 		}
 	}
-}
-//Return cleanliness of entire dungeon as a percentage
-float Dungeon::get_total_cleanliness() {
-	float total_cleanliness = 0;
-	for (Room& room : m_rooms)
-	{
-		total_cleanliness += room.get_clean_percent();
-	}
-	return total_cleanliness / m_rooms.size();
 }
 
 void Dungeon::update_current(float ms)
