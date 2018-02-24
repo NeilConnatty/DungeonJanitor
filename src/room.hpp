@@ -31,12 +31,20 @@ public:
 	bool add_floors(vector<vec2>& positions);
 	bool add_cleanables(vector<vec2>& puddle_positions);
 	bool add_artifact(bool has_artifact, vec2 artifact_pos);
+	bool add_hero_spawn_loc(bool has_hero_spawn, vec2 hero_spawn_pos);
+	bool add_boss_spawn_loc(bool has_boss_spawn, vec2 boss_spawn_pos);
+	bool add_janitor_spawn_loc(bool has_janitor_spawn, vec2 janitor_spawn_pos);
 
 	vector<Puddle>&  get_cleanables();
 
 	double getReward();
 	void setReward(double reward);
-
+	bool has_hero_spawn_loc();
+	vec2 get_hero_spawn_loc();
+	bool has_boss_spawn_loc();
+	vec2 get_boss_spawn_loc();
+	bool has_janitor_spawn_loc();
+	vec2 get_janitor_spawn_loc();
 	bool containsBoss();
 	bool containsArtifact();
 	void setBossInRoom(bool bossInRoom);
@@ -65,6 +73,12 @@ private:
 	bool m_BossHere; // update as Boss moves
 	bool m_ArtifactHere; // update when artifact a) fixed by player or b) discovered by hero
 	int m_ID; // unique room id
+	bool m_has_hero_spawn_loc;
+	vec2 m_hero_spawn_loc;
+	bool m_has_boss_spawn_loc;
+	vec2 m_boss_spawn_loc;
+	bool m_has_janitor_spawn_loc;
+	vec2 m_janitor_spawn_loc;
 	double heroRewardValue;
 	Room * m_NorthRoom, * m_SouthRoom, * m_WestRoom, * m_EastRoom; // Can Be Nullptr
 	vector<Floor>		m_floors;

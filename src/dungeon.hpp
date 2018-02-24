@@ -5,6 +5,7 @@
 #include "room.hpp"
 
 #include <vector>
+using namespace std;
 
 class Dungeon : public GameObject
 {
@@ -15,6 +16,8 @@ public:
 	bool init();
 	void destroy();
 	void clean(vec2 janitor_pos);
+	vector<Room> get_rooms();
+
 
 private:
 	void update_current(float ms) override;
@@ -25,5 +28,5 @@ private:
 	void test_value_iteration(); // for testing Jay
 
 private:
-	std::vector<Room>	m_rooms;  // unsure if this should be a vector of pointers or rooms
+	vector<Room>	m_rooms;  // unsure if this should be a vector of pointers or rooms
 };
