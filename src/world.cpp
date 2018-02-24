@@ -121,7 +121,46 @@ bool World::init(vec2 screen)
 
 bool World::init_creatures()
 {
-	vec2 janitor_position = { 500.f, 100.f };
+	Room* janitor_start_room;
+	Room* hero_start_room;
+	Room* boss_start_room;
+	vec2 janitor_room_position;
+	vec2 hero_room_position;
+	vec2 boss_room_position;
+	for (Room& room : m_dungeon.get_rooms())
+	{
+		if (room.has_janitor_spawn_loc())
+		{
+			printf("%s\n", "janitor!");
+			janitor_start_room = &room;
+			janitor_room_position = room.get_janitor_spawn_loc();
+		}
+
+		if (room.has_hero_spawn_loc())
+		{
+			printf("%s\n", "hero!");
+			hero_start_room = &room;
+			hero_room_position = room.get_hero_spawn_loc();
+		}
+
+		if (room.has_boss_spawn_loc())
+		{
+			boss_start_room = &room;
+			boss_room_position = room.get_boss_spawn_loc();
+		}
+	}
+	vec3 janitor_room_position_3d = { janitor_room_position.x, janitor_room_position.y, 1 };
+	printf("%f", janitor_room_position_3d.x);
+	printf("%f\n", janitor_room_position_3d.y);
+	vec3 janitor_dungeon_position = mult(janitor_start_room->transform, janitor_room_position_3d);
+	printf("%f", janitor_dungeon_position.x);
+	printf("%f\n", janitor_dungeon_position.y);
+	vec3 janitor_world_position = mult(m_dungeon.transform, janitor_dungeon_position);
+	printf("%f", janitor_world_position.x);
+	printf("%f\n", janitor_world_position.y);
+	vec2 janitor_position = { janitor_world_position.x, janitor_world_position.y };
+	printf("%f", janitor_position.x);
+	printf("%f\n", janitor_position.y);
 	if (!m_janitor.init(janitor_position))
 	{
 		fprintf(stderr, "Failed to init Janitor.\n");
@@ -129,7 +168,9 @@ bool World::init_creatures()
 	}
 	m_janitor.set_scale({ 3.f, 3.f });
 
-	vec2 hero_position = { 500.f, 200.f };
+	vec2 hero_position = hero_room_position;
+	printf("%f", hero_position.x);
+	printf("%f\n", hero_position.y);
 	if (!m_hero.init(hero_position))
 	{
 		fprintf(stderr, "Failed to init Hero. \n");
@@ -138,7 +179,9 @@ bool World::init_creatures()
 	}
 	m_hero.set_scale({ 3.f, 3.f });
 
-	vec2 boss_position = { 800.f, 300.f };
+	vec2 boss_position = boss_room_position;
+	printf("%f", boss_position.x);
+	printf("%f\n", boss_position.y);
 	if (!m_boss.init(boss_position))
 	{
 		fprintf(stderr, "Failed to init Boss. \n");

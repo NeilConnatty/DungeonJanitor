@@ -65,6 +65,11 @@ void Dungeon::clean(vec2 janitor_pos)
     }
 }
 
+vector<Room> Dungeon::get_rooms()
+{
+	return m_rooms;
+}
+
 void Dungeon::update_current(float ms)
 {
 }

@@ -78,6 +78,18 @@ mat3 mul(const mat3 & l, const mat3 & r)
 	return ret;
 }
 
+
+//  not giving me the right result in world.cpp
+vec3 mult(const mat3 & l, const vec3 & r)
+{
+
+	vec3 ret;
+	ret.x = dot(l.c0, r);
+	ret.y = dot(l.c1, r);
+	ret.z = dot(l.c2, r);
+	return ret;
+}
+
 mat3 operator*(const mat3 & l, const mat3 & r)
 {
 	return mul(l, r);

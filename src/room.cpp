@@ -146,6 +146,38 @@ bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
 	return true;
 }
 
+bool Room::add_hero_spawn_loc(bool has_hero_spawn_loc, vec2 hero_spawn_loc)
+{
+	if (has_hero_spawn_loc)
+	{
+		m_has_hero_spawn_loc = has_hero_spawn_loc;
+		m_hero_spawn_loc = hero_spawn_loc;
+		return true;
+	}
+	return false;
+}
+
+bool Room::add_boss_spawn_loc(bool has_boss_spawn_loc, vec2 boss_spawn_loc)
+{
+	if (has_boss_spawn_loc)
+	{
+		m_has_boss_spawn_loc = has_boss_spawn_loc;
+		m_boss_spawn_loc = boss_spawn_loc;
+		return true;
+	}
+	return false;
+}
+
+bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_loc)
+{
+	if (has_janitor_spawn_loc)
+	{
+		m_has_janitor_spawn_loc = has_janitor_spawn_loc;
+		m_janitor_spawn_loc = janitor_spawn_loc;
+		return true;
+	}
+	return false;
+}
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
 
 double Room::getReward()
@@ -158,6 +190,52 @@ void Room::setReward(double reward)
     heroRewardValue = reward;
 }
 
+bool Room::has_hero_spawn_loc()
+{
+	return m_has_hero_spawn_loc;
+}
+
+vec2 Room::get_hero_spawn_loc()
+{
+	if (!m_has_hero_spawn_loc)
+	{
+		fprintf(stderr, "Hero doesn't spawn here");
+		return { -1, -1 };
+	}
+	return m_hero_spawn_loc;
+}
+
+bool Room::has_boss_spawn_loc()
+{
+	return m_has_boss_spawn_loc;
+}
+
+vec2 Room::get_boss_spawn_loc()
+{
+	if (!m_has_boss_spawn_loc)
+	{
+		fprintf(stderr, "Boss doesn't spawn here");
+		return { -1, -1 };
+	}
+	return m_boss_spawn_loc;
+}
+
+bool Room::has_janitor_spawn_loc()
+{
+	return m_has_janitor_spawn_loc;
+}
+
+vec2 Room::get_janitor_spawn_loc()
+{
+	if (!m_has_janitor_spawn_loc)
+	{
+		fprintf(stderr, "Janitor doesn't spawn here" );
+		return { -1, -1 };
+	}
+	return m_janitor_spawn_loc;
+}
+
+// If boss is currently in the room
 bool Room::containsBoss()
 {
     // stub
