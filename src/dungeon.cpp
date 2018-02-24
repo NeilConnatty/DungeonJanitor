@@ -199,11 +199,8 @@ void Dungeon::test_value_iteration()
 
 	
 	ValueIteration::initialize(rooms);
-	//ValueIteration::updateValues(rooms);
+	Room* target_room = ValueIteration::getNextRoom(&room4);
 
 
-	// create dummy rooms
-	// artifact
-	// empty
-	// boss
 }
+

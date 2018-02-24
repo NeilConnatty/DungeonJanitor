@@ -195,13 +195,6 @@ void Hero::update_current(float ms)
 }
 
 
-void Hero::calculate_room_rewards()
-{
-	//Room * room;
-
-	//room->setReward(calculate_best_neighbor_room(room)->getReward + PENALTY_VALUE);
-}
-
 vec2 Hero::get_next_door_position()
 {
 	Room* target_room = ValueIteration::getNextRoom(m_currentRoom);
