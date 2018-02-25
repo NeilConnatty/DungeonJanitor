@@ -35,6 +35,28 @@ bool Dungeon::init()
     return false;
   }
 
+	for (Room room : m_rooms)
+	{
+		if (room.has_janitor_spawn_loc())
+		{
+			printf("%s\n", "janitor!");
+			janitor_start_room = &room;
+			janitor_room_position = room.get_janitor_spawn_loc();
+		}
+
+		if (room.has_hero_spawn_loc())
+		{
+			hero_start_room = &room;
+			hero_room_position = room.get_hero_spawn_loc();
+		}
+
+		if (room.has_boss_spawn_loc())
+		{
+			boss_start_room = &room;
+			boss_room_position = room.get_boss_spawn_loc();
+		}
+	}
+
     return true;
 }
 

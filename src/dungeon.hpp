@@ -27,6 +27,13 @@ private:
 
 	void test_value_iteration(); // for testing Jay
 
+public:
+	Room * janitor_start_room;
+	Room* hero_start_room;
+	Room* boss_start_room;
+	vec2 janitor_room_position;
+	vec2 hero_room_position;
+	vec2 boss_room_position;
 private:
 	vector<Room>	m_rooms;  // unsure if this should be a vector of pointers or rooms
 };
