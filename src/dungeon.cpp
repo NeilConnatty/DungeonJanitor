@@ -35,7 +35,7 @@ bool Dungeon::init()
     return false;
   }
 
-	for (Room room : m_rooms)
+	for (Room& room : m_rooms)
 	{
 		if (room.has_janitor_spawn_loc())
 		{
