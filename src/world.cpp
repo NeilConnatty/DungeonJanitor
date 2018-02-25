@@ -126,7 +126,6 @@ bool World::init_creatures()
 	printf("%s", "Janitor Room Pos: ");
 	printf("%f", janitor_room_position_3d.x);
 	printf("%f\n", janitor_room_position_3d.y);
-	printf("%d", m_dungeon.janitor_start_room->getRoomID());
 	vec3 janitor_dungeon_position = mult(m_dungeon.janitor_start_room->transform, janitor_room_position_3d);
 	printf("%s", "Janitor Dungeon Pos: ");
 	printf("%f", janitor_dungeon_position.x);
