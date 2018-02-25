@@ -45,14 +45,14 @@ public:
 	void decrement_cleanables();
 
 
-  void  set_north_room(Room* rm);
-  void  set_south_room(Room* rm);
-  void  set_east_room(Room* rm);
-  void  set_west_room(Room* rm);
-  Room* get_north_room() const;
-  Room* get_south_room() const;
-  Room* get_east_room() const;
-  Room* get_west_room() const;
+  void  set_north_room(const Room* rm);
+  void  set_south_room(const Room* rm);
+  void  set_east_room(const Room* rm);
+  void  set_west_room(const Room* rm);
+  const Room* get_north_room() const;
+  const Room* get_south_room() const;
+  const Room* get_east_room() const;
+  const Room* get_west_room() const;
 
 private:
 	void update_current(float ms) override;
@@ -68,5 +68,5 @@ private:
 	std::vector<Puddle>   m_puddles;
   std::vector<Door>     m_doors;
 
-  std::array<Room*, 4>   m_adjacent_rooms; // implemented as array so that it can be iterated through
+  std::array<const Room*, 4>   m_adjacent_rooms; // implemented as array so that it can be iterated through
  }; 

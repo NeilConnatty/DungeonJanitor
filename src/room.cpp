@@ -167,42 +167,42 @@ float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_tota
 void Room::decrement_cleanables() { m_num_cleanables--; }
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
 
-void Room::set_north_room(Room* rm)
+void Room::set_north_room(const Room* rm)
 {
   m_adjacent_rooms[NORTH] = rm;
 }
 
-void Room::set_south_room(Room* rm)
+void Room::set_south_room(const Room* rm)
 {
   m_adjacent_rooms[SOUTH] = rm;
 }
 
-void Room::set_east_room(Room* rm)
+void Room::set_east_room(const Room* rm)
 {
   m_adjacent_rooms[EAST] = rm;
 }
 
-void Room::set_west_room(Room* rm)
+void Room::set_west_room(const Room* rm)
 {
   m_adjacent_rooms[WEST] = rm;
 }
 
-Room* Room::get_north_room() const
+const Room* Room::get_north_room() const
 {
   return m_adjacent_rooms[NORTH];
 }
 
-Room* Room::get_south_room() const
+const Room* Room::get_south_room() const
 {
   return m_adjacent_rooms[SOUTH];
 }
 
-Room* Room::get_east_room() const
+const Room* Room::get_east_room() const
 {
   return m_adjacent_rooms[EAST];
 }
 
-Room* Room::get_west_room() const
+const Room* Room::get_west_room() const
 {
   return m_adjacent_rooms[WEST];
 }
