@@ -45,10 +45,14 @@ public:
 	void decrement_cleanables();
 
 
-  void set_north_room(Room* rm);
-  void set_south_room(Room* rm);
-  void set_east_room(Room* rm);
-  void set_west_room(Room* rm);
+  void  set_north_room(Room* rm);
+  void  set_south_room(Room* rm);
+  void  set_east_room(Room* rm);
+  void  set_west_room(Room* rm);
+  Room* get_north_room() const;
+  Room* get_south_room() const;
+  Room* get_east_room() const;
+  Room* get_west_room() const;
 
 private:
 	void update_current(float ms) override;

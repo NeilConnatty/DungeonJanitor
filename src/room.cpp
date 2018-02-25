@@ -186,3 +186,23 @@ void Room::set_west_room(Room* rm)
 {
   m_adjacent_rooms[WEST] = rm;
 }
+
+Room* Room::get_north_room() const
+{
+  return m_adjacent_rooms[NORTH];
+}
+
+Room* Room::get_south_room() const
+{
+  return m_adjacent_rooms[SOUTH];
+}
+
+Room* Room::get_east_room() const
+{
+  return m_adjacent_rooms[EAST];
+}
+
+Room* Room::get_west_room() const
+{
+  return m_adjacent_rooms[WEST];
+}
