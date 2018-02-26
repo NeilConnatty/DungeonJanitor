@@ -14,6 +14,7 @@ private:
 	Room * m_currentRoom;
 	vec2 m_destination;
 	vec2 m_vel;
+	bool m_is_moving;
 
 public:
 	Hero();
@@ -24,7 +25,7 @@ public:
 	void	destroy();
 	void setRoom(Room * room);
 	void set_destination(vec2 position);
-	void reset_destination();
+	void stop_movement();
 
 private:
 	void update_current(float ms) override;

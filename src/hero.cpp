@@ -28,7 +28,6 @@ bool Hero::init(vec2 position)
 
 	m_position = position;
 	m_vel = { 0.f, 0.f };
-	reset_destination();
 
 	// The position corresponds to the center of the texture
 	float wr = hero_texture.width * 0.5f;
@@ -88,13 +87,13 @@ void Hero::setRoom(Room * room)
 
 void Hero::set_destination(vec2 destination)
 {
+	m_is_moving = true;
 	m_destination = destination;
 }
 
-// call to stop hero movement
-void Hero::reset_destination()
+void Hero::stop_movement()
 {
-	m_destination = { -10.f, -10.f };
+	m_is_moving = false;
 }
 
 void Hero::draw_current(const mat3& projection, const mat3& current_transform)
@@ -142,7 +141,7 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 void Hero::update_current(float ms)
 {
 	// only move if a destination is set
-	if (m_destination.x > 0 && m_destination.y > 0)
+	if (m_is_moving)
 	{
 		float step_size = 10.f; // should probably replace this with collisions 
 		const float SPEED = 100.0f;
@@ -188,7 +187,7 @@ void Hero::update_current(float ms)
 		} 
 		else
 		{
-			reset_destination();
+			stop_movement();
 		}
 	}
 	
