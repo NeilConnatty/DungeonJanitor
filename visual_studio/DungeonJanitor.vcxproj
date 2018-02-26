@@ -512,6 +512,8 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\common.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\world.cpp" />
+    <ClCompile Include="..\src\pathfinder.cpp" />
+    <ClCompile Include="..\src\pathfindernode.cpp" />
     <ClCompile Include="..\src\room.cpp" />
     <ClCompile Include="..\src\roomtextparser.cpp" />
     <ClCompile Include="..\src\ValueIteration.cpp" />
@@ -528,6 +530,8 @@
     <ClInclude Include="..\src\gameobject.hpp" />
     <ClInclude Include="..\src\hero.hpp" />
     <ClInclude Include="..\src\janitor.hpp" />
+    <ClInclude Include="..\src\pathfinder.hpp" />
+    <ClInclude Include="..\src\pathfindernode.hpp" />
     <ClInclude Include="..\src\room.hpp" />
     <ClInclude Include="..\src\roomtextparser.hpp" />
     <ClInclude Include="..\src\ValueIteration.hpp" />

@@ -31,8 +31,10 @@ public:
 	float getFValue() { return G + H; }
 	float getManhattanDistance(PathNode * destinationNode) 
 	{
-		float x = abs(m_xCoord - destinationNode->m_xCoord);
-		float y = abs(m_yCoord - destinationNode->m_yCoord);
+		float x = fabs(m_xCoord - destinationNode->m_xCoord);
+		float y = fabs(m_yCoord - destinationNode->m_yCoord);
 		return x + y;
 	}
+	bool isMatch(PathNode endNode);
+	
 };

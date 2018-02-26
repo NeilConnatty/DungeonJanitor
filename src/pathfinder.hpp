@@ -3,6 +3,7 @@
 
 #include "common.hpp"
 #include "room.hpp"
+#include "pathfindernode.hpp"
 #include <vector>
 
 using namespace std;
@@ -16,5 +17,7 @@ public:
 
 private:
 
-	bool collisionDetected(vec2 position);
+	static bool collisionDetected(vec2 position);
+
+	static vector<vec2> getPathFromGoalNode(PathNode endNode);
 };

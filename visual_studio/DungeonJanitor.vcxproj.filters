@@ -49,6 +49,12 @@
     <ClCompile Include="..\src\camera.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\pathfinder.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pathfindernode.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -94,6 +100,12 @@
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
     <ClInclude Include="..\src\camera.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pathfinder.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pathfindernode.hpp">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
