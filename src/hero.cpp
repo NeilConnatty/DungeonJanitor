@@ -196,14 +196,22 @@ void Hero::update_current(float ms)
 
 vec2 Hero::get_next_door_position()
 {
-	Room::directions direction = ValueIteration::getNextRoom(m_currentRoom);
- 
-	vec2 target_door_position;
+	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom);
 
-	// Jay stub
-	// need to access doors that are in m_currentRoom
-	// check every door for the room they lead to
-	// if a door lead to the target_room, return that door's position
-
-	return target_door_position;
+	if (target_room == Room::directions::NORTH)
+	{
+		return m_currentRoom->get_north_door()->get_pos();
+	}
+	else if (target_room == Room::directions::SOUTH)
+	{
+		return m_currentRoom->get_south_door()->get_pos();
+	}
+	else if (target_room == Room::directions::EAST)
+	{
+		return m_currentRoom->get_east_door()->get_pos();
+	}
+	else
+	{
+		return m_currentRoom->get_west_door()->get_pos();
+	}
 }

@@ -145,6 +145,11 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
   float y = 0.f;
   bool first_line = true;
   bool last_line = !std::getline(file, line);
+  has_artifact = false;
+  has_hero_spawn = false;
+  has_janitor_spawn = false;
+  has_boss_spawn = false;
+
   while (!last_line) 
   {
     if (!parseLine(line, y, first_line)) 

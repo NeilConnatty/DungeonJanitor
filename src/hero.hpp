@@ -27,11 +27,11 @@ public:
 	void set_destination(vec2 position);
 	void stop_movement();
 
+	vec2 get_next_door_position();
+
 private:
 	void update_current(float ms) override;
 	void update_children(float ms) override {};
 	void draw_current(const mat3& projection, const mat3& current_transform) override;
 	void draw_children(const mat3& projection, const mat3& current_transform) override {};
-	
-	vec2 get_next_door_position();
 };

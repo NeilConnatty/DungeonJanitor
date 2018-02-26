@@ -7,6 +7,7 @@
 #include "hero.hpp"
 #include "boss.hpp"
 #include "camera.hpp"
+#include "ValueIteration.hpp"
 // stlib
 #include <vector>
 #include <random>

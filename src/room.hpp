@@ -65,11 +65,15 @@ public:
     int get_num_cleanables();
     float get_clean_percent();
     void decrement_cleanables();
-    
-    Room* get_north_room();
-    Room* get_south_room();
-    Room* get_east_room();
-    Room* get_west_room();
+
+	Room* get_north_room();
+	Room* get_south_room();
+	Room* get_east_room();
+	Room* get_west_room();
+	Door* get_north_door();
+	Door* get_south_door();
+	Door* get_east_door();
+	Door* get_west_door();
 
 	vector<Door>* get_m_doors(); // temp work around to access doors to in order to set them with the room, hopefully this can later be handled by dungeon parser
 	// This probably wont work when we add more rooms to the dungeon
