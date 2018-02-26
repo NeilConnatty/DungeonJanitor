@@ -74,9 +74,10 @@ RoomParser parser;
         }
     }
   
-  new_room.set_north_room(&new_room_2);
-  new_room_2.set_south_room(&new_room);
-  
+  Door door = new_room.get_m_doors()->front();
+  new_room.set_north_room(&new_room_2, &door);
+  new_room_2.set_south_room(&new_room, &door);
+ 
   return true;
 }
 
@@ -185,53 +186,63 @@ void Dungeon::test_value_iteration()
 
     vector<Room> rooms;
 
-    room1.set_north_room(nullptr);
-    room1.set_south_room(&room4);
-    room1.set_east_room(&room2);
-    room1.set_west_room(nullptr);
+	Door door1;
+	Door door2;
+    room1.set_north_room(nullptr, nullptr);
+    room1.set_south_room(&room4, &door1);
+    room1.set_east_room(&room2, &door2);
+    room1.set_west_room(nullptr, nullptr);
 
-    room2.set_north_room(nullptr);
-    room2.set_south_room(&room5);
-    room2.set_east_room(&room3);
-    room2.set_west_room(&room1);
+	Door door3;
+	Door door4;
+    room2.set_north_room(nullptr, nullptr);
+    room2.set_south_room(&room5, &door3);
+    room2.set_east_room(&room3, &door4);
+    room2.set_west_room(&room1, &door2);
 
-    
-    room3.set_north_room(nullptr);
-    room3.set_south_room(&room6);
-    room3.set_east_room(nullptr);
-    room3.set_west_room(&room2);
+	Door door5;
+    room3.set_north_room(nullptr, nullptr);
+    room3.set_south_room(&room6, &door5);
+    room3.set_east_room(nullptr, nullptr);
+    room3.set_west_room(&room2, &door4);
 
-    room4.set_north_room(&room1);
-    room4.set_south_room(&room7);
-    room4.set_east_room(&room5);
-    room4.set_west_room(nullptr);
+	Door door6;
+	Door door7;
+    room4.set_north_room(&room1, &door1);
+    room4.set_south_room(&room7, &door6);
+    room4.set_east_room(&room5,  &door7);
+    room4.set_west_room(nullptr, nullptr);
 
-    room5.set_north_room(&room2);
-    room5.set_south_room(&room8);
-    room5.set_east_room(&room6);
-    room5.set_west_room(&room4);
+	Door door8;
+	Door door9;
+    room5.set_north_room(&room2, &door3);
+    room5.set_south_room(&room8, &door8);
+    room5.set_east_room(&room6, &door9);
+    room5.set_west_room(&room4, &door7);
+
+	Door door10;
+    room6.set_north_room(&room3, &door5);
+    room6.set_south_room(&room9, &door10);
+    room6.set_east_room(nullptr, nullptr);
+    room6.set_west_room(&room5, &door9);
+
+	Door door11;
+    room7.set_north_room(&room4, &door6);
+    room7.set_south_room(nullptr, nullptr);
+    room7.set_east_room(&room8, &door11);
+    room7.set_west_room(nullptr, nullptr);
+
+	Door door12;
+    room8.set_north_room(&room5, &door8);
+    room8.set_south_room(nullptr, nullptr);
+    room8.set_east_room(&room9, &door12);
+    room8.set_west_room(&room7, &door11);
 
 
-    room6.set_north_room(&room3);
-    room6.set_south_room(&room9);
-    room6.set_east_room(nullptr);
-    room6.set_west_room(&room5);
-
-    room7.set_north_room(&room4);
-    room7.set_south_room(nullptr);
-    room7.set_east_room(&room8);
-    room7.set_west_room(nullptr);
-
-    room8.set_north_room(&room5);
-    room8.set_south_room(nullptr);
-    room8.set_east_room(&room9);
-    room8.set_west_room(&room7);
-
-
-    room9.set_north_room(&room6);
-    room9.set_south_room(nullptr);
-    room9.set_east_room(nullptr);
-    room9.set_west_room(&room8);
+    room9.set_north_room(&room6, &door10);
+    room9.set_south_room(nullptr, nullptr);
+    room9.set_east_room(nullptr,nullptr);
+    room9.set_west_room(&room8, &door12);
     
 
     rooms.emplace_back(room1);

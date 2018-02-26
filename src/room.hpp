@@ -71,10 +71,13 @@ public:
     Room* get_east_room();
     Room* get_west_room();
 
-    void  set_north_room(Room* rm);
-    void  set_south_room(Room* rm);
-    void  set_east_room(Room* rm);
-    void  set_west_room(Room* rm);
+	vector<Door>* get_m_doors(); // temp work around to access doors to in order to set them with the room, hopefully this can later be handled by dungeon parser
+	// This probably wont work when we add more rooms to the dungeon
+
+    void  set_north_room(Room* rm, Door* d);
+    void  set_south_room(Room* rm, Door* d);
+    void  set_east_room(Room* rm, Door* d);
+    void  set_west_room(Room* rm, Door* d);
 
     int getRoomID();
     void setRoomID(int id);
@@ -110,5 +113,6 @@ private:
     vector<Puddle>   m_puddles;
     vector<Door>     m_doors;
     array<Room*, 4>   m_adjacent_rooms; // implemented as array so that it can be iterated through
+	array<Door*, 4> m_adjacent_doors; // correponds with m_adjacent_rooms
 }; 
 

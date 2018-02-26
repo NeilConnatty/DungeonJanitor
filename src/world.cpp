@@ -116,8 +116,6 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to init Creatures. \n");
 		return false;
 	}
-	vec2 pos = { 90.0, 320.0 };
-	m_janitor.set_pos(pos);
 
   // Make camera follow janitor
   m_camera.follow_object(&m_janitor);
@@ -214,17 +212,16 @@ void World::draw()
     glClearDepth(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	mat3 identity_transform{ { 1.f, 0.f, 0.f },{ 0.f, 1.f, 0.f },{ 0.f, 0.f, 1.f } };
     mat3 projection_2D = m_camera.get_projection(w, h);
     mat3 transform = m_camera.get_transform(w, h);
 
     // Drawing entities
 
 
-    m_dungeon.draw(projection_2D, identity_transform);  // Jay: Should this be transform or identity transform?
-    m_janitor.draw(projection_2D, identity_transform);
-	m_hero.draw(projection_2D, identity_transform);
-	m_boss.draw(projection_2D, identity_transform);
+    m_dungeon.draw(projection_2D, transform);
+    m_janitor.draw(projection_2D, transform);
+	m_hero.draw(projection_2D, transform);
+	m_boss.draw(projection_2D, transform);
 
     // Presenting
     glfwSwapBuffers(m_window);
