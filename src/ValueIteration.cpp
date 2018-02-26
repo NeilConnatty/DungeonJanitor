@@ -15,9 +15,6 @@
 
 using namespace std;
 
-//vector<Room>* ValueIteration::m_rooms;
-//map<Room*, float> ValueIteration::VI_current;
-//map<Room*, float> ValueIteration::VI_previous;
 float ValueIteration::m_difference;
 map<int, float> ValueIteration::VI_current;
 map<int, float> ValueIteration::VI_previous;
@@ -87,10 +84,11 @@ void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifac
 		VI_current.emplace(room->getRoomID(), new_value);
 
 		float old_value = VI_previous.at(room->getRoomID());
-
-		if (abs(new_value - old_value) > m_difference)
+		float value_difference = abs(new_value - old_value);
+		
+		if (value_difference > m_difference)
 		{
-			m_difference = abs(new_value - old_value);
+			m_difference = value_difference;
 		}
 		
 		//for testing
@@ -126,24 +124,20 @@ Room::directions ValueIteration::getNextRoom(Room * current_room)
 	// Return best room
 	if ((north_value != -100) && (north_value > south_value) && (north_value > east_value) && north_value > west_value)
 	{
-		//return current_room->get_north_room();
 		return Room::directions::NORTH;
 	}
 	
 	if ((south_value != -100) && (south_value > north_value) && (south_value > east_value) && south_value > west_value)
 	{
-		//return current_room->get_south_room();
 		return Room::directions::SOUTH;
 	}
 	
 	if ((east_value != -100) && (east_value > south_value) && (east_value > north_value) && east_value > west_value)
 	{
-		//return current_room->get_east_room();
 		return Room::directions::EAST;
 	}
 	else
 	{
-		//return current_room->get_west_room();
 		return Room::directions::WEST;
 	}
 	
