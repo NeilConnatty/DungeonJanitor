@@ -153,7 +153,7 @@ float ValueIteration::calculateHighestNeighborValue(Room * room)
 {
 	vector<float> neighbor_values;
 
-	if (room->get_north_room() !=	nullptr)
+	if (room->get_north_room() != nullptr)
 	{
 		neighbor_values.push_back(VI_previous.at(room->get_north_room()->getRoomID()));
 	}

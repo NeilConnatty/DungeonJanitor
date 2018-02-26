@@ -1,5 +1,6 @@
 //pathfinder.cpp
 
+#include <assert.h>
 #include "pathfinder.hpp"
 
 vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination)
@@ -45,8 +46,9 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 			{
 				if (found_node->getFValue() > successor_node.getFValue())
 				{
-					//remove found_node
-					//stub
+					//Jay Should not get here. Previous node should always have more efficient path.
+					printf("Jay: Error - found more efficient node during A*");
+					assert(false);
 				}
 				else
 				{
@@ -61,8 +63,9 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 			{
 				if (found_node->getFValue() > successor_node.getFValue())
 				{
-					//remove found_node
-					//stub
+					//Jay Should not get here. Previous node should always have more efficient path.
+					printf("Jay: Error - found more efficient node during A*");
+					assert(false);
 				}
 				else
 				{
@@ -71,12 +74,9 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 				}
 			}
 
-			// remove from OPEN/CLOSED
 			openNodes.push_back(successor_node);
 			// sort OPEN so that best node is at end
-
 		}
-
 		closedNodes.push_back(node_current);
 	}
 
