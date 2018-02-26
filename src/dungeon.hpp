@@ -5,6 +5,7 @@
 #include "room.hpp"
 
 #include <vector>
+#include <memory>
 
 class Dungeon : public GameObject
 {
@@ -25,5 +26,5 @@ private:
                      const mat3 &current_transform) override;
 
 private:
-  std::vector<Room> m_rooms;
+  std::vector<std::unique_ptr<Room>> m_rooms;
 };
