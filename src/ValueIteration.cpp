@@ -92,7 +92,7 @@ void ValueIteration::updateValues(vector<Room> rooms, float artifact_probability
 	}
 }
 
-Room * ValueIteration::getNextRoom(Room * current_room)
+Room::directions ValueIteration::getNextRoom(Room * current_room)
 {
 	float north_value = LOW_NUMBER_HACK;
 	float south_value = LOW_NUMBER_HACK;
@@ -120,21 +120,25 @@ Room * ValueIteration::getNextRoom(Room * current_room)
 	// Return best room
 	if ((north_value != -100) && (north_value > south_value) && (north_value > east_value) && north_value > west_value)
 	{
-		return current_room->get_north_room();
+		//return current_room->get_north_room();
+		return Room::directions::NORTH;
 	}
 	
 	if ((south_value != -100) && (south_value > north_value) && (south_value > east_value) && south_value > west_value)
 	{
-		return current_room->get_south_room();
+		//return current_room->get_south_room();
+		return Room::directions::SOUTH;
 	}
 	
 	if ((east_value != -100) && (east_value > south_value) && (east_value > north_value) && east_value > west_value)
 	{
-		return current_room->get_east_room();
+		//return current_room->get_east_room();
+		return Room::directions::EAST;
 	}
 	else
 	{
-		return current_room->get_west_room();
+		//return current_room->get_west_room();
+		return Room::directions::WEST;
 	}
 	
 }

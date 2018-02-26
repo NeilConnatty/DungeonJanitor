@@ -15,7 +15,8 @@ public:
 	
 	static void initialize(vector<Room> rooms);
 	static void updateValues(vector<Room> rooms, float artifact_probability);
-	static Room * getNextRoom(Room* current_room);
+	//static Room * getNextRoom(Room* current_room);
+	static Room::directions getNextRoom(Room* current_room);
 
 
 private:

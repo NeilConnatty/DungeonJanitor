@@ -197,7 +197,7 @@ void Hero::update_current(float ms)
 
 vec2 Hero::get_next_door_position()
 {
-	Room* target_room = ValueIteration::getNextRoom(m_currentRoom);
+	Room::directions direction = ValueIteration::getNextRoom(m_currentRoom);
  
 	vec2 target_door_position;
 
