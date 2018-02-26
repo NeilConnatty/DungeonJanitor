@@ -13,7 +13,7 @@ class ValueIteration
 {
 public:
 	
-	static Room::directions getNextRoom(Room* current_room, vector<Room> rooms, float artifact_probability);
+	static Room::directions getNextRoom(Room* current_room, vector<unique_ptr<Room>>& rooms, float artifact_probability);	
 
 private:
 	static float m_difference;
@@ -25,8 +25,8 @@ private:
 	static float calculateHighestNeighborValue(Room* room);
 	static bool continueValueIterating();
 
-	static void initialize(vector<Room> rooms, float artifact_probability);
-	static void updateValues(vector<Room> rooms, float artifact_probability);
+	static void initialize(vector<unique_ptr<Room>>& rooms, float artifact_probability);
+	static void updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability);
 	static Room::directions getNextRoom(Room* current_room);
 
 };

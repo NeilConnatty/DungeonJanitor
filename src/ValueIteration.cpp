@@ -23,19 +23,19 @@ map<int, float> ValueIteration::VI_current;
 map<int, float> ValueIteration::VI_previous;
 
 
-Room::directions ValueIteration::getNextRoom(Room * current_room, vector<Room> rooms, float artifact_probability)
+Room::directions ValueIteration::getNextRoom(Room * current_room, vector<unique_ptr<Room>>& rooms, float artifact_probability)
 {
 	initialize(rooms, artifact_probability);
 	return getNextRoom(current_room);
 }
 
-void ValueIteration::initialize(vector<Room> rooms, float artifact_probability)
+void ValueIteration::initialize(vector<unique_ptr<Room>>& rooms, float artifact_probability)
 {
 	//m_rooms = &rooms;
 
-	for (Room& room : rooms)
+	for (unique_ptr<Room>& room : rooms)
 	{	
-		Room* room_ptr = &room;
+		Room* room_ptr = room.get();
 		
 		float value = calculateInitialRoomValue(room_ptr);
 
@@ -56,7 +56,7 @@ void ValueIteration::initialize(vector<Room> rooms, float artifact_probability)
 	printf("Value Iteration Ended After %d Cycles.\n", test_number_of_cycles);
 }
 
-void ValueIteration::updateValues(vector<Room> rooms, float artifact_probability)
+void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability)
 {
 	VI_previous = VI_current;
 	VI_current.clear();
@@ -68,25 +68,25 @@ void ValueIteration::updateValues(vector<Room> rooms, float artifact_probability
 	// plus the room's inherent reward (R)
 	// new_value = R + g * V;
 	
-	for (Room room : rooms)
+	for (unique_ptr<Room>& room : rooms)
 	{
 		float new_value;
 
-		if (room.containsBoss())
+		if (room->containsBoss())
 		{
 			new_value = 1.0;
 		}
 		else
 		{
 
-			float V = calculateHighestNeighborValue(&room);
+			float V = calculateHighestNeighborValue(room.get());
 
-			new_value = calculateRoomReward(&room, artifact_probability) + DISCOUNT_FACTOR * V;
+			new_value = calculateRoomReward(room.get(), artifact_probability) + DISCOUNT_FACTOR * V;
 		}
 
-		VI_current.emplace(room.getRoomID(), new_value);
+		VI_current.emplace(room->getRoomID(), new_value);
 
-		float old_value = VI_previous.at(room.getRoomID());
+		float old_value = VI_previous.at(room->getRoomID());
 
 		if (abs(new_value - old_value) > m_difference)
 		{
@@ -94,7 +94,7 @@ void ValueIteration::updateValues(vector<Room> rooms, float artifact_probability
 		}
 		
 		//for testing
-		printf("The new value for room %d is %f \n", room.getRoomID(), new_value);
+		printf("The new value for room %d is %f \n", room->getRoomID(), new_value);
 	}
 }
 
