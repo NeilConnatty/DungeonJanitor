@@ -117,7 +117,7 @@ bool World::init(vec2 screen)
 		return false;
 	}
 	vector<Room> rooms = m_dungeon.get_rooms();
-	ValueIteration::initialize(rooms);
+	//ValueIteration::initialize(rooms);
 
   // Make camera follow janitor
   m_camera.follow_object(&m_janitor);

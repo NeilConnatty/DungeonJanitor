@@ -301,7 +301,7 @@ void Room::setArtifactInRoom(bool artifactInRoom)
 
 int Room::getRoomID()
 {
-    return m_ID;
+	return m_ID;
 }
 
 void Room::setRoomID(int id)

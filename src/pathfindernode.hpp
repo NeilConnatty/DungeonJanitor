@@ -1,6 +1,9 @@
 #pragma once
-
+#include "common.hpp"
 #include <math.h>
+#include <vector>
+
+using namespace std;
 
 struct PathNode
 {
@@ -28,13 +31,14 @@ public:
 
 	}
 
-	float getFValue() { return G + H; }
-	float getManhattanDistance(PathNode * destinationNode) 
-	{
-		float x = fabs(m_xCoord - destinationNode->m_xCoord);
-		float y = fabs(m_yCoord - destinationNode->m_yCoord);
-		return x + y;
-	}
 	bool isMatch(PathNode endNode);
+	bool operator==(const PathNode& comparison_node)
+	{
+		return false; /* your comparison code goes here */
+	}
+	float getFValue() { return G + H; };
+	float getManhattanDistance(PathNode * destinationNode);
+	vector<PathNode> getSuccessorNodes();
+	
 	
 };

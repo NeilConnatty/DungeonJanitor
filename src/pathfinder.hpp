@@ -17,7 +17,9 @@ public:
 
 private:
 
-	static bool collisionDetected(vec2 position);
+	static bool collisionDetected(PathNode node);
 
 	static vector<vec2> getPathFromGoalNode(PathNode endNode);
+
+	static void updateNodeListValuesWithSuccessor(vector<PathNode> node_list, PathNode successor_node);
 };
