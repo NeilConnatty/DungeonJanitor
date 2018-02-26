@@ -66,7 +66,7 @@ void Room::draw_children(const mat3 &projection,
 
   if (m_ArtifactHere)
   {
-	  m_artifact.draw(projection, current_transform);
+      m_artifact.draw(projection, current_transform);
   }
 }
 
@@ -135,49 +135,49 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
 
 bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
 {
-	if (has_artifact)
-	{
-		if (!m_artifact.init(artifact_pos))
-		{
-			return false;
-		}
-		m_artifact.set_scale({ 0.5f, 0.5f });
-		m_ArtifactHere = true;
-	}
-	return true;
+    if (has_artifact)
+    {
+        if (!m_artifact.init(artifact_pos))
+        {
+            return false;
+        }
+        m_artifact.set_scale({ 0.5f, 0.5f });
+        m_ArtifactHere = true;
+    }
+    return true;
 }
 
 bool Room::add_hero_spawn_loc(bool has_hero_spawn_loc, vec2 hero_spawn_loc)
 {
-	if (has_hero_spawn_loc)
-	{
-		m_has_hero_spawn_loc = has_hero_spawn_loc;
-		m_hero_spawn_loc = hero_spawn_loc;
-		return true;
-	}
-	return false;
+    if (has_hero_spawn_loc)
+    {
+        m_has_hero_spawn_loc = has_hero_spawn_loc;
+        m_hero_spawn_loc = hero_spawn_loc;
+        return true;
+    }
+    return false;
 }
 
 bool Room::add_boss_spawn_loc(bool has_boss_spawn_loc, vec2 boss_spawn_loc)
 {
-	if (has_boss_spawn_loc)
-	{
-		m_has_boss_spawn_loc = has_boss_spawn_loc;
-		m_boss_spawn_loc = boss_spawn_loc;
-		return true;
-	}
-	return false;
+    if (has_boss_spawn_loc)
+    {
+        m_has_boss_spawn_loc = has_boss_spawn_loc;
+        m_boss_spawn_loc = boss_spawn_loc;
+        return true;
+    }
+    return false;
 }
 
 bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_loc)
 {
-	if (has_janitor_spawn_loc)
-	{
-		m_has_janitor_spawn_loc = has_janitor_spawn_loc;
-		m_janitor_spawn_loc = janitor_spawn_loc;
-		return true;
-	}
-	return false;
+    if (has_janitor_spawn_loc)
+    {
+        m_has_janitor_spawn_loc = has_janitor_spawn_loc;
+        m_janitor_spawn_loc = janitor_spawn_loc;
+        return true;
+    }
+    return false;
 }
 
 //int Room::get_num_cleanables() { return m_num_cleanables; }
@@ -198,47 +198,47 @@ void Room::setReward(double reward)
 
 bool Room::has_hero_spawn_loc()
 {
-	return m_has_hero_spawn_loc;
+    return m_has_hero_spawn_loc;
 }
 
 vec2 Room::get_hero_spawn_loc()
 {
-	if (!m_has_hero_spawn_loc)
-	{
-		fprintf(stderr, "Hero doesn't spawn here");
-		return { -1, -1 };
-	}
-	return m_hero_spawn_loc;
+    if (!m_has_hero_spawn_loc)
+    {
+        fprintf(stderr, "Hero doesn't spawn here");
+        return { -1, -1 };
+    }
+    return m_hero_spawn_loc;
 }
 
 bool Room::has_boss_spawn_loc()
 {
-	return m_has_boss_spawn_loc;
+    return m_has_boss_spawn_loc;
 }
 
 vec2 Room::get_boss_spawn_loc()
 {
-	if (!m_has_boss_spawn_loc)
-	{
-		fprintf(stderr, "Boss doesn't spawn here");
-		return { -1, -1 };
-	}
-	return m_boss_spawn_loc;
+    if (!m_has_boss_spawn_loc)
+    {
+        fprintf(stderr, "Boss doesn't spawn here");
+        return { -1, -1 };
+    }
+    return m_boss_spawn_loc;
 }
 
 bool Room::has_janitor_spawn_loc()
 {
-	return m_has_janitor_spawn_loc;
+    return m_has_janitor_spawn_loc;
 }
 
 vec2 Room::get_janitor_spawn_loc()
 {
-	if (!m_has_janitor_spawn_loc)
-	{
-		fprintf(stderr, "Janitor doesn't spawn here" );
-		return { -1, -1 };
-	}
-	return m_janitor_spawn_loc;
+    if (!m_has_janitor_spawn_loc)
+    {
+        fprintf(stderr, "Janitor doesn't spawn here" );
+        return { -1, -1 };
+    }
+    return m_janitor_spawn_loc;
 }
 
 // If boss is currently in the room
@@ -256,61 +256,61 @@ bool Room::containsArtifact()
 
 void Room::setBossInRoom(bool bossInRoom)
 {
-	m_BossHere = bossInRoom;
+    m_BossHere = bossInRoom;
 }
 
 void Room::setArtifactInRoom(bool artifactInRoom)
 {
-	m_ArtifactHere = artifactInRoom;
+    m_ArtifactHere = artifactInRoom;
 }
 
 Room * Room::getNorthRoom()
 {
-	return m_NorthRoom;
+    return m_NorthRoom;
 }
 
 Room * Room::getSouthRoom()
 {
-	return m_SouthRoom;
+    return m_SouthRoom;
 }
 
 Room * Room::getWestRoom()
 {
-	return m_WestRoom;
+    return m_WestRoom;
 }
 
 Room * Room::getEastRoom()
 {
-	return m_EastRoom;
+    return m_EastRoom;
 }
 
 void Room::setNorthRoom(Room * room)
 {
-	m_NorthRoom = room;
+    m_NorthRoom = room;
 
 }
 
 void Room::setSouthRoom(Room * room)
 {
-	m_SouthRoom = room;
+    m_SouthRoom = room;
 }
 
 void Room::setEastRoom(Room * room)
 {
-	m_EastRoom = room;
+    m_EastRoom = room;
 }
 
 void Room::setWestRoom(Room * room)
 {
-	m_WestRoom = room;
+    m_WestRoom = room;
 }
 
 int Room::getRoomID()
 {
-	return m_ID;
+    return m_ID;
 }
 
 void Room::setRoomID(int id)
 {
-	m_ID = id;
+    m_ID = id;
 }
