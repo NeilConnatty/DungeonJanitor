@@ -93,7 +93,7 @@ void Dungeon::destroy()
 	}
 }
 
-vector<unique_ptr<Room>> Dungeon::get_rooms()
+vector<unique_ptr<Room>>& Dungeon::get_rooms()
 {
 	return m_rooms;
 }

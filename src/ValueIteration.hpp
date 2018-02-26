@@ -13,8 +13,8 @@ class ValueIteration
 {
 public:
 	
-	static void initialize(vector<unique_ptr<Room>> rooms);
-	static void updateValues(vector<unique_ptr<Room>> rooms, float artifact_probability);
+	static void initialize(vector<unique_ptr<Room>>& rooms);
+	static void updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability);
 	//static Room * getNextRoom(Room* current_room);
 	static Room::directions getNextRoom(Room* current_room);
 

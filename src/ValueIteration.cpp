@@ -23,13 +23,13 @@ map<int, float> ValueIteration::VI_current;
 map<int, float> ValueIteration::VI_previous;
 
 
-void ValueIteration::initialize(vector<unique_ptr<Room>> rooms)
+void ValueIteration::initialize(vector<unique_ptr<Room>>& rooms)
 {
 	//m_rooms = &rooms;
 
 	for (unique_ptr<Room>& room : rooms)
 	{	
-		Room* room_ptr = &(*room);
+		Room* room_ptr = room.get();
 		
 		float value = calculateInitialRoomValue(room_ptr);
 
@@ -50,7 +50,7 @@ void ValueIteration::initialize(vector<unique_ptr<Room>> rooms)
 	printf("Value Iteration Ended After %d Cycles.\n", test_number_of_cycles);
 }
 
-void ValueIteration::updateValues(vector<unique_ptr<Room>> rooms, float artifact_probability)
+void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability)
 {
 	VI_previous = VI_current;
 	VI_current.clear();
@@ -73,9 +73,9 @@ void ValueIteration::updateValues(vector<unique_ptr<Room>> rooms, float artifact
 		else
 		{
 
-			float V = calculateHighestNeighborValue(&(*room));
+			float V = calculateHighestNeighborValue(room.get());
 
-			new_value = calculateRoomReward(&(*room), artifact_probability) + DISCOUNT_FACTOR * V;
+			new_value = calculateRoomReward(room.get(), artifact_probability) + DISCOUNT_FACTOR * V;
 		}
 
 		VI_current.emplace(room->getRoomID(), new_value);

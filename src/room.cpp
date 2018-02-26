@@ -17,6 +17,14 @@ bool Room::init(vec2 position)
   m_has_hero_spawn_loc = false;
   m_has_janitor_spawn_loc = false;
   m_BossHere = false;
+  m_adjacent_rooms[NORTH] = nullptr;
+  m_adjacent_rooms[SOUTH] = nullptr;
+  m_adjacent_rooms[EAST] = nullptr;
+  m_adjacent_rooms[WEST] = nullptr;
+  m_adjacent_doors[NORTH] = nullptr;
+  m_adjacent_doors[SOUTH] = nullptr;
+  m_adjacent_doors[EAST] = nullptr;
+  m_adjacent_doors[WEST] = nullptr;
 
   return true;
 }

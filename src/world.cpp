@@ -116,7 +116,7 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to init Creatures. \n");
 		return false;
 	}
-	vector<unique_ptr<Room>> rooms = m_dungeon.get_rooms();
+	vector<unique_ptr<Room>>& rooms = m_dungeon.get_rooms();
 	ValueIteration::initialize(rooms);
 
   // Make camera follow janitor
@@ -184,7 +184,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w, (float)h };
     m_janitor.update(elapsed_ms);
-//	vec2 nextDoorPos = m_hero.get_next_door_position();
+	//vec2 nextDoorPos = m_hero.get_next_door_position();
 	m_hero.set_destination(m_janitor.get_pos());
 	m_hero.update(elapsed_ms);
 	m_boss.update(elapsed_ms);
