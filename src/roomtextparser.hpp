@@ -15,4 +15,5 @@ private:
 	std::vector<Room::wall_pair> wall_pairs;
 	std::vector<vec2> floor_pos;
 	std::vector<vec2> puddle_pos;
+  std::vector<vec2> door_pos;
 };

@@ -9,19 +9,21 @@
 class Dungeon : public GameObject
 {
 public:
-	Dungeon();
-	~Dungeon();
+  Dungeon();
+  ~Dungeon();
 
-	bool init();
-	void destroy();
-	void clean(vec2 janitor_pos);
-
-private:
-	void update_current(float ms) override;
-	void update_children(float ms) override;
-	void draw_current(const mat3& projection, const mat3& current_transform) override;
-	void draw_children(const mat3& projection, const mat3& current_transform) override;
+  bool init();
+  void destroy();
+  void clean(vec2 janitor_pos);
 
 private:
-	std::vector<Room>	m_rooms;  // unsure if this should be a vector of pointers or rooms
+  void update_current(float ms) override;
+  void update_children(float ms) override;
+  void draw_current(const mat3 &projection,
+                    const mat3 &current_transform) override;
+  void draw_children(const mat3 &projection,
+                     const mat3 &current_transform) override;
+
+private:
+  std::vector<Room> m_rooms;
 };

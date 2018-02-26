@@ -31,6 +31,16 @@ void Room::destroy()
   {
     w.destroy();
   }
+
+  for (Puddle p : m_puddles)
+  {
+    p.destroy();
+  }
+
+  for (Door d : m_doors)
+  {
+    d.destroy();
+  }
 }
 
 void Room::update_current(float ms) {}
@@ -48,7 +58,6 @@ void Room::draw_current(const mat3 &projection, const mat3 &current_transform)
 void Room::draw_children(const mat3 &projection,
                          const mat3 &current_transform) 
 {
-
   for (Floor f : m_floors) 
   {
     f.draw(projection, current_transform);
@@ -62,6 +71,11 @@ void Room::draw_children(const mat3 &projection,
   for (Puddle p : m_puddles) 
   {
     p.draw(projection, current_transform);
+  }
+
+  for (Door d : m_doors)
+  {
+    d.draw(projection, current_transform);
   }
 }
 
@@ -85,6 +99,16 @@ bool Room::add_floor(vec2 floor)
   return true;
 }
 
+bool Room::add_door(vec2 pos)
+{
+  m_doors.emplace_back();
+  if (!m_doors.back().init(pos))
+  {
+    return false;
+  }
+  return true;
+}
+
 bool Room::add_floors(std::vector<vec2> &positions) 
 {
   for (vec2 &pos : positions) 
@@ -97,6 +121,20 @@ bool Room::add_floors(std::vector<vec2> &positions)
 
   return true;
 }
+
+bool Room::add_doors(std::vector<vec2> &positions)
+{
+  for (vec2 &pos : positions)
+  {
+    if (!add_door(pos))
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 
 bool Room::add_walls(std::vector<wall_pair> &walls) 
 {
@@ -128,3 +166,43 @@ int Room::get_num_cleanables() { return m_num_cleanables; }
 float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
 void Room::decrement_cleanables() { m_num_cleanables--; }
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
+
+void Room::set_north_room(const Room* rm)
+{
+  m_adjacent_rooms[NORTH] = rm;
+}
+
+void Room::set_south_room(const Room* rm)
+{
+  m_adjacent_rooms[SOUTH] = rm;
+}
+
+void Room::set_east_room(const Room* rm)
+{
+  m_adjacent_rooms[EAST] = rm;
+}
+
+void Room::set_west_room(const Room* rm)
+{
+  m_adjacent_rooms[WEST] = rm;
+}
+
+const Room* Room::get_north_room() const
+{
+  return m_adjacent_rooms[NORTH];
+}
+
+const Room* Room::get_south_room() const
+{
+  return m_adjacent_rooms[SOUTH];
+}
+
+const Room* Room::get_east_room() const
+{
+  return m_adjacent_rooms[EAST];
+}
+
+const Room* Room::get_west_room() const
+{
+  return m_adjacent_rooms[WEST];
+}
