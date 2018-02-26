@@ -39,7 +39,6 @@ bool Dungeon::init()
 	{
 		if (room.has_janitor_spawn_loc())
 		{
-			printf("%s\n", "janitor!");
 			janitor_start_room = &room;
 			janitor_room_position = room.get_janitor_spawn_loc();
 		}
@@ -53,6 +52,7 @@ bool Dungeon::init()
 		if (room.has_boss_spawn_loc())
 		{
 			boss_start_room = &room;
+			room.setBossInRoom(true);
 			boss_room_position = room.get_boss_spawn_loc();
 		}
 	}
