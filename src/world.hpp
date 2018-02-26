@@ -6,6 +6,7 @@
 #include "janitor.hpp"
 #include "hero.hpp"
 #include "boss.hpp"
+#include "camera.hpp"
 // stlib
 #include <vector>
 #include <random>
@@ -59,11 +60,16 @@ private:
 	//Janitor
 	Janitor m_janitor;
 
+
 	// Hero
 	Hero m_hero;
 
 	// Boss
 	Boss m_boss;
+
+  //Camera
+  Camera m_camera;
+
 
 	// C++ rng
 	std::default_random_engine m_rng;

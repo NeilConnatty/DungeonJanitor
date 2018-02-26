@@ -46,6 +46,9 @@
     <ClCompile Include="..\src\Cleanable\artifact.cpp">
       <Filter>src\Cleanable</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -89,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Cleanable\artifact.hpp">
       <Filter>headers\Cleanable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\camera.hpp">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
