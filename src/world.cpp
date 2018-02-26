@@ -116,7 +116,7 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to init Creatures. \n");
 		return false;
 	}
-	vector<Room> rooms = m_dungeon.get_rooms();
+	vector<unique_ptr<Room>> rooms = m_dungeon.get_rooms();
 	ValueIteration::initialize(rooms);
 
   // Make camera follow janitor

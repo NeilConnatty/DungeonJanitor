@@ -5,7 +5,10 @@
 #include "room.hpp"
 
 #include <vector>
+#include <memory>
+
 using namespace std;
+
 
 class Dungeon : public GameObject
 {
@@ -16,7 +19,7 @@ public:
   bool init();
   void destroy();
   void clean(vec2 janitor_pos);
-  vector<Room> get_rooms();
+  vector<unique_ptr<Room>> get_rooms();
 
 private:
   void update_current(float ms) override;
@@ -36,6 +39,10 @@ public:
 	vec2 hero_room_position;
 	vec2 boss_room_position;
 private:
-	vector<Room>	m_rooms;  // unsure if this should be a vector of pointers or rooms
+
+
+	//vector<Room>	m_rooms;  // unsure if this should be a vector of pointers or rooms
+	vector<std::unique_ptr<Room>> m_rooms;
+
 };
 
