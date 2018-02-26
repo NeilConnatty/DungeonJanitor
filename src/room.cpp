@@ -314,24 +314,33 @@ void Room::setRoomID(int id)
 	m_ID = id;
 }
 
-void Room::set_north_room(Room* rm)
+vector<Door>* Room::get_m_doors()
 {
-  m_adjacent_rooms[NORTH] = rm;
+	return &m_doors;
 }
 
-void Room::set_south_room(Room* rm)
+void Room::set_north_room(Room* rm, Door* d)
+{
+	m_adjacent_rooms[NORTH] = rm;
+	m_adjacent_doors[NORTH] = d;
+}
+
+void Room::set_south_room(Room* rm, Door* d)
 {
   m_adjacent_rooms[SOUTH] = rm;
+  m_adjacent_doors[SOUTH] = d;
 }
 
-void Room::set_east_room(Room* rm)
+void Room::set_east_room(Room* rm, Door* d)
 {
   m_adjacent_rooms[EAST] = rm;
+  m_adjacent_doors[EAST] = d;
 }
 
-void Room::set_west_room(Room* rm)
+void Room::set_west_room(Room* rm, Door* d)
 {
   m_adjacent_rooms[WEST] = rm;
+  m_adjacent_doors[WEST] = d;
 }
 
 Room* Room::get_north_room()
