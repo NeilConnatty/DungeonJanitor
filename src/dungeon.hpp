@@ -3,7 +3,6 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
-#include "hallway.hpp"
 
 #include <vector>
 
@@ -27,5 +26,4 @@ private:
 
 private:
   std::vector<Room> m_rooms;
-  std::vector<Hallway> m_hallways;
 };

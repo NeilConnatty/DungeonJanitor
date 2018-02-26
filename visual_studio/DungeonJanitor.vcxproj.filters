@@ -40,9 +40,6 @@
     <ClCompile Include="..\src\door.cpp">
       <Filter>src\Dungeon</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\hallway.cpp">
-      <Filter>src\Dungeon</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -76,9 +73,6 @@
       <Filter>headers\Dungeon</Filter>
     </ClInclude>
     <ClInclude Include="..\src\door.hpp">
-      <Filter>headers\Dungeon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\hallway.hpp">
       <Filter>headers\Dungeon</Filter>
     </ClInclude>
     <ClInclude Include="..\src\camera.hpp">

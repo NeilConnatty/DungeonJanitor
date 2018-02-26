@@ -14,6 +14,22 @@ bool Dungeon::init()
 {
   RoomParser parser;
 
+  /**************2nd Room ****************/
+  m_rooms.emplace_back();
+  Room& new_room_2 = m_rooms.back();
+  if (!new_room_2.init())
+  {
+    fprintf(stderr, "Failed to init room.\n");
+    return false;
+  }
+
+  new_room_2.set_pos({ 128.f, -550.f }); // temporary values, eventually we will want to have
+                                         // a parser that creates the dungeon layouts
+  if (!parser.parseRoom(new_room_2, room_path("2.rm")))
+  {
+    return false;
+  }
+
   /**************1st Room ****************/
   m_rooms.emplace_back();
 	Room& new_room = m_rooms.back();
@@ -32,32 +48,27 @@ bool Dungeon::init()
     return false;
   }
 
-  /**************2nd Room ****************/
+  /************** Hallway Room ****************/
   m_rooms.emplace_back();
-  Room& new_room_2 = m_rooms.back();
-  if (!new_room_2.init())
-  {
-    fprintf(stderr, "Failed to init room.\n");
-    return false;
-  }
+  Room& hallway = m_rooms.back();
 
-  new_room_2.set_pos({ 128.f, -820.f }); // temporary values, eventually we will want to have
-                                     // a parser that creates the dungeon layouts
-  if (!parser.parseRoom(new_room_2, room_path("2.rm")))
-  {
-    return false;
-  }
-
-  new_room.set_north_room(&new_room_2);
-  new_room_2.set_south_room(&new_room);
-
-  /************** Hallway ****************/
-  m_hallways.emplace_back();
-  if (!m_hallways.back().init({new_room_2.get_pos().x + 420.f, new_room_2.get_pos().y + 620.f}))
+  if (!hallway.init())
   {
     fprintf(stderr, "Failed to init hallway.\n");
     return false;
   }
+
+  hallway.set_pos({ new_room_2.get_pos().x + 420.f, new_room_2.get_pos().y + 620.f });
+
+  if (!parser.parseRoom(hallway, room_path("hallway.rm")))
+  {
+    return false;
+  }
+
+  new_room.set_north_room(&hallway);
+  new_room_2.set_south_room(&hallway);
+  hallway.set_north_room(&new_room_2);
+  hallway.set_south_room(&new_room);
 
 	return true;
 }
@@ -99,11 +110,6 @@ void Dungeon::update_children(float ms)
 	{
 		room.update(ms);
 	}
-
-  for (Hallway& hallway : m_hallways)
-  {
-    hallway.update(ms);
-  }
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
@@ -116,9 +122,4 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
 	{
 		room.draw(projection, current_transform);
 	}
-
-  for (Hallway& hall : m_hallways)
-  {
-    hall.draw(projection, current_transform);
-  }
 }
