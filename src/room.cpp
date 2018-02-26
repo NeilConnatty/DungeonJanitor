@@ -16,6 +16,7 @@ bool Room::init(vec2 position)
   m_has_boss_spawn_loc = false;
   m_has_hero_spawn_loc = false;
   m_has_janitor_spawn_loc = false;
+  m_BossHere = false;
 
   return true;
 }
@@ -203,6 +204,7 @@ bool Room::add_boss_spawn_loc(bool has_boss_spawn_loc, vec2 boss_spawn_loc)
 
 	m_has_boss_spawn_loc = has_boss_spawn_loc;
 	m_boss_spawn_loc = boss_spawn_loc;
+	m_BossHere = has_boss_spawn_loc;
 	return true;
 }
 
