@@ -48,27 +48,8 @@ bool Dungeon::init()
     return false;
   }
 
-  /************** Hallway Room ****************/
-  m_rooms.emplace_back();
-  Room& hallway = m_rooms.back();
-
-  if (!hallway.init())
-  {
-    fprintf(stderr, "Failed to init hallway.\n");
-    return false;
-  }
-
-  hallway.set_pos({ new_room_2.get_pos().x + 420.f, new_room_2.get_pos().y + 620.f });
-
-  if (!parser.parseRoom(hallway, room_path("hallway.rm")))
-  {
-    return false;
-  }
-
-  new_room.set_north_room(&hallway);
-  new_room_2.set_south_room(&hallway);
-  hallway.set_north_room(&new_room_2);
-  hallway.set_south_room(&new_room);
+  new_room.set_north_room(&new_room_2);
+  new_room_2.set_south_room(&new_room);
 
 	return true;
 }
