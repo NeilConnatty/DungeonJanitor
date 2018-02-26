@@ -100,41 +100,41 @@ Room * ValueIteration::getNextRoom(Room * current_room)
 	float west_value = LOW_NUMBER_HACK;
 
 	// Load room values
-	if (current_room->getNorthRoom() != nullptr)
+	if (current_room->get_north_room() != nullptr)
 	{
-		north_value = VI_current.at(current_room->getNorthRoom()->getRoomID());
+		north_value = VI_current.at(current_room->get_north_room()->getRoomID());
 	}
-	if (current_room->getSouthRoom() != nullptr)
+	if (current_room->get_south_room() != nullptr)
 	{
-		south_value = VI_current.at(current_room->getSouthRoom()->getRoomID());
+		south_value = VI_current.at(current_room->get_south_room()->getRoomID());
 	}
-	if (current_room->getEastRoom() != nullptr)
+	if (current_room->get_east_room() != nullptr)
 	{
-		east_value = VI_current.at(current_room->getEastRoom()->getRoomID());
+		east_value = VI_current.at(current_room->get_east_room()->getRoomID());
 	}
-	if (current_room->getWestRoom() != nullptr)
+	if (current_room->get_west_room() != nullptr)
 	{
-		west_value = VI_current.at(current_room->getWestRoom()->getRoomID());
+		west_value = VI_current.at(current_room->get_west_room()->getRoomID());
 	}
 
 	// Return best room
 	if ((north_value != -100) && (north_value > south_value) && (north_value > east_value) && north_value > west_value)
 	{
-		return current_room->getNorthRoom();
+		return current_room->get_north_room();
 	}
 	
 	if ((south_value != -100) && (south_value > north_value) && (south_value > east_value) && south_value > west_value)
 	{
-		return current_room->getSouthRoom();
+		return current_room->get_south_room();
 	}
 	
 	if ((east_value != -100) && (east_value > south_value) && (east_value > north_value) && east_value > west_value)
 	{
-		return current_room->getEastRoom();
+		return current_room->get_east_room();
 	}
 	else
 	{
-		return current_room->getWestRoom();
+		return current_room->get_west_room();
 	}
 	
 }
@@ -143,25 +143,25 @@ float ValueIteration::calculateHighestNeighborValue(Room * room)
 {
 	vector<float> neighbor_values;
 
-	if (room->getNorthRoom() !=	nullptr)
+	if (room->get_north_room() !=	nullptr)
 	{
-		neighbor_values.push_back(VI_previous.at(room->getNorthRoom()->getRoomID()));
+		neighbor_values.push_back(VI_previous.at(room->get_north_room()->getRoomID()));
 	}
-	if (room->getSouthRoom() != nullptr)
+	if (room->get_south_room() != nullptr)
 	{
-		neighbor_values.push_back(VI_previous.at(room->getSouthRoom()->getRoomID()));
+		neighbor_values.push_back(VI_previous.at(room->get_south_room()->getRoomID()));
 	}
-	if (room->getEastRoom() != nullptr)
+	if (room->get_east_room() != nullptr)
 	{
-		Room* eastRoom = room->getEastRoom();
+		Room* eastRoom = room->get_east_room();
 		auto it = VI_previous.find(eastRoom->getRoomID());
 		auto pair = *it;
 		float eastValue = pair.second;
 		neighbor_values.push_back(eastValue);
 	}
-	if (room->getWestRoom() != nullptr)
+	if (room->get_west_room() != nullptr)
 	{
-		neighbor_values.push_back(VI_previous.at(room->getWestRoom()->getRoomID()));
+		neighbor_values.push_back(VI_previous.at(room->get_west_room()->getRoomID()));
 	}
 
 	return *max_element(neighbor_values.begin(), neighbor_values.end());;

@@ -31,6 +31,16 @@ void Room::destroy()
   {
     w.destroy();
   }
+
+  for (Puddle p : m_puddles)
+  {
+    p.destroy();
+  }
+
+  for (Door d : m_doors)
+  {
+    d.destroy();
+  }
 }
 
 void Room::update_current(float ms) {}
@@ -48,7 +58,6 @@ void Room::draw_current(const mat3 &projection, const mat3 &current_transform)
 void Room::draw_children(const mat3 &projection,
                          const mat3 &current_transform) 
 {
-
   for (Floor f : m_floors) 
   {
     f.draw(projection, current_transform);
@@ -66,8 +75,15 @@ void Room::draw_children(const mat3 &projection,
 
   if (m_ArtifactHere)
   {
-      m_artifact.draw(projection, current_transform);
+		m_artifact.draw(projection, current_transform);
+
   }
+
+  for (Door d : m_doors)
+  {
+    d.draw(projection, current_transform);
+  }
+
 }
 
 bool Room::add_wall(wall_pair wall) 
@@ -90,6 +106,16 @@ bool Room::add_floor(vec2 floor)
   return true;
 }
 
+bool Room::add_door(vec2 pos)
+{
+  m_doors.emplace_back();
+  if (!m_doors.back().init(pos))
+  {
+    return false;
+  }
+  return true;
+}
+
 bool Room::add_floors(std::vector<vec2> &positions) 
 {
   for (vec2 &pos : positions) 
@@ -102,6 +128,20 @@ bool Room::add_floors(std::vector<vec2> &positions)
 
   return true;
 }
+
+bool Room::add_doors(std::vector<vec2> &positions)
+{
+  for (vec2 &pos : positions)
+  {
+    if (!add_door(pos))
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 
 bool Room::add_walls(std::vector<wall_pair> &walls) 
 {
@@ -264,47 +304,6 @@ void Room::setArtifactInRoom(bool artifactInRoom)
     m_ArtifactHere = artifactInRoom;
 }
 
-Room * Room::getNorthRoom()
-{
-    return m_NorthRoom;
-}
-
-Room * Room::getSouthRoom()
-{
-    return m_SouthRoom;
-}
-
-Room * Room::getWestRoom()
-{
-    return m_WestRoom;
-}
-
-Room * Room::getEastRoom()
-{
-    return m_EastRoom;
-}
-
-void Room::setNorthRoom(Room * room)
-{
-    m_NorthRoom = room;
-
-}
-
-void Room::setSouthRoom(Room * room)
-{
-    m_SouthRoom = room;
-}
-
-void Room::setEastRoom(Room * room)
-{
-    m_EastRoom = room;
-}
-
-void Room::setWestRoom(Room * room)
-{
-    m_WestRoom = room;
-}
-
 int Room::getRoomID()
 {
     return m_ID;
@@ -312,5 +311,46 @@ int Room::getRoomID()
 
 void Room::setRoomID(int id)
 {
-    m_ID = id;
+	m_ID = id;
 }
+
+void Room::set_north_room(Room* rm)
+{
+  m_adjacent_rooms[NORTH] = rm;
+}
+
+void Room::set_south_room(Room* rm)
+{
+  m_adjacent_rooms[SOUTH] = rm;
+}
+
+void Room::set_east_room(Room* rm)
+{
+  m_adjacent_rooms[EAST] = rm;
+}
+
+void Room::set_west_room(Room* rm)
+{
+  m_adjacent_rooms[WEST] = rm;
+}
+
+Room* Room::get_north_room()
+{
+  return m_adjacent_rooms[NORTH];
+}
+
+Room* Room::get_south_room()
+{
+  return m_adjacent_rooms[SOUTH];
+}
+
+Room* Room::get_east_room()
+{
+  return m_adjacent_rooms[EAST];
+}
+
+Room* Room::get_west_room()
+{
+  return m_adjacent_rooms[WEST];
+}
+
