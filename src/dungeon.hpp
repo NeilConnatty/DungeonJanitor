@@ -39,7 +39,6 @@ public:
 	vec2 hero_room_position;
 	vec2 boss_room_position;
 private:
-
 	vector<std::unique_ptr<Room>> m_rooms;
 
 };
