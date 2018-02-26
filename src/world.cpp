@@ -116,14 +116,8 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to init Creatures. \n");
 		return false;
 	}
-
-  vec2 janitor_position = { 500.f, 100.f };
-  if (!m_janitor.init(janitor_position))
-  {
-    fprintf(stderr, "Failed to init Janitor.\n");
-    return false;
-  }
-  m_janitor.set_scale({ 3.f, 3.f });
+	vec2 pos = { 90.0, 320.0 };
+	m_janitor.set_pos(pos);
 
   // Make camera follow janitor
   m_camera.follow_object(&m_janitor);
@@ -134,23 +128,11 @@ bool World::init(vec2 screen)
 
 bool World::init_creatures()
 {
+	int w, h;
+	glfwGetFramebufferSize(m_window, &w, &h);
+	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
+	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
 	
-	vec3 janitor_room_position_3d = { m_dungeon.janitor_room_position.x, m_dungeon.janitor_room_position.y, 1.0 };
-	printf("%s", "Janitor Room Pos: ");
-	printf("%f", janitor_room_position_3d.x);
-	printf("%f\n", janitor_room_position_3d.y);
-	vec3 janitor_dungeon_position = mult(m_dungeon.janitor_start_room->transform, janitor_room_position_3d);
-	printf("%s", "Janitor Dungeon Pos: ");
-	printf("%f", janitor_dungeon_position.x);
-	printf("%f\n", janitor_dungeon_position.y);
-	vec3 janitor_world_position = mult(m_dungeon.transform, janitor_dungeon_position);
-	printf("%s", "Janitor World Pos: ");
-	printf("%f", janitor_world_position.x);
-	printf("%f\n", janitor_world_position.y);
-	vec2 janitor_position = { janitor_world_position.x, janitor_world_position.y };
-	printf("%s", "Janitor Final Pos: ");
-	printf("%f", janitor_position.x);
-	printf("%f\n", janitor_position.y);
 	if (!m_janitor.init(janitor_position))
 	{
 		fprintf(stderr, "Failed to init Janitor.\n");
@@ -158,9 +140,7 @@ bool World::init_creatures()
 	}
 	m_janitor.set_scale({ 3.f, 3.f });
 
-	vec2 hero_position = m_dungeon.hero_room_position;
-	printf("%f", hero_position.x);
-	printf("%f\n", hero_position.y);
+	vec2 hero_position = get_world_coords_from_room_coords(m_dungeon.hero_room_position, m_dungeon.hero_start_room->transform, m_dungeon.transform);
 	if (!m_hero.init(hero_position))
 	{
 		fprintf(stderr, "Failed to init Hero. \n");
@@ -169,9 +149,7 @@ bool World::init_creatures()
 	}
 	m_hero.set_scale({ 3.f, 3.f });
 
-	vec2 boss_position = m_dungeon.boss_room_position;
-	printf("%f", boss_position.x);
-	printf("%f\n", boss_position.y);
+	vec2 boss_position = get_world_coords_from_room_coords(m_dungeon.boss_room_position, m_dungeon.boss_start_room->transform, m_dungeon.transform);
 	if (!m_boss.init(boss_position))
 	{
 		fprintf(stderr, "Failed to init Boss. \n");

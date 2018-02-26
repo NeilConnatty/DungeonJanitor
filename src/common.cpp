@@ -166,6 +166,15 @@ float det(mat3 m)
   return det(m, minors);
 }
 
+vec2 get_world_coords_from_room_coords(vec2 room_coords, mat3 room_transform, mat3 dungeon_transform)
+{
+
+	vec3 room_position_3d = { room_coords.x, room_coords.y, 1.0 };
+	vec3 dungeon_position = mult(room_transform, room_position_3d);
+	vec3 world_position = mult(dungeon_transform, dungeon_position);
+	return { world_position.x, world_position.y };
+}
+
 mat3 inverse(mat3 m)
 {
   // The lovely process for calculating the inverse was taken from here:
