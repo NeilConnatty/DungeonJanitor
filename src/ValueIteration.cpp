@@ -23,7 +23,13 @@ map<int, float> ValueIteration::VI_current;
 map<int, float> ValueIteration::VI_previous;
 
 
-void ValueIteration::initialize(vector<Room> rooms)
+Room::directions ValueIteration::getNextRoom(Room * current_room, vector<Room> rooms, float artifact_probability)
+{
+	initialize(rooms, artifact_probability);
+	return getNextRoom(current_room);
+}
+
+void ValueIteration::initialize(vector<Room> rooms, float artifact_probability)
 {
 	//m_rooms = &rooms;
 
@@ -39,12 +45,12 @@ void ValueIteration::initialize(vector<Room> rooms)
 		printf("The initial value for room %d is %f \n", room_ptr->getRoomID(), value);
 	}
 
-	updateValues(rooms, 0.5);
+	updateValues(rooms, artifact_probability);
 
 	int test_number_of_cycles = 1;
 	while (continueValueIterating())
 	{
-		updateValues(rooms, 0.5);
+		updateValues(rooms, artifact_probability);
 		test_number_of_cycles++;
 	}
 	printf("Value Iteration Ended After %d Cycles.\n", test_number_of_cycles);

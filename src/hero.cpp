@@ -196,7 +196,10 @@ void Hero::update_current(float ms)
 
 vec2 Hero::get_next_door_position()
 {
-	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom);
+	float percentage_of_cleaned_artifacts = 0.5;
+	vector<Room> rooms; // STUB needs to be set
+
+	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom, rooms, percentage_of_cleaned_artifacts);
 
 	if (target_room == Room::directions::NORTH)
 	{

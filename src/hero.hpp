@@ -15,6 +15,7 @@ private:
 	vec2 m_destination;
 	vec2 m_vel;
 	bool m_is_moving;
+	vector<Room*> m_room;
 
 public:
 	Hero();

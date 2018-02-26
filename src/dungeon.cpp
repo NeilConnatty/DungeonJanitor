@@ -258,7 +258,7 @@ void Dungeon::test_value_iteration()
     rooms.emplace_back(room9);
 
     
-    ValueIteration::initialize(rooms);
+    //ValueIteration::initialize(rooms);
     //Room* target_room = ValueIteration::getNextRoom(&room4); //Jay commented out after VI returned room direction
 
 
