@@ -18,7 +18,8 @@ public:
   
   bool init();
   void destroy();
-  void clean(vec2 janitor_pos);
+  void clean();
+  void activate_artifact();
   vector<unique_ptr<Room>>& get_rooms();
 
 private:

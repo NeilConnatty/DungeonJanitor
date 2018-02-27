@@ -310,6 +310,11 @@ void Room::setArtifactInRoom(bool artifactInRoom)
     m_ArtifactHere = artifactInRoom;
 }
 
+Artifact* Room::get_artifact()
+{
+	return &m_artifact;
+}
+
 int Room::getRoomID()
 {
 	return m_ID;

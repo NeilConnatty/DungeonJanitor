@@ -264,7 +264,13 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE)
 	{
-		m_dungeon.clean(m_janitor.get_pos());
+		m_dungeon.clean();
+	}
+
+	// temporary keybind, probably will bind it to space once we have collisions
+	if (action == GLFW_PRESS && key == GLFW_KEY_A)
+	{
+		m_dungeon.activate_artifact();
 	}
 
     // Resetting game

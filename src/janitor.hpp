@@ -54,5 +54,4 @@ private:
 	bool m_key_down;
 	bool m_key_left;
 	bool m_key_right;
-
 };

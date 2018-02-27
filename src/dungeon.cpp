@@ -121,7 +121,7 @@ vector<unique_ptr<Room>>& Dungeon::get_rooms()
 	return m_rooms;
 }
 
-void Dungeon::clean(vec2 janitor_pos)
+void Dungeon::clean()
 {
 	for (std::unique_ptr<Room>& room : m_rooms)
 	{
@@ -136,6 +136,18 @@ void Dungeon::clean(vec2 janitor_pos)
 					p.toggle_enable();
 				}
 			}
+		}
+	}
+}
+
+void Dungeon::activate_artifact()
+{
+	for (std::unique_ptr<Room>& room : m_rooms)
+	{
+		Room* room_ptr = room.get();
+		if (room_ptr->containsArtifact())
+		{
+			room_ptr->get_artifact()->activate();
 		}
 	}
 }

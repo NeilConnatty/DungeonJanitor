@@ -2,7 +2,8 @@
 
 #include "artifact.hpp"
 
-Texture Artifact::artifact_texture;
+Texture Artifact::activated_artifact_texture;
+Texture Artifact::deactivated_artifact_texture;
 
 Artifact::Artifact() {}
 
@@ -15,20 +16,30 @@ bool Artifact::init()
 
 bool Artifact::init(vec2 position)
 {
-	if (!artifact_texture.is_valid())
+	if (!activated_artifact_texture.is_valid())
 	{
-		if (!artifact_texture.load_from_file(textures_path("artifact_placeholder.png")))
+		if (!activated_artifact_texture.load_from_file(textures_path("artifact_placeholder.png")))
 		{
-			fprintf(stderr, "Failed to load artifact texture\n");
+			fprintf(stderr, "Failed to load activated artifact texture\n");
 			return false;
 		}
 	}
 
+	if (!deactivated_artifact_texture.is_valid())
+	{
+		if (!deactivated_artifact_texture.load_from_file(textures_path("deactivated_artifact_placeholder.png")))
+		{
+			fprintf(stderr, "Failed to load deactivated artifact texture\n");
+			return false;
+		}
+	}
+
+	m_is_activated = false;
 	m_position = position;
 
 	// The position corresponds to the center of the texture
-	float wr = artifact_texture.width * 0.5f;
-	float hr = artifact_texture.height * 0.5f;
+	float wr = activated_artifact_texture.width * 0.5f;
+	float hr = activated_artifact_texture.height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -106,7 +117,14 @@ void Artifact::draw_current(const mat3& projection, const mat3& current_transfor
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, artifact_texture.id);
+	if (m_is_activated)
+	{
+		glBindTexture(GL_TEXTURE_2D, activated_artifact_texture.id);
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, deactivated_artifact_texture.id);
+	}
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
@@ -116,4 +134,14 @@ void Artifact::draw_current(const mat3& projection, const mat3& current_transfor
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+}
+
+void Artifact::activate()
+{
+	m_is_activated = true;
+}
+
+void Artifact::deactivate()
+{
+	m_is_activated = false;
 }
