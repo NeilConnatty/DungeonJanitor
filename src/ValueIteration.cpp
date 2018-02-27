@@ -168,7 +168,7 @@ float ValueIteration::calculateHighestNeighborValue(Room * room)
 		neighbor_values.push_back(VI_previous.at(room->get_west_room()->getRoomID()));
 	}
 
-	return *max_element(neighbor_values.begin(), neighbor_values.end());;
+	return *max_element(neighbor_values.begin(), neighbor_values.end());
 }
 
 bool ValueIteration::continueValueIterating()
@@ -199,7 +199,7 @@ float ValueIteration::calculateRoomReward(Room* room, float artifact_probability
 	}
 
 	// If room has both boss and artifact, treated as only having Boss
-	else if (room->containsArtifact())
+	else if (room->containsUndiscoveredArtifact())
 	{
 		reward = ARTIFACT_VALUE * artifact_probability;
 	}

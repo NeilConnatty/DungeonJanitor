@@ -294,7 +294,7 @@ bool Room::containsBoss()
     return m_BossHere;
 }
 
-bool Room::containsArtifact()
+bool Room::containsUndiscoveredArtifact()
 {
     // stub
     return m_ArtifactHere;

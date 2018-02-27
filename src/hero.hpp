@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
+#include "pathfinder.hpp"
 #include "ValueIteration.hpp"
 #include <vector>
 

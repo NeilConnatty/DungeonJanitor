@@ -168,6 +168,9 @@ void Hero::update_current(float ms)
 		float timeFactor = ms / 1000;
 		bool will_move = false;
 
+    vector<vec2> path;
+    Pathfinder::getPathFromPositionToDestination(m_position, m_destination, SPEED / 10.f, Y_SPEED / 10.f, path);
+
 		float s_x = m_position.x;
 		float s_y = m_position.y;
 		float d_x = m_destination.x;
@@ -226,7 +229,7 @@ vec2 Hero::get_next_door_position()
 	for (unique_ptr<Room>& room : *m_rooms)
 	{
 		Room* room_ptr = room.get();
-		if (room_ptr->containsArtifact())
+		if (room_ptr->containsUndiscoveredArtifact())
 		{
 			num_artifacts++;
 			if (room_ptr->get_artifact()->is_activated()) {
