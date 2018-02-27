@@ -218,10 +218,30 @@ void Hero::update_current(float ms)
 
 vec2 Hero::get_next_door_position()
 {
-	float percentage_of_cleaned_artifacts = 0.5;
+	float percentage_of_activated_artifacts = 0.0;
 	vector<unique_ptr<Room>>* rooms = m_rooms;
+	int num_artifacts = 0;
+	int num_activated_artifacts = 0;
 
-	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom, *rooms, percentage_of_cleaned_artifacts);
+	for (unique_ptr<Room>& room : *m_rooms)
+	{
+		Room* room_ptr = room.get();
+		if (room_ptr->containsArtifact())
+		{
+			num_artifacts++;
+			if (room_ptr->get_artifact()->is_activated()) {
+				num_activated_artifacts++;
+			}
+		}
+
+	}
+	if (num_artifacts > 0)
+	{
+		percentage_of_activated_artifacts = num_activated_artifacts / num_artifacts;
+	}
+
+
+	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom, *rooms, percentage_of_activated_artifacts);
 
 	if (target_room == Room::directions::NORTH)
 	{

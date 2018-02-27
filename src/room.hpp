@@ -61,6 +61,7 @@ public:
     bool containsArtifact();
     void setBossInRoom(bool bossInRoom);
     void setArtifactInRoom(bool artifactInRoom);
+	Artifact* get_artifact();
 
     int get_num_cleanables();
     float get_clean_percent();
