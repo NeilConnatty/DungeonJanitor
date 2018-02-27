@@ -143,12 +143,17 @@ void Hero::update_current(float ms)
 	// only move if a destination is set
 	if (m_is_moving)
 	{
+		
+
 		float step_size = 10.f; // should probably replace this with collisions 
 		const float SPEED = 100.0f;
 		//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
 		const float Y_SPEED = SPEED * (24.f / 35.f);
 		float timeFactor = ms / 1000;
 		bool will_move = false;
+
+		vector<vec2> path = Pathfinder::getPathFromPositionToDestination(m_position, m_destination, 
+			SPEED * timeFactor, Y_SPEED * timeFactor);
 
 		float s_x = m_position.x;
 		float s_y = m_position.y;

@@ -2,7 +2,7 @@
 
 #include "pathfindernode.hpp";
 
-#define CLOSE_ENOUGH 0.01f; // Subject to change
+#define CLOSE_ENOUGH 10.f; // Subject to change
 
 bool PathNode::isMatch(PathNode endNode)
 {
@@ -24,11 +24,9 @@ float PathNode::getManhattanDistance(PathNode * destinationNode)
 	return x + y;
 }
 
-vector<PathNode> PathNode::getSuccessorNodes(PathNode* endNode)
+vector<PathNode>* PathNode::getSuccessorNodes(PathNode* endNode, float x_speed, float y_speed)
 {
 	vector<PathNode> successor_nodes;
-	
-	float x_speed, y_speed; // should be set earlier
 	float diagonal = sqrt(pow(x_speed, 2) + pow(y_speed, 2));
 
 	PathNode pn1 = PathNode(this->m_xCoord + x_speed, this->m_yCoord);
@@ -65,5 +63,5 @@ vector<PathNode> PathNode::getSuccessorNodes(PathNode* endNode)
 		node.H = node.getManhattanDistance(endNode);
 	}
 
-	return successor_nodes;
+	return &successor_nodes;
 }

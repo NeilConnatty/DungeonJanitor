@@ -12,7 +12,7 @@ struct PathNode
 
 public:
 	float m_xCoord, m_yCoord;
-	int m_id;
+	//int m_id;
 	PathNode * parent;
 	float G, H;
 
@@ -40,7 +40,7 @@ public:
 	
 	float getFValue() { return G + H; };
 	float getManhattanDistance(PathNode * destinationNode);
-	vector<PathNode> getSuccessorNodes(PathNode* endNode);
+	vector<PathNode>* getSuccessorNodes(PathNode* endNode, float x_speed, float y_speed);
 	
 	
 };
