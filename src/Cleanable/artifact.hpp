@@ -20,8 +20,9 @@ public:
 	bool	init();
 	bool	init(vec2 position);
 	void	destroy();
-	void deactivate();
-	void activate();
+	bool	is_activated();
+	void    deactivate();
+	void    activate();
 
 private:
 	void update_current(float ms) override {};

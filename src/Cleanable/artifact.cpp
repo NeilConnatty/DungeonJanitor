@@ -136,6 +136,11 @@ void Artifact::draw_current(const mat3& projection, const mat3& current_transfor
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
 
+bool Artifact::is_activated()
+{
+	return m_is_activated;
+}
+
 void Artifact::activate()
 {
 	m_is_activated = true;
