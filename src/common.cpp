@@ -78,6 +78,18 @@ mat3 mul(const mat3 & l, const mat3 & r)
 	return ret;
 }
 
+
+//  not giving me the right result in world.cpp
+vec3 mult(const mat3 & l, const vec3 & r)
+{
+
+	vec3 ret;
+	ret.x = dot(l.c0, r);
+	ret.y = dot(l.c1, r);
+	ret.z = dot(l.c2, r);
+	return ret;
+}
+
 mat3 operator*(const mat3 & l, const mat3 & r)
 {
 	return mul(l, r);
@@ -152,6 +164,15 @@ float det(mat3 m)
 {
   mat3 minors = mat_of_minor(m);
   return det(m, minors);
+}
+
+vec2 get_world_coords_from_room_coords(vec2 room_coords, mat3 room_transform, mat3 dungeon_transform)
+{
+
+	vec3 room_position_3d = { room_coords.x, room_coords.y, 1.0 };
+	vec3 dungeon_position = mult(room_transform, room_position_3d);
+	vec3 world_position = mult(dungeon_transform, dungeon_position);
+	return { world_position.x, world_position.y };
 }
 
 mat3 inverse(mat3 m)

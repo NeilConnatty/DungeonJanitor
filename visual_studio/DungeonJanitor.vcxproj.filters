@@ -19,8 +19,20 @@
     <ClCompile Include="..\src\Cleanable\puddle.cpp">
       <Filter>src\Cleanable</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\hero.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\boss.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Cleanable\artifact.cpp">
+      <Filter>src\Cleanable</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\camera.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\door.cpp">
+      <Filter>src\Dungeon</Filter>
     </ClCompile>
     <ClCompile Include="..\src\dungeon.cpp">
       <Filter>src\Dungeon</Filter>
@@ -37,8 +49,14 @@
     <ClCompile Include="..\src\wall.cpp">
       <Filter>src\Dungeon</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\door.cpp">
-      <Filter>src\Dungeon</Filter>
+    <ClCompile Include="..\src\pathfinder.cpp">
+      <Filter>src\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\pathfindernode.cpp">
+      <Filter>src\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ValueIteration.cpp">
+      <Filter>src\AI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,8 +93,26 @@
     <ClInclude Include="..\src\door.hpp">
       <Filter>headers\Dungeon</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\hero.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\boss.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Cleanable\artifact.hpp">
+      <Filter>headers\Cleanable</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\camera.hpp">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ValueIteration.hpp">
+      <Filter>headers\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pathfinder.hpp">
+      <Filter>headers\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\pathfindernode.hpp">
+      <Filter>headers\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +133,12 @@
     </Filter>
     <Filter Include="headers\Dungeon">
       <UniqueIdentifier>{41434c59-faf3-4595-ac85-c601daf24aa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers\AI">
+      <UniqueIdentifier>{929c110c-2bbe-4b0a-95ec-02dfa8e5e772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\AI">
+      <UniqueIdentifier>{161fe1cc-1e72-4ade-a05d-067c76b9094a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

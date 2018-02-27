@@ -9,11 +9,6 @@
 // Same as static in c, local to compilation unit
 namespace
 {
-    const size_t MAX_TURTLES = 15;
-    const size_t MAX_FISH = 5;
-    const size_t TURTLE_DELAY_MS = 2000;
-    const size_t FISH_DELAY_MS = 5000;
-
     namespace
     {
         void glfw_err_cb(int error, const char* desc)
@@ -115,18 +110,52 @@ bool World::init(vec2 screen)
 		return false;
   }
 
-  vec2 janitor_position = { 500.f, 100.f };
-  if (!m_janitor.init(janitor_position))
-  {
-    fprintf(stderr, "Failed to init Janitor.\n");
-    return false;
-  }
-  m_janitor.set_scale({ 3.f, 3.f });
 
+	if (!init_creatures())
+	{
+		fprintf(stderr, "Failed to init Creatures. \n");
+		return false;
+	}
+	vector<unique_ptr<Room>>& rooms = m_dungeon.get_rooms();
   // Make camera follow janitor
   m_camera.follow_object(&m_janitor);
+
   
   return true;
+}
+
+bool World::init_creatures()
+{
+	int w, h;
+	glfwGetFramebufferSize(m_window, &w, &h);
+	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
+	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
+	
+	if (!m_janitor.init(janitor_position))
+	{
+		fprintf(stderr, "Failed to init Janitor.\n");
+		return false;
+	}
+	m_janitor.set_scale({ 3.f, 3.f });
+
+	vec2 hero_position = get_world_coords_from_room_coords(m_dungeon.hero_room_position, m_dungeon.hero_start_room->transform, m_dungeon.transform);
+	if (!m_hero.init(hero_position))
+	{
+		fprintf(stderr, "Failed to init Hero. \n");
+		return false;
+
+	}
+	m_hero.set_scale({ 3.f, 3.f });
+
+	vec2 boss_position = get_world_coords_from_room_coords(m_dungeon.boss_room_position, m_dungeon.boss_start_room->transform, m_dungeon.transform);
+	if (!m_boss.init(boss_position))
+	{
+		fprintf(stderr, "Failed to init Boss. \n");
+		return false;
+	}
+	m_boss.set_scale({ 3.f , 3.f });
+
+	return true;
 }
 
 // Releases all the associated resources
@@ -140,6 +169,8 @@ void World::destroy()
     
     m_dungeon.destroy();
     m_janitor.destroy();
+	m_hero.destroy();
+	m_boss.destroy();
     //Destructors for game objects here
     glfwDestroyWindow(m_window);
 }
@@ -151,6 +182,10 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w, (float)h };
     m_janitor.update(elapsed_ms);
+	//vec2 nextDoorPos = m_hero.get_next_door_position();
+	m_hero.set_destination(m_janitor.get_pos());
+	m_hero.update(elapsed_ms);
+	m_boss.update(elapsed_ms);
     m_dungeon.update(elapsed_ms);
 
     return true;
@@ -182,8 +217,13 @@ void World::draw()
     mat3 transform = m_camera.get_transform(w, h);
 
     // Drawing entities
+
+
     m_dungeon.draw(projection_2D, transform);
     m_janitor.draw(projection_2D, transform);
+	m_hero.draw(projection_2D, transform);
+	m_boss.draw(projection_2D, transform);
+
     // Presenting
     glfwSwapBuffers(m_window);
 }
