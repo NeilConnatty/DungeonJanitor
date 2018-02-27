@@ -8,10 +8,10 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 	PathNode startNode = PathNode(position.x, position.y);
 	PathNode endNode = PathNode(destination.x, destination.y);
 
-	vector<PathNode*> openNodes;
-	vector<PathNode*> closedNodes;
+	vector<PathNode> openNodes;
+	vector<PathNode> closedNodes;
 
-	openNodes.push_back(&startNode);
+	openNodes.push_back(startNode);
 
 	while (openNodes.size() > 0)
 	{
@@ -29,25 +29,26 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 		// if collision -> close node and continue
 		if (collisionDetected(*node_current))
 		{
-			closedNodes.push_back(node_current);
+			closedNodes.push_back(*node_current);
 			continue;
 		}
 		
 		// else get successors and set their values
-		vector<PathNode>* successors = node_current->getSuccessorNodes(&endNode, x_speed, y_speed);
+		vector<PathNode> successors = node_current->getSuccessorNodes(&endNode, x_speed, y_speed);
 
 
-		for (PathNode successor_node : *successors)
+		for (PathNode& successor_node : successors)
 		{
 			// see if in OPEN. new value should never be better
+			
 			auto found_node = find(openNodes.begin(), openNodes.end(), successor_node);
 			if (found_node != openNodes.end())
 			{
-				if ((*found_node)->getFValue() > successor_node.getFValue())
+				if (found_node->getFValue() > successor_node.getFValue())
 				{
+					openNodes.erase(found_node);
 					//Jay Should not get here. Previous node should always have more efficient path.
-					printf("Jay: Error - found more efficient node during A*");
-					assert(false);
+					//printf("Jay: Error - found more efficient node during A*");
 				}
 				else
 				{
@@ -60,11 +61,12 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 			found_node = find(closedNodes.begin(), closedNodes.end(), successor_node);
 			if (found_node != closedNodes.end())
 			{
-				if ((*found_node)->getFValue() > successor_node.getFValue())
+				if (found_node->getFValue() > successor_node.getFValue())
 				{
 					//Jay Should not get here. Previous node should always have more efficient path.
-					printf("Jay: Error - found more efficient node during A*");
-					assert(false);
+					//printf("Jay: Error - found more efficient node during A*");
+					//assert(false);
+					closedNodes.erase(found_node);
 				}
 				else
 				{
@@ -72,10 +74,11 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 					continue;
 				}
 			}
-
-			openNodes.push_back(&successor_node);
+			
+			openNodes.push_back(successor_node);
+			int test = 0;
 		}
-		closedNodes.push_back(node_current);
+		closedNodes.push_back(*node_current);
 	}
 	return getPathFromGoalNode(endNode);
 }
@@ -87,17 +90,17 @@ bool Pathfinder::collisionDetected(PathNode node)
 	return false;
 }
 
-PathNode* Pathfinder::getNextNode(vector<PathNode*>* nodes)
+PathNode* Pathfinder::getNextNode(vector<PathNode>* nodes)
 {
-	PathNode * bestSoFar = nodes->front();
-	float count = 0;
-	float finalCount = 0;
+	PathNode * bestSoFar = &(nodes->front());
+	int count = 0;
+	int finalCount = 0;
 
-	for (PathNode* node : *nodes)
+	for (PathNode& node : *nodes)
 	{
-		if (node->getFValue() < bestSoFar->getFValue())
+		if (node.getFValue() < bestSoFar->getFValue())
 		{
-			bestSoFar = node;
+			bestSoFar = &node;
 			finalCount = count;
 		}
 		count++;

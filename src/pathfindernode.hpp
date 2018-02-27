@@ -40,7 +40,7 @@ public:
 	
 	float getFValue() { return G + H; };
 	float getManhattanDistance(PathNode * destinationNode);
-	vector<PathNode>* getSuccessorNodes(PathNode* endNode, float x_speed, float y_speed);
+	vector<PathNode> getSuccessorNodes(PathNode* endNode, float x_speed, float y_speed);
 	
 	
 };

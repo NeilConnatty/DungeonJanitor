@@ -2,11 +2,14 @@
 
 #include "pathfindernode.hpp";
 
-#define CLOSE_ENOUGH 10.f; // Subject to change
+#define CLOSE_ENOUGH 0.001f; // Subject to change
+#define IS_MATCH 10.f; // Subject to change
 
 bool PathNode::isMatch(PathNode endNode)
 {
-	return (*this == endNode);
+	bool c1 = abs(this->m_xCoord - endNode.m_xCoord) <= IS_MATCH;
+	bool c2 = abs(this->m_yCoord - endNode.m_yCoord) <= IS_MATCH;
+	return c1 && c2;
 }
 
 bool PathNode::operator==(const PathNode & comparison_node)
@@ -24,10 +27,15 @@ float PathNode::getManhattanDistance(PathNode * destinationNode)
 	return x + y;
 }
 
-vector<PathNode>* PathNode::getSuccessorNodes(PathNode* endNode, float x_speed, float y_speed)
+vector<PathNode> PathNode::getSuccessorNodes(PathNode* endNode, float x_speed, float y_speed)
 {
 	vector<PathNode> successor_nodes;
 	float diagonal = sqrt(pow(x_speed, 2) + pow(y_speed, 2));
+
+	if (m_xCoord < 0 || m_yCoord < 0)
+	{
+		int problem;
+	}
 
 	PathNode pn1 = PathNode(this->m_xCoord + x_speed, this->m_yCoord);
 	PathNode pn2 = PathNode(this->m_xCoord - x_speed, this->m_yCoord);
@@ -57,11 +65,11 @@ vector<PathNode>* PathNode::getSuccessorNodes(PathNode* endNode, float x_speed, 
 	successor_nodes.emplace_back(pn7);
 	successor_nodes.emplace_back(pn8);
 
-	for (PathNode node : successor_nodes)
+	for (PathNode& node : successor_nodes)
 	{
 		node.parent = this;
 		node.H = node.getManhattanDistance(endNode);
 	}
 
-	return &successor_nodes;
+	return successor_nodes;
 }

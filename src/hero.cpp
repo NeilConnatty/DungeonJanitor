@@ -152,8 +152,7 @@ void Hero::update_current(float ms)
 		float timeFactor = ms / 1000;
 		bool will_move = false;
 
-		vector<vec2> path = Pathfinder::getPathFromPositionToDestination(m_position, m_destination, 
-			SPEED * timeFactor, Y_SPEED * timeFactor);
+		vector<vec2> path = Pathfinder::getPathFromPositionToDestination(m_position, m_destination, SPEED / 10.f, Y_SPEED / 10.f);
 
 		float s_x = m_position.x;
 		float s_y = m_position.y;
