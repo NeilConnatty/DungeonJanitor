@@ -12,6 +12,8 @@ Hero::~Hero() {}
 
 bool Hero::init()
 {
+	m_is_moving = false;
+	m_next_room = nullptr;
 	return init({ 0.f, 0.f });
 }
 
@@ -85,15 +87,31 @@ void Hero::setRoom(Room * room)
 	m_currentRoom = room;
 }
 
-void Hero::set_destination(vec2 destination)
+void Hero::setAllRooms(vector<unique_ptr<Room>>* rooms)
+{
+	m_rooms = rooms;
+}
+
+void Hero::set_destination(vec2 destination_pos, Hero::destinations destination_type )
 {
 	m_is_moving = true;
-	m_destination = destination;
+	m_destination = destination_pos;
+	m_destination_type = destination_type;
 }
 
 void Hero::stop_movement()
 {
 	m_is_moving = false;
+}
+
+bool Hero::is_moving()
+{
+	return m_is_moving;
+}
+
+Room* Hero::get_current_room()
+{
+	return m_currentRoom;
 }
 
 void Hero::draw_current(const mat3& projection, const mat3& current_transform)
@@ -140,7 +158,7 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 
 void Hero::update_current(float ms)
 {
-	// only move if a destination is set
+	// only move if set to move
 	if (m_is_moving)
 	{
 		float step_size = 10.f; // should probably replace this with collisions 
@@ -188,6 +206,10 @@ void Hero::update_current(float ms)
 		else
 		{
 			stop_movement();
+			if (m_destination_type == DOOR)
+			{
+				m_currentRoom = m_next_room;
+			}
 		}
 	}
 	
@@ -197,24 +219,28 @@ void Hero::update_current(float ms)
 vec2 Hero::get_next_door_position()
 {
 	float percentage_of_cleaned_artifacts = 0.5;
-	vector<unique_ptr<Room>> rooms; // STUB needs to be set
+	vector<unique_ptr<Room>>* rooms = m_rooms;
 
-	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom, rooms, percentage_of_cleaned_artifacts);
+	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom, *rooms, percentage_of_cleaned_artifacts);
 
 	if (target_room == Room::directions::NORTH)
 	{
+		m_next_room = m_currentRoom->get_north_room();
 		return m_currentRoom->get_north_door()->get_pos();
 	}
 	else if (target_room == Room::directions::SOUTH)
 	{
+		m_next_room = m_currentRoom->get_south_room();
 		return m_currentRoom->get_south_door()->get_pos();
 	}
 	else if (target_room == Room::directions::EAST)
 	{
+		m_next_room = m_currentRoom->get_east_room();
 		return m_currentRoom->get_east_door()->get_pos();
 	}
 	else
 	{
+		m_next_room = m_currentRoom->get_west_room();
 		return m_currentRoom->get_west_door()->get_pos();
 	}
 }
