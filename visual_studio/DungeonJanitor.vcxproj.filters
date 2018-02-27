@@ -13,17 +13,8 @@
     <ClCompile Include="..\src\gameobject.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\janitor.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Cleanable\puddle.cpp">
       <Filter>src\Cleanable</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\hero.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\boss.cpp">
-      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Cleanable\artifact.cpp">
       <Filter>src\Cleanable</Filter>
@@ -57,6 +48,15 @@
     </ClCompile>
     <ClCompile Include="..\src\ValueIteration.cpp">
       <Filter>src\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\boss.cpp">
+      <Filter>src\Creatues</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\hero.cpp">
+      <Filter>src\Creatues</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\janitor.cpp">
+      <Filter>src\Creatues</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +139,9 @@
     </Filter>
     <Filter Include="src\AI">
       <UniqueIdentifier>{161fe1cc-1e72-4ade-a05d-067c76b9094a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Creatues">
+      <UniqueIdentifier>{b10edf56-be2e-46bd-bb42-43acf6a3aa73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
