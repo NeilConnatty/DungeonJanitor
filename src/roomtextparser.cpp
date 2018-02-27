@@ -5,7 +5,6 @@
 #include <fstream>
 #include <string>
 
-
 #define SPACE ' '
 #define WALL 'w'
 #define FLOOR 'f'
@@ -14,8 +13,9 @@
 #define JANITOR 'j'
 #define HERO 'h'
 #define BOSS 'b'
-#define DOOR    'd'
-
+#define DOOR 'd'
+#define ROOM 'r'
+#define HALLWAY 'h'
 
 bool RoomParser::parseLine(std::string &line, float y, bool first_line) 
 {
@@ -115,15 +115,15 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
   return true;
 }
 
-void RoomParser::clearPositions()
+void RoomParser::clearPositions() 
 {
-    wall_pairs.clear();
-    floor_pos.clear();
-    puddle_pos.clear();
-	  door_pos.clear();
+  wall_pairs.clear();
+  floor_pos.clear();
+  puddle_pos.clear();
+  door_pos.clear();
 }
 
-bool RoomParser::populateRoom(Room &room)
+bool RoomParser::populateRoom(Room &room) 
 {
     return (room.add_floors(floor_pos) && 
             room.add_walls(wall_pairs) && 
@@ -190,4 +190,50 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
   }
 
   return true;
+}
+
+//======================= DungeonParser ======================//
+bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename)
+{
+  std::string line;
+  std::ifstream file(filename);
+  std::vector<std::string> lines;
+
+  while (std::getline(file, line))
+  {
+    lines.emplace_back(line);
+  }
+
+  return parseLines(lines);
+}
+
+bool DungeonParser::parseLines(std::vector<std::string>& lines)
+{
+  size_t row, column;
+
+  for (row = 0; row < lines.size(); ++row)
+  {
+    std::string& line = lines[column];
+    for (column = 0; column < line.size(); ++column)
+    {
+      char& ch = line[column];
+
+      if (ch == ROOM)
+      {
+
+      }
+      else if (ch == HALLWAY)
+      {
+
+      }
+      else
+      {
+        fprintf(stderr,
+          "Error parsing room file. Invalid character %c at line %d, "
+          "column %d.\n",
+          ch, row + 1, column + 1);
+        return false;
+      }
+    }
+  }
 }

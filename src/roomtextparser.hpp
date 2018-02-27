@@ -29,9 +29,17 @@ private:
 	vector<vec2> floor_pos;
 	vector<vec2> puddle_pos;
 	vector<vec2> door_pos;
-	vector<Room::wall_pair> wall_pairs;
-	
+	vector<Room::wall_pair> wall_pairs;  
+};
 
-  
+class DungeonParser
+{
+public:
+  bool parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename);
+
+private:
+  bool parseLines(std::vector<std::string>& lines);
+
+private:
 };
 
