@@ -69,9 +69,6 @@
     <ClInclude Include="..\src\gameobject.hpp">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\janitor.hpp">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Cleanable\puddle.hpp">
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
@@ -93,12 +90,6 @@
     <ClInclude Include="..\src\door.hpp">
       <Filter>headers\Dungeon</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\hero.hpp">
-      <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\boss.hpp">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Cleanable\artifact.hpp">
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
@@ -113,6 +104,15 @@
     </ClInclude>
     <ClInclude Include="..\src\pathfindernode.hpp">
       <Filter>headers\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\boss.hpp">
+      <Filter>headers\Creatues</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\hero.hpp">
+      <Filter>headers\Creatues</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\janitor.hpp">
+      <Filter>headers\Creatues</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +142,9 @@
     </Filter>
     <Filter Include="src\Creatues">
       <UniqueIdentifier>{b10edf56-be2e-46bd-bb42-43acf6a3aa73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers\Creatues">
+      <UniqueIdentifier>{bc2e40af-2c4d-4aab-869a-f03d58f094fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
