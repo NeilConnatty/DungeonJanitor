@@ -1,6 +1,7 @@
 // pathfindernode.cpp
 
 #include "pathfindernode.hpp";
+#include <memory>
 
 #define CLOSE_ENOUGH 0.001f; // Subject to change
 #define IS_MATCH 10.f; // Subject to change
@@ -27,7 +28,7 @@ float PathNode::getManhattanDistance(PathNode * destinationNode)
 	return x + y;
 }
 
-void PathNode::getSuccessorNodes(vector<PathNode> * successor_nodes, PathNode* endNode, float x_speed, float y_speed)
+void PathNode::getSuccessorNodes(vector<unique_ptr<PathNode>> * successor_nodes, PathNode* endNode, float x_speed, float y_speed)
 {
 	float diagonal = sqrt(pow(x_speed, 2) + pow(y_speed, 2));
 
@@ -36,24 +37,24 @@ void PathNode::getSuccessorNodes(vector<PathNode> * successor_nodes, PathNode* e
 		int problem;
 	}
 
-	PathNode pn1 = PathNode(this->m_xCoord + x_speed, this->m_yCoord);
-	PathNode pn2 = PathNode(this->m_xCoord - x_speed, this->m_yCoord);
-	PathNode pn3 = PathNode(this->m_xCoord + x_speed, this->m_yCoord + y_speed);
-	PathNode pn4 = PathNode(this->m_xCoord + x_speed, this->m_yCoord - y_speed);
-	PathNode pn5 = PathNode(this->m_xCoord - x_speed, this->m_yCoord + y_speed);
-	PathNode pn6 = PathNode(this->m_xCoord - x_speed, this->m_yCoord - y_speed);
-	PathNode pn7 = PathNode(this->m_xCoord			, this->m_yCoord + y_speed);
-	PathNode pn8 = PathNode(this->m_xCoord			, this->m_yCoord - y_speed);
+	PathNode* pn1 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord);
+	PathNode* pn2 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord);
+	PathNode* pn3 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord + y_speed);
+	PathNode* pn4 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord - y_speed);
+	PathNode* pn5 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord + y_speed);
+	PathNode* pn6 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord - y_speed);
+	PathNode* pn7 = new PathNode(this->m_xCoord			, this->m_yCoord + y_speed);
+	PathNode* pn8 = new PathNode(this->m_xCoord			, this->m_yCoord - y_speed);
 
 	// Set G based on distance from this node
-	pn1.G = this->G + x_speed;
-	pn2.G = this->G + x_speed;
-	pn3.G = this->G + diagonal;
-	pn4.G = this->G + diagonal;
-	pn5.G = this->G + diagonal;
-	pn6.G = this->G + diagonal;
-	pn7.G = this->G + y_speed;
-	pn8.G = this->G + y_speed;
+	pn1->G = this->G + x_speed;
+	pn2->G = this->G + x_speed;
+	pn3->G = this->G + diagonal;
+	pn4->G = this->G + diagonal;
+	pn5->G = this->G + diagonal;
+	pn6->G = this->G + diagonal;
+	pn7->G = this->G + y_speed;
+	pn8->G = this->G + y_speed;
 
 	successor_nodes->emplace_back(pn1);
 	successor_nodes->emplace_back(pn2);
@@ -64,10 +65,10 @@ void PathNode::getSuccessorNodes(vector<PathNode> * successor_nodes, PathNode* e
 	successor_nodes->emplace_back(pn7);
 	successor_nodes->emplace_back(pn8);
 
-	for (PathNode& node : *successor_nodes)
+	for (std::unique_ptr<PathNode>& node : *successor_nodes)
 	{
-		node.parent = this;
-		node.H = node.getManhattanDistance(endNode);
+		node->parent = this;
+		node->H = node->getManhattanDistance(endNode);
 	}
 
 }

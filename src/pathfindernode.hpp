@@ -2,6 +2,7 @@
 #include "common.hpp"
 #include <math.h>
 #include <vector>
+#include <memory>
 
 using namespace std;
 
@@ -40,7 +41,7 @@ public:
 	
 	float getFValue() { return G + H; };
 	float getManhattanDistance(PathNode * destinationNode);
-	void getSuccessorNodes(vector<PathNode> * successor_nodes, PathNode* endNode, float x_speed, float y_speed);
+	void getSuccessorNodes(vector<unique_ptr<PathNode>>* successor_nodes, PathNode* endNode, float x_speed, float y_speed);
 	
 	
 };

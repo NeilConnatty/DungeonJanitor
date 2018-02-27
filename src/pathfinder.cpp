@@ -16,7 +16,7 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 	while (openNodes.size() > 0)
 	{
 		// choose next node_current from openNodes
-		PathNode* node_current = getNextNode(&openNodes);
+		std::unique_ptr<PathNode> node_current(getNextNode(&openNodes)); // moves the returned unique_ptr into node_current
 
 		// if node is match, done with pathfinding
 		if (node_current->isMatch(endNode))
@@ -34,11 +34,11 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 		}
 		
 		// else get successors and set their values
-		vector<PathNode> successors; 
+		vector<unique_ptr<PathNode>> successors; 
 		node_current->getSuccessorNodes(&successors, &endNode, x_speed, y_speed);
 
 
-		for (PathNode& successor_node : successors)
+		for (unique_ptr<PathNode>& successor_node : successors)
 		{
 			// see if in OPEN. new value should never be better
 			
@@ -77,22 +77,22 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 				}
 			}
 			*/
-			openNodes.push_back(make_unique<PathNode>(successor_node));
+			openNodes.push_back(std::move(successor_node));
 			int test = 0;
 		}
-		closedNodes.push_back(make_unique<PathNode>(*node_current));
+		closedNodes.push_back(std::move(node_current));
 	}
 	return getPathFromGoalNode(endNode);
 }
 
-bool Pathfinder::collisionDetected(PathNode node)
+bool Pathfinder::collisionDetected(PathNode& node)
 {
 
 	//stub
 	return false;
 }
 
-PathNode* Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes)
+unique_ptr<PathNode> Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes)
 {
 	PathNode * bestSoFar = &(*(nodes->front()));
 	int count = 0;
@@ -108,9 +108,11 @@ PathNode* Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes)
 		count++;
 	}
 
-	nodes->erase(nodes->begin() + finalCount);
+  // Need to make sure the node isn't deallocated on call to erase
+  std::unique_ptr<PathNode> ret(std::move(*(nodes->begin() + finalCount)));
+  nodes->erase(nodes->begin() + finalCount);
 
-	return bestSoFar;
+	return ret;
 }
 
 vector<vec2> Pathfinder::getPathFromGoalNode(PathNode endNode)
