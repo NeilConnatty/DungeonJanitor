@@ -183,8 +183,7 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w, (float)h };
     m_janitor.update(elapsed_ms);
-	vec2 nextDoorPos = get_world_coords_from_room_coords(m_hero.get_next_door_position(), m_hero.get_current_room()->transform, m_dungeon.transform);
-	m_hero.set_destination(nextDoorPos);
+	move_hero();
 	m_hero.update(elapsed_ms);
 	m_boss.update(elapsed_ms);
     m_dungeon.update(elapsed_ms);
@@ -275,6 +274,15 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         glfwGetWindowSize(m_window, &w, &h);
         //Destructor functions for game objects go below:
     }
+}
+
+void World::move_hero()
+{
+	if (!m_hero.is_moving())
+	{
+		vec2 next_door_pos = get_world_coords_from_room_coords(m_hero.get_next_door_position(), m_hero.get_current_room()->transform, m_dungeon.transform);
+		m_hero.set_destination(next_door_pos, Hero::destinations::DOOR);
+	}
 }
 
 //left it just because.

@@ -8,10 +8,19 @@
 
 class Hero : public GameObject
 {
+public:
+	enum destinations
+	{
+		DOOR = 0,
+		ARTIFACT = 1,
+		BOSS = 2
+	};
 
 private:
 	static Texture hero_texture;
 	Room * m_currentRoom;
+	Room* m_next_room;
+	Hero::destinations m_destination_type;
 	vec2 m_destination;
 	vec2 m_vel;
 	bool m_is_moving;
@@ -26,11 +35,12 @@ public:
 	void	destroy();
 	void setRoom(Room * room);
 	void setAllRooms(vector<unique_ptr<Room>>* rooms);
-	void set_destination(vec2 position);
+	void set_destination(vec2 position, Hero::destinations destination);
 	void stop_movement();
+	bool is_moving();
 	Room* get_current_room();
 
-	vec2 get_next_door_position();
+	vec2 get_next_door_position(); // which door to go to next
 
 private:
 	void update_current(float ms) override;
