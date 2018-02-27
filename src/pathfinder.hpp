@@ -19,6 +19,7 @@ public:
 private:
 
 	static bool collisionDetected(PathNode node);
-	static PathNode* getNextNode(vector<PathNode>* nodes);
+	static PathNode* getNextNode(vector<unique_ptr<PathNode>>* nodes);
 	static vector<vec2> getPathFromGoalNode(PathNode endNode);
+	
 };
