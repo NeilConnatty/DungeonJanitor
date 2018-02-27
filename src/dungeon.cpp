@@ -147,7 +147,7 @@ void Dungeon::activate_artifact()
 		Room* room_ptr = room.get();
 		if (room_ptr->containsArtifact())
 		{
-			room_ptr->get_artifact()->activate();
+			room_ptr->get_artifact()->set_active(true);
 		}
 	}
 }

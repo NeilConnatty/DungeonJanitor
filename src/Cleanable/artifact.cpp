@@ -141,12 +141,7 @@ bool Artifact::is_activated()
 	return m_is_activated;
 }
 
-void Artifact::activate()
+void Artifact::set_active(bool active)
 {
-	m_is_activated = true;
-}
-
-void Artifact::deactivate()
-{
-	m_is_activated = false;
+	m_is_activated = active;
 }
