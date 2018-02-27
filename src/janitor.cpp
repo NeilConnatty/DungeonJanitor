@@ -364,7 +364,7 @@ bool Janitor::validate_textures()
 {
 	if (!up1.is_valid())
 	{
-		if (!up1.load_from_file(textures_path("up1.png")))
+		if (!up1.load_from_file(textures_path("janitor/up1.png")))
 		{
 			fprintf(stderr, "Failed to load texture up1\n");
 			return false;
@@ -372,7 +372,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up2.is_valid())
 	{
-		if (!up2.load_from_file(textures_path("up2.png")))
+		if (!up2.load_from_file(textures_path("janitor/up2.png")))
 		{
 			fprintf(stderr, "Failed to load texture up2\n");
 			return false;
@@ -380,7 +380,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up3.is_valid())
 	{
-		if (!up3.load_from_file(textures_path("up3.png")))
+		if (!up3.load_from_file(textures_path("janitor/up3.png")))
 		{
 			fprintf(stderr, "Failed to load texture up3\n");
 			return false;
@@ -388,7 +388,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up4.is_valid())
 	{
-		if (!up4.load_from_file(textures_path("up4.png")))
+		if (!up4.load_from_file(textures_path("janitor/up4.png")))
 		{
 			fprintf(stderr, "Failed to load texture up4\n");
 			return false;
@@ -396,7 +396,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down1.is_valid())
 	{
-		if (!down1.load_from_file(textures_path("down1.png")))
+		if (!down1.load_from_file(textures_path("janitor/down1.png")))
 		{
 			fprintf(stderr, "Failed to load texture down1\n");
 			return false;
@@ -404,7 +404,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down2.is_valid())
 	{
-		if (!down2.load_from_file(textures_path("down2.png")))
+		if (!down2.load_from_file(textures_path("janitor/down2.png")))
 		{
 			fprintf(stderr, "Failed to load texture down2\n");
 			return false;
@@ -412,7 +412,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down3.is_valid())
 	{
-		if (!down3.load_from_file(textures_path("down3.png")))
+		if (!down3.load_from_file(textures_path("janitor/down3.png")))
 		{
 			fprintf(stderr, "Failed to load texture down3\n");
 			return false;
@@ -420,7 +420,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down4.is_valid())
 	{
-		if (!down4.load_from_file(textures_path("down4.png")))
+		if (!down4.load_from_file(textures_path("janitor/down4.png")))
 		{
 			fprintf(stderr, "Failed to load texture down4\n");
 			return false;
@@ -428,7 +428,7 @@ bool Janitor::validate_textures()
 	}
 	if (!left1.is_valid())
 	{
-		if (!left1.load_from_file(textures_path("left1.png")))
+		if (!left1.load_from_file(textures_path("janitor/left1.png")))
 		{
 			fprintf(stderr, "Failed to load texture left1\n");
 			return false;
@@ -436,7 +436,7 @@ bool Janitor::validate_textures()
 	}
 	if (!left2.is_valid())
 	{
-		if (!left2.load_from_file(textures_path("left2.png")))
+		if (!left2.load_from_file(textures_path("janitor/left2.png")))
 		{
 			fprintf(stderr, "Failed to load texture left2\n");
 			return false;
@@ -444,7 +444,7 @@ bool Janitor::validate_textures()
 	}
 	if (!left3.is_valid())
 	{
-		if (!left3.load_from_file(textures_path("left3.png")))
+		if (!left3.load_from_file(textures_path("janitor/left3.png")))
 		{
 			fprintf(stderr, "Failed to load texture left3\n");
 			return false;
@@ -452,7 +452,7 @@ bool Janitor::validate_textures()
 	}
 	if (!left4.is_valid())
 	{
-		if (!left4.load_from_file(textures_path("left4.png")))
+		if (!left4.load_from_file(textures_path("janitor/left4.png")))
 		{
 			fprintf(stderr, "Failed to load texture left4\n");
 			return false;
@@ -460,7 +460,7 @@ bool Janitor::validate_textures()
 	}
 	if (!right1.is_valid())
 	{
-		if (!right1.load_from_file(textures_path("right1.png")))
+		if (!right1.load_from_file(textures_path("janitor/right1.png")))
 		{
 			fprintf(stderr, "Failed to load texture right1\n");
 			return false;
@@ -468,7 +468,7 @@ bool Janitor::validate_textures()
 	}
 	if (!right2.is_valid())
 	{
-		if (!right2.load_from_file(textures_path("right2.png")))
+		if (!right2.load_from_file(textures_path("janitor/right2.png")))
 		{
 			fprintf(stderr, "Failed to load texture right2\n");
 			return false;
@@ -476,7 +476,7 @@ bool Janitor::validate_textures()
 	}
 	if (!right3.is_valid())
 	{
-		if (!right3.load_from_file(textures_path("right3.png")))
+		if (!right3.load_from_file(textures_path("janitor/right3.png")))
 		{
 			fprintf(stderr, "Failed to load texture right3\n");
 			return false;
@@ -484,7 +484,7 @@ bool Janitor::validate_textures()
 	}
 	if (!right4.is_valid())
 	{
-		if (!right4.load_from_file(textures_path("right4.png")))
+		if (!right4.load_from_file(textures_path("janitor/right4.png")))
 		{
 			fprintf(stderr, "Failed to load texture right4\n");
 			return false;
@@ -492,7 +492,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up_right1.is_valid())
 	{
-		if (!up_right1.load_from_file(textures_path("up_right1.png")))
+		if (!up_right1.load_from_file(textures_path("janitor/up_right1.png")))
 		{
 			fprintf(stderr, "Failed to load texture up_right1\n");
 			return false;
@@ -500,7 +500,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up_right2.is_valid())
 	{
-		if (!up_right2.load_from_file(textures_path("up_right2.png")))
+		if (!up_right2.load_from_file(textures_path("janitor/up_right2.png")))
 		{
 			fprintf(stderr, "Failed to load texture up_right2\n");
 			return false;
@@ -508,7 +508,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up_right3.is_valid())
 	{
-		if (!up_right3.load_from_file(textures_path("up_right3.png")))
+		if (!up_right3.load_from_file(textures_path("janitor/up_right3.png")))
 		{
 			fprintf(stderr, "Failed to load texture up_right3\n");
 			return false;
@@ -516,7 +516,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up_right4.is_valid())
 	{
-		if (!up_right4.load_from_file(textures_path("up_right4.png")))
+		if (!up_right4.load_from_file(textures_path("janitor/up_right4.png")))
 		{
 			fprintf(stderr, "Failed to load texture up_right4\n");
 			return false;
@@ -524,7 +524,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up_left1.is_valid())
 	{
-		if (!up_left1.load_from_file(textures_path("up_left1.png")))
+		if (!up_left1.load_from_file(textures_path("janitor/up_left1.png")))
 		{
 			fprintf(stderr, "Failed to load texture up_left1\n");
 			return false;
@@ -532,7 +532,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up_left2.is_valid())
 	{
-		if (!up_left2.load_from_file(textures_path("up_left2.png")))
+		if (!up_left2.load_from_file(textures_path("janitor/up_left2.png")))
 		{
 			fprintf(stderr, "Failed to load texture up_left2\n");
 			return false;
@@ -540,7 +540,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up_left3.is_valid())
 	{
-		if (!up_left3.load_from_file(textures_path("up_left3.png")))
+		if (!up_left3.load_from_file(textures_path("janitor/up_left3.png")))
 		{
 			fprintf(stderr, "Failed to load texture up_left3\n");
 			return false;
@@ -548,7 +548,7 @@ bool Janitor::validate_textures()
 	}
 	if (!up_left4.is_valid())
 	{
-		if (!up_left4.load_from_file(textures_path("up_left4.png")))
+		if (!up_left4.load_from_file(textures_path("janitor/up_left4.png")))
 		{
 			fprintf(stderr, "Failed to load texture up_left4\n");
 			return false;
@@ -556,7 +556,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down_right1.is_valid())
 	{
-		if (!down_right1.load_from_file(textures_path("down_right1.png")))
+		if (!down_right1.load_from_file(textures_path("janitor/down_right1.png")))
 		{
 			fprintf(stderr, "Failed to load texture down_right1\n");
 			return false;
@@ -564,7 +564,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down_right2.is_valid())
 	{
-		if (!down_right2.load_from_file(textures_path("down_right2.png")))
+		if (!down_right2.load_from_file(textures_path("janitor/down_right2.png")))
 		{
 			fprintf(stderr, "Failed to load texture down_right2\n");
 			return false;
@@ -572,7 +572,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down_right3.is_valid())
 	{
-		if (!down_right3.load_from_file(textures_path("down_right3.png")))
+		if (!down_right3.load_from_file(textures_path("janitor/down_right3.png")))
 		{
 			fprintf(stderr, "Failed to load texture down_right3\n");
 			return false;
@@ -580,7 +580,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down_right4.is_valid())
 	{
-		if (!down_right4.load_from_file(textures_path("down_right4.png")))
+		if (!down_right4.load_from_file(textures_path("janitor/down_right4.png")))
 		{
 			fprintf(stderr, "Failed to load texture down_right4\n");
 			return false;
@@ -588,7 +588,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down_left1.is_valid())
 	{
-		if (!down_left1.load_from_file(textures_path("down_left1.png")))
+		if (!down_left1.load_from_file(textures_path("janitor/down_left1.png")))
 		{
 			fprintf(stderr, "Failed to load texture down_left1\n");
 			return false;
@@ -596,7 +596,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down_left2.is_valid())
 	{
-		if (!down_left2.load_from_file(textures_path("down_left2.png")))
+		if (!down_left2.load_from_file(textures_path("janitor/down_left2.png")))
 		{
 			fprintf(stderr, "Failed to load texture down_left2\n");
 			return false;
@@ -604,7 +604,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down_left3.is_valid())
 	{
-		if (!down_left3.load_from_file(textures_path("down_left3.png")))
+		if (!down_left3.load_from_file(textures_path("janitor/down_left3.png")))
 		{
 			fprintf(stderr, "Failed to load texture down_left3\n");
 			return false;
@@ -612,7 +612,7 @@ bool Janitor::validate_textures()
 	}
 	if (!down_left4.is_valid())
 	{
-		if (!down_left4.load_from_file(textures_path("down_left4.png")))
+		if (!down_left4.load_from_file(textures_path("janitor/down_left4.png")))
 		{
 			fprintf(stderr, "Failed to load texture down_left4\n");
 			return false;
