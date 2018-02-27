@@ -42,16 +42,16 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 		{
 			// see if in OPEN. new value should never be better
 			
-			/*
 			auto found_node = find(openNodes.begin(), openNodes.end(), successor_node);
 			if (found_node != openNodes.end())
 			{
-				if ((*found_node)->getFValue() > successor_node.getFValue())
+				if ((*found_node)->getFValue() > successor_node->getFValue())
 				{
-					openNodes.erase(found_node);
 					//Jay Should not get here. Previous node should always have more efficient path.
-					//printf("Jay: Error - found more efficient node during A*");
-				}
+          printf("Jay: Error - found more efficient node during A*");
+          assert(false);
+          openNodes.erase(found_node);
+        }
 				else
 				{
 					// discard successor_node and continue for loop
@@ -63,11 +63,11 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 			found_node = find(closedNodes.begin(), closedNodes.end(), successor_node);
 			if (found_node != closedNodes.end())
 			{
-				if ((*found_node)->getFValue() > successor_node.getFValue())
+				if ((*found_node)->getFValue() > successor_node->getFValue())
 				{
 					//Jay Should not get here. Previous node should always have more efficient path.
-					//printf("Jay: Error - found more efficient node during A*");
-					//assert(false);
+					printf("Jay: Error - found more efficient node during A*");
+					assert(false);
 					closedNodes.erase(found_node);
 				}
 				else
@@ -76,7 +76,7 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 					continue;
 				}
 			}
-			*/
+			
 			openNodes.push_back(std::move(successor_node));
 			int test = 0;
 		}
