@@ -278,7 +278,11 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 void World::move_hero()
 {
-	if (!m_hero.is_moving())
+	if (m_hero.get_current_room()->containsBoss())
+	{
+		m_hero.stop_movement();
+	}
+	else if (!m_hero.is_moving())
 	{
 		vec2 next_door_pos = get_world_coords_from_room_coords(m_hero.get_next_door_position(), m_hero.get_current_room()->transform, m_dungeon.transform);
 		m_hero.set_destination(next_door_pos, Hero::destinations::DOOR);

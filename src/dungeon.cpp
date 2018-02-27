@@ -27,7 +27,7 @@ RoomParser parser;
 		return false;
 	}
 
-	new_room_3->set_pos({ 1084.f, -550.f }); // temporary values, eventually we will want to have
+	new_room_3->set_pos({ 128.f, -1120.f }); // temporary values, eventually we will want to have
 											// a parser that creates the dungeon layouts
 	if (!parser.parseRoom(*new_room_3, room_path("3.rm")))
 	{
@@ -98,10 +98,10 @@ RoomParser parser;
   new_room_2->setRoomID(2);
   new_room_2->set_south_room(new_room, &door);
   Door& door2 = new_room_3->get_m_doors()->front();
-  door2.set_pos({ 1084.f, -175.f });
-  door2.toggle_enable();
-  new_room_2->set_east_room(new_room_3, &door2);
-  new_room_3->set_west_room(new_room_2, &door2);
+  door2.set_pos({ 220.0, 18.0});
+  //door2.toggle_enable();
+  new_room_2->set_north_room(new_room_3, &door2);
+  new_room_3->set_south_room(new_room_2, &door2);
   new_room_3->setRoomID(3);
 
  
