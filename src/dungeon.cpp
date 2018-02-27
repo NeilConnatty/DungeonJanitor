@@ -75,7 +75,7 @@ RoomParser parser;
         }
     }
   
-  Door door = new_room->get_m_doors()->front();
+  Door& door = new_room->get_m_doors()->front();
   door.set_pos({ 220.0, 18.0 }); // temp value
   new_room->setRoomID(1);
   new_room->set_north_room(new_room_2, &door);

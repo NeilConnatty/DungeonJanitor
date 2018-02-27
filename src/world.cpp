@@ -130,7 +130,6 @@ bool World::init_creatures()
 	glfwGetFramebufferSize(m_window, &w, &h);
 	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
 	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
-	
 	if (!m_janitor.init(janitor_position))
 	{
 		fprintf(stderr, "Failed to init Janitor.\n");
@@ -139,6 +138,7 @@ bool World::init_creatures()
 	m_janitor.set_scale({ 3.f, 3.f });
 
 	vec2 hero_position = get_world_coords_from_room_coords(m_dungeon.hero_room_position, m_dungeon.hero_start_room->transform, m_dungeon.transform);
+	m_hero.setRoom(m_dungeon.hero_start_room);
 	if (!m_hero.init(hero_position))
 	{
 		fprintf(stderr, "Failed to init Hero. \n");
@@ -146,6 +146,7 @@ bool World::init_creatures()
 
 	}
 	m_hero.set_scale({ 3.f, 3.f });
+	m_hero.setAllRooms(&m_dungeon.get_rooms());
 
 	vec2 boss_position = get_world_coords_from_room_coords(m_dungeon.boss_room_position, m_dungeon.boss_start_room->transform, m_dungeon.transform);
 	if (!m_boss.init(boss_position))
@@ -182,8 +183,8 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
     vec2 screen = { (float)w, (float)h };
     m_janitor.update(elapsed_ms);
-	//vec2 nextDoorPos = m_hero.get_next_door_position();
-	m_hero.set_destination(m_janitor.get_pos());
+	vec2 nextDoorPos = get_world_coords_from_room_coords(m_hero.get_next_door_position(), m_hero.get_current_room()->transform, m_dungeon.transform);
+	m_hero.set_destination(nextDoorPos);
 	m_hero.update(elapsed_ms);
 	m_boss.update(elapsed_ms);
     m_dungeon.update(elapsed_ms);

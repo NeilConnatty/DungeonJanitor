@@ -85,6 +85,11 @@ void Hero::setRoom(Room * room)
 	m_currentRoom = room;
 }
 
+void Hero::setAllRooms(vector<unique_ptr<Room>>* rooms)
+{
+	m_rooms = rooms;
+}
+
 void Hero::set_destination(vec2 destination)
 {
 	m_is_moving = true;
@@ -94,6 +99,11 @@ void Hero::set_destination(vec2 destination)
 void Hero::stop_movement()
 {
 	m_is_moving = false;
+}
+
+Room* Hero::get_current_room()
+{
+	return m_currentRoom;
 }
 
 void Hero::draw_current(const mat3& projection, const mat3& current_transform)
@@ -197,9 +207,9 @@ void Hero::update_current(float ms)
 vec2 Hero::get_next_door_position()
 {
 	float percentage_of_cleaned_artifacts = 0.5;
-	vector<unique_ptr<Room>> rooms; // STUB needs to be set
+	vector<unique_ptr<Room>>* rooms = m_rooms;
 
-	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom, rooms, percentage_of_cleaned_artifacts);
+	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom, *rooms, percentage_of_cleaned_artifacts);
 
 	if (target_room == Room::directions::NORTH)
 	{

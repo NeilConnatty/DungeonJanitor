@@ -15,7 +15,7 @@ private:
 	vec2 m_destination;
 	vec2 m_vel;
 	bool m_is_moving;
-	vector<Room*> m_room;
+	vector<unique_ptr<Room>>* m_rooms;
 
 public:
 	Hero();
@@ -25,8 +25,10 @@ public:
 	bool	init(vec2 position);
 	void	destroy();
 	void setRoom(Room * room);
+	void setAllRooms(vector<unique_ptr<Room>>* rooms);
 	void set_destination(vec2 position);
 	void stop_movement();
+	Room* get_current_room();
 
 	vec2 get_next_door_position();
 
