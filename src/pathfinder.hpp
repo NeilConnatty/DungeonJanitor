@@ -5,6 +5,7 @@
 #include "room.hpp"
 #include "pathfindernode.hpp"
 #include <vector>
+#include <memory>
 
 using namespace std;
 

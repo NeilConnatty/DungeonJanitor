@@ -34,7 +34,8 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 		}
 		
 		// else get successors and set their values
-		vector<PathNode> successors = node_current->getSuccessorNodes(&endNode, x_speed, y_speed);
+		vector<PathNode> successors; 
+		node_current->getSuccessorNodes(&successors, &endNode, x_speed, y_speed);
 
 
 		for (PathNode& successor_node : successors)

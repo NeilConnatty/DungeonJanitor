@@ -27,9 +27,8 @@ float PathNode::getManhattanDistance(PathNode * destinationNode)
 	return x + y;
 }
 
-vector<PathNode> PathNode::getSuccessorNodes(PathNode* endNode, float x_speed, float y_speed)
+void PathNode::getSuccessorNodes(vector<PathNode> * successor_nodes, PathNode* endNode, float x_speed, float y_speed)
 {
-	vector<PathNode> successor_nodes;
 	float diagonal = sqrt(pow(x_speed, 2) + pow(y_speed, 2));
 
 	if (m_xCoord < 0 || m_yCoord < 0)
@@ -56,20 +55,19 @@ vector<PathNode> PathNode::getSuccessorNodes(PathNode* endNode, float x_speed, f
 	pn7.G = this->G + y_speed;
 	pn8.G = this->G + y_speed;
 
-	successor_nodes.emplace_back(pn1);
-	successor_nodes.emplace_back(pn2);
-	successor_nodes.emplace_back(pn3);
-	successor_nodes.emplace_back(pn4);
-	successor_nodes.emplace_back(pn5);
-	successor_nodes.emplace_back(pn6);
-	successor_nodes.emplace_back(pn7);
-	successor_nodes.emplace_back(pn8);
+	successor_nodes->emplace_back(pn1);
+	successor_nodes->emplace_back(pn2);
+	successor_nodes->emplace_back(pn3);
+	successor_nodes->emplace_back(pn4);
+	successor_nodes->emplace_back(pn5);
+	successor_nodes->emplace_back(pn6);
+	successor_nodes->emplace_back(pn7);
+	successor_nodes->emplace_back(pn8);
 
-	for (PathNode& node : successor_nodes)
+	for (PathNode& node : *successor_nodes)
 	{
 		node.parent = this;
 		node.H = node.getManhattanDistance(endNode);
 	}
 
-	return successor_nodes;
 }
