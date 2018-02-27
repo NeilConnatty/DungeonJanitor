@@ -18,40 +18,55 @@ test_value_iteration(); // for testing
 
 RoomParser parser;
 
-  /**************2nd Room ****************/
-  m_rooms.emplace_back(std::make_unique<Room>());
-  Room* new_room_2 = m_rooms.back().get();
-  if (!new_room_2->init())
-  {
-    fprintf(stderr, "Failed to init room.\n");
-    return false;
-  }
-
-  new_room_2->set_pos({ 128.f, -550.f }); // temporary values, eventually we will want to have
-                                         // a parser that creates the dungeon layouts
-  if (!parser.parseRoom(*new_room_2, room_path("2.rm")))
-  {
-    return false;
-  }
-
-  /**************1st Room ****************/
-
-  m_rooms.emplace_back(std::make_unique<Room>());
-	Room* new_room = m_rooms.back().get();
-	if (!new_room->init()) 
+	/**************3rd Room ****************/
+	m_rooms.emplace_back(std::make_unique<Room>());
+	Room* new_room_3 = m_rooms.back().get();
+	if (!new_room_3->init())
 	{
-		fprintf(stderr, "Failed to init room.\n");
+		fprintf(stderr, "Failed to init room3.\n");
 		return false;
 	}
 
-  new_room->set_pos(
-      {128.f, 70.f}); // temporary values, eventually we will want to have
-                      // a parser that creates the dungeon layouts
+	new_room_3->set_pos({ 1084.f, -550.f }); // temporary values, eventually we will want to have
+											// a parser that creates the dungeon layouts
+	if (!parser.parseRoom(*new_room_3, room_path("3.rm")))
+	{
+		return false;
+	}
+	  /**************2nd Room ****************/
+	  m_rooms.emplace_back(std::make_unique<Room>());
+	  Room* new_room_2 = m_rooms.back().get();
+	  if (!new_room_2->init())
+	  {
+		fprintf(stderr, "Failed to init room.\n");
+		return false;
+	  }
 
-  if (!parser.parseRoom(*new_room, room_path("1.rm")))
-  {
-    return false;
-  }
+	  new_room_2->set_pos({ 128.f, -550.f }); // temporary values, eventually we will want to have
+											 // a parser that creates the dungeon layouts
+	  if (!parser.parseRoom(*new_room_2, room_path("2.rm")))
+	  {
+		return false;
+	  }
+
+	  /**************1st Room ****************/
+
+	  m_rooms.emplace_back(std::make_unique<Room>());
+		Room* new_room = m_rooms.back().get();
+		if (!new_room->init()) 
+		{
+			fprintf(stderr, "Failed to init room.\n");
+			return false;
+		}
+
+	  new_room->set_pos(
+		  {128.f, 70.f}); // temporary values, eventually we will want to have
+						  // a parser that creates the dungeon layouts
+
+	  if (!parser.parseRoom(*new_room, room_path("1.rm")))
+	  {
+		return false;
+	  }
 
 
     for (unique_ptr<Room>& room : m_rooms)
@@ -77,10 +92,18 @@ RoomParser parser;
   
   Door& door = new_room->get_m_doors()->front();
   door.set_pos({ 220.0, 18.0 }); // temp value
+  door.toggle_enable(); // temp hack
   new_room->setRoomID(1);
   new_room->set_north_room(new_room_2, &door);
   new_room_2->setRoomID(2);
   new_room_2->set_south_room(new_room, &door);
+  Door& door2 = new_room_3->get_m_doors()->front();
+  door2.set_pos({ 1084.f, -175.f });
+  door2.toggle_enable();
+  new_room_2->set_east_room(new_room_3, &door2);
+  new_room_3->set_west_room(new_room_2, &door2);
+  new_room_3->setRoomID(3);
+
  
   return true;
 }
