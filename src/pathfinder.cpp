@@ -35,7 +35,7 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 		}
 		
 		// else get successors and set their values
-		vector<PathNode> successors = node_current.getSuccessorNodes();
+		vector<PathNode> successors = node_current.getSuccessorNodes(&endNode);
 
 
 		for (PathNode successor_node : successors)
@@ -102,6 +102,10 @@ vector<vec2> Pathfinder::getPathFromGoalNode(PathNode endNode)
 		p = p->parent;
 	}
 	return solutionPathList;
+}
+
+void Pathfinder::updateNodeListValuesWithSuccessor(vector<PathNode> node_list, PathNode successor_node)
+{
 }
 
 

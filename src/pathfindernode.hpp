@@ -5,8 +5,11 @@
 
 using namespace std;
 
+
 struct PathNode
 {
+
+
 public:
 	float m_xCoord, m_yCoord;
 	int m_id;
@@ -32,13 +35,12 @@ public:
 	}
 
 	bool isMatch(PathNode endNode);
-	bool operator==(const PathNode& comparison_node)
-	{
-		return false; /* your comparison code goes here */
-	}
+
+	bool operator==(const PathNode& comparison_node);
+	
 	float getFValue() { return G + H; };
 	float getManhattanDistance(PathNode * destinationNode);
-	vector<PathNode> getSuccessorNodes();
+	vector<PathNode> getSuccessorNodes(PathNode* endNode);
 	
 	
 };
