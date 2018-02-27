@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "pathfinder.hpp"
 
-vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination, float x_speed, float y_speed)
+void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination, float x_speed, float y_speed, vector<vec2>& path)
 {
 	PathNode startNode = PathNode(position.x, position.y);
 	PathNode endNode = PathNode(destination.x, destination.y);
@@ -82,7 +82,8 @@ vector<vec2> Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 de
 		}
 		closedNodes.push_back(std::move(node_current));
 	}
-	return getPathFromGoalNode(endNode);
+	
+  getPathFromGoalNode(endNode, path);
 }
 
 bool Pathfinder::collisionDetected(PathNode& node)
@@ -115,9 +116,8 @@ unique_ptr<PathNode> Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes
 	return ret;
 }
 
-vector<vec2> Pathfinder::getPathFromGoalNode(PathNode endNode)
+void Pathfinder::getPathFromGoalNode(PathNode endNode, vector<vec2>& solutionPathList)
 {
-	vector<vec2> solutionPathList;
 	PathNode* p = &endNode;
 	
 	while (p != nullptr)
@@ -126,6 +126,4 @@ vector<vec2> Pathfinder::getPathFromGoalNode(PathNode endNode)
 		solutionPathList.emplace(solutionPathList.begin());
 		p = p->parent;
 	}
-
-	return solutionPathList;
 }
