@@ -1,6 +1,7 @@
 // gameobject.cpp
 
 #include "gameobject.hpp"
+#include <iostream>
 
 GameObject::GameObject() :
 	m_position({0.f, 0.f}),
