@@ -3,6 +3,7 @@
 #include "dungeon.hpp"
 #include "roomtextparser.hpp"
 #include "ValueIteration.hpp" // testing
+#include <iostream>
 
 Dungeon::Dungeon() : 
     GameObject()

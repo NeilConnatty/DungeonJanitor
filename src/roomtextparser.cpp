@@ -120,14 +120,14 @@ void RoomParser::clearPositions()
     wall_pairs.clear();
     floor_pos.clear();
     puddle_pos.clear();
-	door_pos.clear();
+	  door_pos.clear();
 }
 
 bool RoomParser::populateRoom(Room &room)
 {
     return (room.add_floors(floor_pos) && 
             room.add_walls(wall_pairs) && 
-			room.add_doors(door_pos) &&
+			      room.add_doors(door_pos) &&
             room.add_cleanables(puddle_pos) && 
             room.add_artifact(has_artifact, artifact_pos) &&
             room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
