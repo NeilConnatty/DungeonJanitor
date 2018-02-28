@@ -120,7 +120,7 @@ void RoomParser::clearPositions()
     wall_pairs.clear();
     floor_pos.clear();
     puddle_pos.clear();
-	door_pos.clear();
+	  door_pos.clear();
 }
 
 bool RoomParser::populateRoom(Room &room)
