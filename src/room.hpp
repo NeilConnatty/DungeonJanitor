@@ -58,7 +58,7 @@ public:
     bool has_janitor_spawn_loc();
     vec2 get_janitor_spawn_loc();
     bool containsBoss();
-    bool containsArtifact();
+    bool containsUndiscoveredArtifact();
     void setBossInRoom(bool bossInRoom);
     void setArtifactInRoom(bool artifactInRoom);
 	Artifact* get_artifact();
