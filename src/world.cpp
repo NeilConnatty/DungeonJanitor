@@ -264,7 +264,19 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE)
 	{
-		m_dungeon.clean();
+		if (action == GLFW_PRESS && key == GLFW_KEY_SPACE){
+            for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) {
+                std::vector<Puddle>& cleanables = room->get_cleanables();
+                for (Puddle& p : cleanables) {
+                    // TODO: check we have the artifact to clean
+                    // m_janitor.can_clean(p)
+                    // printf("%lu\n", sizeof(cleanables));
+                    if (p.is_enabled() && m_janitor.collides_with(p, m_dungeon.janitor_start_room->transform, m_dungeon.transform)) {
+                        p.toggle_enable();
+                    }
+                }
+            }
+        }
 	}
 
 	// temporary keybind, probably will bind it to space once we have collisions

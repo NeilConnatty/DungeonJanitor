@@ -37,7 +37,7 @@ public:
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
-	//bool collides_with(GameObject& object);
+	bool collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform);
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;
