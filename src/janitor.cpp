@@ -257,6 +257,32 @@ void Janitor::key_down() { m_key_down = !m_key_down; }
 void Janitor::key_left() { m_key_left = !m_key_left; }
 void Janitor::key_right() { m_key_right = !m_key_right; }
 
+
+bool Janitor::collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform) {
+	float jLeftEdge = m_position.x-25;
+	float jRightEdge = m_position.x+25;
+	float jTopEdge = m_position.y-25;
+	float jBottomEdge = m_position.y+25;
+
+  float objX = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).x;
+  float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;
+
+	float oLeftEdge =  objX-object.get_scale().x;
+	float oRightEdge =  objX+object.get_scale().x;
+	float oTopEdge =  objY-object.get_scale().y;
+	float oBottomEdge =  objY+object.get_scale().y;
+
+	if ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge))
+	{
+    if (jTopEdge <= oBottomEdge && jBottomEdge >= oTopEdge) {
+			printf("COLLISION\n");
+    	return true;
+    }
+	}
+  return false;
+}
+
+
 //Helper function for draw_current
 //sets *m_curr_tex = &some_tex where some_tex is based on timing and key(s) pressed
 void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
