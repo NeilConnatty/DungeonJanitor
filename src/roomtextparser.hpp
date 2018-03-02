@@ -39,7 +39,21 @@ public:
 
 private:
   bool parseLines(std::vector<std::string>& lines);
+  bool addHallwayUniversal(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addLeftTopHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addMiddleTopHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addRightTopHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addLeftHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addMiddleHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addRightHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addLeftBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addMiddleBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addRightBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset);
+  bool addHallwayHelper(std::unique_ptr<Room> &hallway, vec2 offset,
+                        bool topRow, bool bottomRow, bool startColumn,
+                        bool endColumn);
 
 private:
+  std::vector<std::unique_ptr<Room>>& m_rooms;
 };
 
