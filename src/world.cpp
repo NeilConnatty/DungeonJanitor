@@ -110,22 +110,27 @@ bool World::init(vec2 screen)
 		return false;
   }
 
-
+  
 	if (!init_creatures())
 	{
 		fprintf(stderr, "Failed to init Creatures. \n");
 		return false;
 	}
-	vector<unique_ptr<Room>>& rooms = m_dungeon.get_rooms();
+  
   // Make camera follow janitor
   m_camera.follow_object(&m_janitor);
-
   
   return true;
 }
 
 bool World::init_creatures()
 {
+  if (m_dungeon.janitor_start_room == nullptr || m_dungeon.hero_start_room == nullptr || m_dungeon.boss_start_room == nullptr)
+  {
+    fprintf(stderr, "Start rooms for dungeon not properly set.\n");
+    return false;
+  }
+
 	int w, h;
 	glfwGetFramebufferSize(m_window, &w, &h);
 	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
@@ -183,9 +188,9 @@ bool World::update(float elapsed_ms)
   glfwGetFramebufferSize(m_window, &w, &h);
   vec2 screen = {(float)w, (float)h};
   m_janitor.update(elapsed_ms);
-  move_hero();
-  m_hero.update(elapsed_ms);
-  m_boss.update(elapsed_ms);
+  //move_hero();
+  //m_hero.update(elapsed_ms);
+  //m_boss.update(elapsed_ms);
   m_dungeon.update(elapsed_ms);
 
   return true;
@@ -220,8 +225,8 @@ void World::draw()
 
   m_dungeon.draw(projection_2D, transform);
   m_janitor.draw(projection_2D, transform);
-  m_hero.draw(projection_2D, transform);
-  m_boss.draw(projection_2D, transform);
+  //m_hero.draw(projection_2D, transform);
+  //m_boss.draw(projection_2D, transform);
 
   // Presenting
   glfwSwapBuffers(m_window);

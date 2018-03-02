@@ -20,12 +20,15 @@
 #define EMPTY 'e'
 
 //Offsets
-#define ROOM_X_OFFSET 165.f
+#define ROOM_X_OFFSET 185.f
 #define ROOM_Y_OFFSET 160.f;
 #define WALL_X_OFFSET 10.f
 #define WALL_Y_OFFSET 60.f
 #define FLOOR_X_OFFSET 35.f
 #define FLOOR_Y_OFFSET 25.f
+
+const char* room_files[] = { room_path("1.rm"), room_path("2.rm"), room_path("3.rm") };
+const size_t num_room_files = 3;
 
 bool RoomParser::parseLine(std::string &line, float y, bool first_line) 
 {
@@ -206,39 +209,45 @@ bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, cons
   std::string line;
   std::ifstream file(filename);
   std::vector<std::string> lines;
-  m_rooms = rooms;
 
   while (std::getline(file, line))
   {
     lines.emplace_back(line);
   }
 
-  return parseLines(lines);
+  return parseLines(lines, rooms);
 }
 
-bool DungeonParser::parseLines(std::vector<std::string>& lines)
+bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms)
 {
-  size_t row, column = 0;
+  size_t row, column, num_rooms = 0;
   vec2 offset = { 0.f,0.f };
   RoomParser roomParser;
 
-  m_rooms.emplace_back();
-  std::unique_ptr<Room> &hallway = m_rooms.back();
-
-  for (; row < lines.size(); ++row)
+  rooms.clear();
+  rooms.emplace_back(new Room);
+  Room* hallway = rooms.back().get();
+  if (!hallway->init())
   {
-    std::string& line = lines[column];
+    fprintf(stderr, "Failed to init hallway room");
+    return false;
+  }
+
+  for (row = 0; row < lines.size(); ++row)
+  {
+    std::string& line = lines[row];
     offset.x = 0.f;
-    for (; column < line.size(); ++column)
+    for (column = 0; column < line.size(); ++column)
     {
       char& ch = line[column];
 
       if (ch == ROOM)
       {
+        rooms.emplace_back(new Room);
+        rooms.back()->init(offset*2.f);
+        roomParser.parseRoom(*rooms.back(), room_files[num_rooms%num_room_files]);
+        ++num_rooms;
         // TODO: find adjacent hallway for door location -- prefer bottom
-        m_rooms.emplace_back();
-        m_rooms.back()->init(offset);
-        roomParser.parseRoom(*m_rooms.back().get(), room_path("1.rm"));
         // TODO: change room type to be classroom, office, or bathroom
       }
       else if (ch == HALLWAY)
@@ -248,7 +257,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines)
         bool startColumn = (column == 0) || (line[column - 1] == EMPTY);
         bool endColumn = (column == line.size() - 1) || (line[column + 1] == EMPTY);
         
-        addHallwayHelper(hallway, offset, topRow, bottomRow, startColumn, endColumn);
+        addHallwayHelper(*hallway, offset, topRow, bottomRow, startColumn, endColumn);
       }
       else if (ch == EMPTY)
       {
@@ -268,62 +277,148 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines)
     offset.y += ROOM_Y_OFFSET;
   } // for (; row < lines.size(); ++row)
 
+  // TODO: set up adjacency between rooms and hallway
   return true;
 }
 
-bool DungeonParser::addLeftTopHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addLeftTopHallway(Room& hallway, vec2 offset)
 {
-  
+  return (addLeftWalls(hallway, offset, false) && addTopLeftWall(hallway, offset) &&
+          addTopWalls(hallway, offset) && addFloors(hallway, offset, false) &&
+          addRightFloors(hallway, offset, false));
 }
 
-bool DungeonParser::addMiddleTopHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addMiddleTopHallway(Room& hallway, vec2 offset)
 {
-
+  return (addTopWalls(hallway, offset) && addFloors(hallway, offset, false) &&
+          addRightFloors(hallway, offset, false));
 }
 
-bool DungeonParser::addRightTopHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addRightTopHallway(Room& hallway, vec2 offset)
 {
-
+  return (addTopWalls(hallway, offset) && addTopRightWall(hallway, offset) &&
+          addRightWalls(hallway, offset, false) && addFloors(hallway, offset, false));
 }
 
-bool DungeonParser::addLeftHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addLeftHallway(Room& hallway, vec2 offset)
 {
-
+  return (addLeftWalls(hallway, offset, true) && addFloors(hallway, offset, true) &&
+          addRightFloors(hallway, offset, true));
 }
 
-bool DungeonParser::addMiddleHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addMiddleHallway(Room& hallway, vec2 offset)
 {
-
+  return (addFloors(hallway, offset, true) && addRightFloors(hallway, offset, true));
 }
 
-bool DungeonParser::addRightHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addRightHallway(Room& hallway, vec2 offset)
 {
-
+  return (addFloors(hallway, offset, true) && addRightWalls(hallway, offset, true));
 }
 
-bool DungeonParser::addLeftBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addLeftBottomHallway(Room& hallway, vec2 offset)
 {
-
+  return (addFloors(hallway, offset, true) && addBottomLeftWall(hallway, offset) &&
+          addBottomWalls(hallway, offset) && addRightFloors(hallway, offset, true) &&
+          addBottomRightWall(hallway, offset) && addLeftWalls(hallway, offset, true));
 }
 
-bool DungeonParser::addMiddleBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addMiddleBottomHallway(Room& hallway, vec2 offset)
 {
-
+  return (addFloors(hallway, offset, true) && addBottomWalls(hallway, offset) &&
+          addRightFloors(hallway, offset, true) &&
+          addBottomRightWall(hallway, offset));
 }
 
-bool DungeonParser::addRightBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addRightBottomHallway(Room& hallway, vec2 offset)
 {
-
+  return (addFloors(hallway, offset, true) && addBottomWalls(hallway, offset) &&
+          addBottomRightWall(hallway, offset) &&
+          addRightWalls(hallway, offset, true));
 }
 
-bool DungeonParser::addHallwayHelper(std::unique_ptr<Room> &hallway,
+bool DungeonParser::addLeftTopBottomHallway(Room& hallway, vec2 offset)
+{
+  return (
+      addLeftWalls(hallway, offset, false) && addTopLeftWall(hallway, offset) &&
+      addTopWalls(hallway, offset) && addFloors(hallway, offset, false) &&
+      addRightFloors(hallway, offset, false) &&
+      addBottomWalls(hallway, offset) && addBottomLeftWall(hallway, offset) &&
+      addBottomRightWall(hallway, offset));
+}
+
+bool DungeonParser::addRightTopBottomHallway(Room& hallway, vec2 offset)
+{
+  return (
+    addRightWalls(hallway, offset, false) && addTopLeftWall(hallway, offset) &&
+    addTopWalls(hallway, offset) && addFloors(hallway, offset, false) &&
+    addRightFloors(hallway, offset, false) &&
+    addBottomWalls(hallway, offset) && addBottomLeftWall(hallway, offset) &&
+    addBottomRightWall(hallway, offset));
+}
+
+bool DungeonParser::addMiddleTopBottomHallway(Room& hallway, vec2 offset)
+{
+  return (addTopWalls(hallway, offset) && addFloors(hallway, offset, false) &&
+          addRightFloors(hallway, offset, false) &&
+          addBottomWalls(hallway, offset) && addBottomRightWall(hallway, offset));
+}
+
+bool DungeonParser::addLeftRightTopHallway(Room& hallway, vec2 offset)
+{
+  return (addLeftWalls(hallway, offset, false) &&
+          addTopLeftWall(hallway, offset) && addTopWalls(hallway, offset) &&
+          addFloors(hallway, offset, false) && addRightWalls(hallway, offset, false));
+}
+
+bool DungeonParser::addLeftRightBottomHallway(Room& hallway, vec2 offset)
+{
+  return (
+      addFloors(hallway, offset, true) && addBottomLeftWall(hallway, offset) &&
+      addBottomWalls(hallway, offset) && addBottomRightWall(hallway, offset) &&
+      addLeftWalls(hallway, offset, true) &&
+      addRightWalls(hallway, offset, true));
+}
+
+bool DungeonParser::addLeftRightMidHallway(Room& hallway, vec2 offset)
+{
+  return (addLeftWalls(hallway, offset, true) &&
+          addFloors(hallway, offset, true) &&
+          addRightWalls(hallway, offset, true));
+}
+
+bool DungeonParser::addHallwayHelper(Room &hallway,
                                      vec2 offset, bool topRow, bool bottomRow,
                                      bool startColumn, bool endColumn) 
 {
   bool ret;
-  if (startColumn)
+  if (startColumn && endColumn)
   {
-    if (topRow)
+    if (topRow && bottomRow)
+    {
+      fprintf(stderr, "Island in dungeon design text doc.\n");
+      return false;
+    }
+    else if (topRow)
+    {
+      ret = addLeftRightTopHallway(hallway, offset);
+    }
+    else if (bottomRow)
+    {
+      ret = addLeftRightBottomHallway(hallway, offset);
+    }
+    else
+    {
+      ret = addLeftRightMidHallway(hallway, offset);
+    }
+  }
+  else if (startColumn)
+  {
+    if (topRow && bottomRow)
+    {
+      ret = addLeftTopBottomHallway(hallway, offset);
+    }
+    else if (topRow)
     {
       ret = addLeftTopHallway(hallway, offset);
     }
@@ -338,7 +433,11 @@ bool DungeonParser::addHallwayHelper(std::unique_ptr<Room> &hallway,
   }
   else if (endColumn)
   {
-    if (topRow)
+    if (topRow && bottomRow)
+    {
+      ret = addRightTopBottomHallway(hallway, offset);
+    }
+    else if (topRow)
     {
       ret = addRightTopHallway(hallway, offset);
     }
@@ -353,7 +452,11 @@ bool DungeonParser::addHallwayHelper(std::unique_ptr<Room> &hallway,
   }
   else
   {
-    if (topRow)
+    if (topRow && bottomRow)
+    {
+      ret = addMiddleTopBottomHallway(hallway, offset);
+    }
+    else if (topRow)
     {
       ret = addMiddleTopHallway(hallway, offset);
     }
@@ -370,23 +473,202 @@ bool DungeonParser::addHallwayHelper(std::unique_ptr<Room> &hallway,
   return ret;
 }
 
-bool DungeonParser::addHallwayUniversal(std::unique_ptr<Room>& hallway, vec2 offset)
+bool DungeonParser::addFloors(Room& hallway, vec2 offset, bool addGapFloors)
 {
-  size_t row, column = 0.f;
-  vec2 new_offset = offset;
-  new_offset.y += WALL_Y_OFFSET;
+  size_t row, column;;
+  vec2 new_offset;
 
-  for (; row < 4; ++row)
+  if (addGapFloors)
+  {
+    new_offset.y = offset.y;
+    for (row = 0; row < 3; ++row)
+    {
+      new_offset.x = offset.x + WALL_X_OFFSET;
+      for (column = 0; column < 5; ++column)
+      {
+        if (!hallway.add_floor(new_offset))
+        {
+          // TODO add print
+          return false;
+        }
+        new_offset.x += FLOOR_X_OFFSET;
+      }
+      new_offset.y += FLOOR_Y_OFFSET;
+    }
+  }
+
+  new_offset.y = offset.y + WALL_Y_OFFSET;
+  for (row = 0; row < 4; ++row)
   {
     new_offset.x = offset.x + WALL_X_OFFSET;
-    for (; column < 5; ++column)
+    for (column = 0; column < 5; ++column)
     {
-      if (!hallway->add_floor(new_offset))
+      if (!hallway.add_floor(new_offset))
       {
         // TODO add print
         return false;
       }
       new_offset.x += FLOOR_X_OFFSET;
+    }
+    new_offset.y += FLOOR_Y_OFFSET;
+  }
+
+  return true;
+}
+
+bool DungeonParser::addTopWalls(Room& hallway, vec2 offset)
+{
+  size_t column;
+  vec2 new_offset = offset;
+  new_offset.x += WALL_X_OFFSET;
+
+  for (column = 0; column < 5; ++column)
+  {
+    if (!hallway.add_wall({ new_offset, TOP }))
+    {
+      return false;
+    }
+    new_offset.x += FLOOR_X_OFFSET;
+  }
+
+  // using 'BOTTOM' here seems unintuitive, but needed to cover up gaps
+  return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | BOTTOM)});
+}
+
+bool DungeonParser::addBottomWalls(Room& hallway, vec2 offset)
+{
+  size_t column;
+  vec2 new_offset = offset;
+  new_offset.x += WALL_X_OFFSET;
+  new_offset.y += (WALL_Y_OFFSET + 4.f*FLOOR_Y_OFFSET);
+
+  for (column = 0; column < 5; ++column)
+  {
+    if (!hallway.add_wall({ new_offset, BOTTOM }))
+    {
+      return false;
+    }
+    new_offset.x += FLOOR_X_OFFSET;
+  }
+
+  return true;
+}
+
+bool DungeonParser::addLeftWalls(Room& hallway, vec2 offset, bool addGapFiller)
+{
+  size_t row;
+  vec2 new_offset = offset;
+
+  if (addGapFiller)
+  {
+    for (row = 0; row < 3; ++row)
+    {
+      if (!hallway.add_wall({ new_offset, VERTICAL }))
+      {
+        return false;
+      }
+      new_offset.y += FLOOR_Y_OFFSET;
+    }
+  }
+
+  new_offset.y = offset.y + WALL_Y_OFFSET;
+  for (row = 0; row < 4; ++row)
+  {
+    if (!hallway.add_wall({ new_offset, VERTICAL }))
+    {
+      return false;
+    }
+    new_offset.y += FLOOR_Y_OFFSET;
+  }
+
+  return true;
+}
+
+bool DungeonParser::addRightWalls(Room& hallway, vec2 offset, bool addGapFiller)
+{
+  size_t row;
+  vec2 new_offset = offset;
+  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
+
+  if (addGapFiller)
+  {
+    for (row = 0; row < 3; ++row)
+    {
+      if (!hallway.add_wall({ new_offset, VERTICAL }))
+      {
+        return false;
+      }
+      new_offset.y += FLOOR_Y_OFFSET;
+    }
+  }
+
+  new_offset.y = offset.y + WALL_Y_OFFSET;
+  for (row = 0; row < 4; ++row)
+  {
+    if (!hallway.add_wall({ new_offset, VERTICAL }))
+    {
+      return false;
+    }
+    new_offset.y += FLOOR_Y_OFFSET;
+  }
+
+  return true;
+}
+
+bool DungeonParser::addTopLeftWall(Room& hallway, vec2 offset)
+{
+  return hallway.add_wall({ offset, (wall_edge)(VERTICAL | TOP) });
+}
+
+bool DungeonParser::addBottomLeftWall(Room& hallway, vec2 offset)
+{
+  vec2 new_offset = offset;
+  new_offset.y += (WALL_Y_OFFSET + 4.f*FLOOR_Y_OFFSET);
+
+  return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | BOTTOM) });
+}
+
+bool DungeonParser::addTopRightWall(Room& hallway, vec2 offset)
+{
+  vec2 new_offset = offset;
+  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
+
+  return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | TOP) });
+}
+
+bool DungeonParser::addBottomRightWall(Room& hallway, vec2 offset)
+{
+  vec2 new_offset = offset;
+  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
+  new_offset.y += (WALL_Y_OFFSET + 4.f*FLOOR_Y_OFFSET);
+
+  return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | BOTTOM) });
+}
+
+bool DungeonParser::addRightFloors(Room& hallway, vec2 offset, bool addGapFiller)
+{
+  size_t row;
+  vec2 new_offset = offset;
+  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
+
+  if (addGapFiller)
+  {
+    for (row = 0; row < 3; ++row)
+    {
+      if (!hallway.add_floor(new_offset)) // TODO: make way to add vertical floor tile
+      {
+        return false;
+      }
+      new_offset.y += FLOOR_Y_OFFSET;
+    }
+  }
+
+  new_offset.y = offset.y + WALL_Y_OFFSET;
+  for (row = 0; row < 4; ++row)
+  {
+    if (!hallway.add_floor(new_offset)) // TODO: make way to add vertical floor tile
+    {
+      return false;
     }
     new_offset.y += FLOOR_Y_OFFSET;
   }

@@ -38,22 +38,36 @@ public:
   bool parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename);
 
 private:
-  bool parseLines(std::vector<std::string>& lines);
-  bool addHallwayUniversal(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addLeftTopHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addMiddleTopHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addRightTopHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addLeftHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addMiddleHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addRightHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addLeftBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addMiddleBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addRightBottomHallway(std::unique_ptr<Room>& hallway, vec2 offset);
-  bool addHallwayHelper(std::unique_ptr<Room> &hallway, vec2 offset,
+  bool parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms);
+  bool addLeftTopHallway(Room& hallway, vec2 offset);
+  bool addMiddleTopHallway(Room& hallway, vec2 offset);
+  bool addRightTopHallway(Room& hallway, vec2 offset);
+  bool addLeftHallway(Room& hallway, vec2 offset);
+  bool addMiddleHallway(Room& hallway, vec2 offset);
+  bool addRightHallway(Room& hallway, vec2 offset);
+  bool addLeftBottomHallway(Room& hallway, vec2 offset);
+  bool addMiddleBottomHallway(Room& hallway, vec2 offset);
+  bool addRightBottomHallway(Room& hallway, vec2 offset); 
+  bool addLeftTopBottomHallway(Room& hallway, vec2 offset);
+  bool addRightTopBottomHallway(Room& hallway, vec2 offset);
+  bool addMiddleTopBottomHallway(Room& hallway, vec2 offset);
+  bool addLeftRightTopHallway(Room& hallway, vec2 offset);
+  bool addLeftRightMidHallway(Room& hallway, vec2 offset);
+  bool addLeftRightBottomHallway(Room& hallway, vec2 offset);
+  bool addTopWalls(Room& hallway, vec2 offset);
+  bool addBottomWalls(Room& hallway, vec2 offset);
+  bool addLeftWalls(Room& hallway, vec2 offset, bool addGapFiller);
+  bool addRightWalls(Room& hallway, vec2 offset, bool addGapFiller);
+  bool addTopLeftWall(Room& hallway, vec2 offset);
+  bool addTopRightWall(Room& hallway, vec2 offset);
+  bool addBottomLeftWall(Room& hallway, vec2 offset);
+  bool addBottomRightWall(Room& hallway, vec2 offset);
+  bool addFloors(Room& hallway, vec2 offset, bool addGapFloors);
+  bool addRightFloors(Room& hallway, vec2 offset, bool addGapFiller);
+  bool addHallwayHelper(Room &hallway, vec2 offset,
                         bool topRow, bool bottomRow, bool startColumn,
                         bool endColumn);
 
 private:
-  std::vector<std::unique_ptr<Room>>& m_rooms;
 };
 
