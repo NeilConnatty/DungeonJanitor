@@ -20,7 +20,7 @@ map<int, float> ValueIteration::VI_current;
 map<int, float> ValueIteration::VI_previous;
 
 
-Room::directions ValueIteration::getNextRoom(Room * current_room, vector<unique_ptr<Room>>& rooms, float artifact_probability)
+Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room, vector<unique_ptr<Room>>& rooms, float artifact_probability)
 {
 	initialize(rooms, artifact_probability);
 	return getNextRoom(current_room);
@@ -96,77 +96,40 @@ void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifac
 	}
 }
 
-Room::directions ValueIteration::getNextRoom(Room * current_room)
+Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room)
 {
-	float north_value = LOW_NUMBER_HACK;
-	float south_value = LOW_NUMBER_HACK;
-	float east_value = LOW_NUMBER_HACK;
-	float west_value = LOW_NUMBER_HACK;
+  using room_value = std::pair<Room::adjacent_room, float>;
+  
+  struct CompValues
+  {
+    bool operator()(room_value& v1, room_value& v2)
+    {
+      return v1.second < v2.second;
+    }
+  };
 
-	// Load room values
-	if (current_room->get_north_room() != nullptr)
-	{
-		north_value = VI_current.at(current_room->get_north_room()->getRoomID());
-	}
-	if (current_room->get_south_room() != nullptr)
-	{
-		south_value = VI_current.at(current_room->get_south_room()->getRoomID());
-	}
-	if (current_room->get_east_room() != nullptr)
-	{
-		east_value = VI_current.at(current_room->get_east_room()->getRoomID());
-	}
-	if (current_room->get_west_room() != nullptr)
-	{
-		west_value = VI_current.at(current_room->get_west_room()->getRoomID());
-	}
+  std::vector<room_value> values;
+  const std::vector<Room::adjacent_room>& adjacents = current_room->get_adjacent_rooms();
 
-	// Return best room
-	if ((north_value != -100) && (north_value > south_value) && (north_value > east_value) && north_value > west_value)
-	{
-		return Room::directions::NORTH;
-	}
-	
-	if ((south_value != -100) && (south_value > north_value) && (south_value > east_value) && south_value > west_value)
-	{
-		return Room::directions::SOUTH;
-	}
-	
-	if ((east_value != -100) && (east_value > south_value) && (east_value > north_value) && east_value > west_value)
-	{
-		return Room::directions::EAST;
-	}
-	else
-	{
-		return Room::directions::WEST;
-	}
-	
+  for (const Room::adjacent_room& adj : adjacents)
+  {
+    values.push_back({ adj, VI_current.at(adj.room->getRoomID()) });
+  }
+
+  room_value max_value = *max_element(values.begin(), values.end(), CompValues());
+  return max_value.first;	
 }
 
-float ValueIteration::calculateHighestNeighborValue(Room * room)
+float ValueIteration::calculateHighestNeighborValue(const Room * room)
 {
 	vector<float> neighbor_values;
 
-	if (room->get_north_room() != nullptr)
-	{
-		neighbor_values.push_back(VI_previous.at(room->get_north_room()->getRoomID()));
-	}
-	if (room->get_south_room() != nullptr)
-	{
-		neighbor_values.push_back(VI_previous.at(room->get_south_room()->getRoomID()));
-	}
-	if (room->get_east_room() != nullptr)
-	{
-		Room* eastRoom = room->get_east_room();
-		auto it = VI_previous.find(eastRoom->getRoomID());
-		auto pair = *it;
-		float eastValue = pair.second;
-		neighbor_values.push_back(eastValue);
-	}
-	if (room->get_west_room() != nullptr)
-	{
-		neighbor_values.push_back(VI_previous.at(room->get_west_room()->getRoomID()));
-	}
+  const vector<Room::adjacent_room>& adjacents = room->get_adjacent_rooms();
+
+  for (const Room::adjacent_room& adj : adjacents)
+  {
+    neighbor_values.push_back(VI_previous.at(adj.room->getRoomID()));
+  }
 
 	return *max_element(neighbor_values.begin(), neighbor_values.end());
 }
@@ -177,7 +140,7 @@ bool ValueIteration::continueValueIterating()
 	return (m_difference >= error);
 }
 
-float ValueIteration::calculateInitialRoomValue(Room * room)
+float ValueIteration::calculateInitialRoomValue(const Room * room)
 {
 	float reward = INITIAL_VALUE;
 
@@ -189,7 +152,7 @@ float ValueIteration::calculateInitialRoomValue(Room * room)
 	return reward;
 }
 
-float ValueIteration::calculateRoomReward(Room* room, float artifact_probability)
+float ValueIteration::calculateRoomReward(const Room* room, float artifact_probability)
 {
 	float reward = NORMAL_ROOM_VALUE;
 

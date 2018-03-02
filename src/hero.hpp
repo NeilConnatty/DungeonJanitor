@@ -19,8 +19,8 @@ public:
 
 private:
 	static Texture hero_texture;
-	Room * m_currentRoom;
-	Room* m_next_room;
+	const Room * m_currentRoom;
+	const Room* m_next_room;
 	Hero::destinations m_destination_type;
 	vec2 m_destination;
 	vec2 m_vel;
@@ -39,7 +39,7 @@ public:
 	void set_destination(vec2 position, Hero::destinations destination);
 	void stop_movement();
 	bool is_moving();
-	Room* get_current_room();
+	const Room* get_current_room();
 
 	vec2 get_next_door_position(); // which door to go to next
 

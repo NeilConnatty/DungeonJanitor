@@ -19,7 +19,6 @@ bool Door::init(vec2 pos)
   }
 
   m_position = pos;
-  m_position.y = pos.y + 18.f;
 
   // The position corresponds to the center of the texture
   float wr = door_texture.width * 0.5f;

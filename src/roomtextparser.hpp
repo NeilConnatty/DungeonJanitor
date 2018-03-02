@@ -28,7 +28,7 @@ private:
 	
 	vector<vec2> floor_pos;
 	vector<vec2> puddle_pos;
-	vector<vec2> door_pos;
+	vec2 door_pos;
 	vector<Room::wall_pair> wall_pairs;  
 };
 
