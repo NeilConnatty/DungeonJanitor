@@ -297,7 +297,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
     }
 
     const Door& door = room->get_door();
-    room->add_adjacent_room({ room.get(), &door });
+    room->add_adjacent_room({ hallway, &door });
     hallway->add_adjacent_room({ room.get(), &door });
   }
 

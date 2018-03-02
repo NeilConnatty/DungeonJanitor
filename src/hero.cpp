@@ -168,8 +168,8 @@ void Hero::update_current(float ms)
 		float timeFactor = ms / 1000;
 		bool will_move = false;
 
-    vector<vec2> path;
-    Pathfinder::getPathFromPositionToDestination(m_position, m_destination, SPEED / 10.f, Y_SPEED / 10.f, path);
+    //vector<vec2> path;
+    //Pathfinder::getPathFromPositionToDestination(m_position, m_destination, SPEED / 10.f, Y_SPEED / 10.f, path);
 
 		float s_x = m_position.x;
 		float s_y = m_position.y;
@@ -253,6 +253,6 @@ vec2 Hero::get_next_door_position()
   // else, the door's position is in the target room's coords
   vec3 room_position_3d = { target_room.door->get_pos().x, target_room.door->get_pos().y, 1.0 };
   vec3 dungeon_position = mult(target_room.room->transform, room_position_3d);
-  vec3 current_room_pos = mult(m_currentRoom->transform, dungeon_position);
+  vec3 current_room_pos = mult(inverse(m_currentRoom->transform), dungeon_position);
   return { current_room_pos.x, current_room_pos.y };
 }
