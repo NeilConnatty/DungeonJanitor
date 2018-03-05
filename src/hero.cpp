@@ -109,7 +109,7 @@ bool Hero::is_moving()
 	return m_is_moving;
 }
 
-Room* Hero::get_current_room()
+const Room* Hero::get_current_room()
 {
 	return m_currentRoom;
 }
@@ -168,8 +168,8 @@ void Hero::update_current(float ms)
 		float timeFactor = ms / 1000;
 		bool will_move = false;
 
-    vector<vec2> path;
-    Pathfinder::getPathFromPositionToDestination(m_position, m_destination, SPEED / 10.f, Y_SPEED / 10.f, path);
+    //vector<vec2> path;
+    //Pathfinder::getPathFromPositionToDestination(m_position, m_destination, SPEED / 10.f, Y_SPEED / 10.f, path);
 
 		float s_x = m_position.x;
 		float s_y = m_position.y;
@@ -212,6 +212,10 @@ void Hero::update_current(float ms)
 			if (m_destination_type == DOOR)
 			{
 				m_currentRoom = m_next_room;
+        if (m_currentRoom->containsUndiscoveredArtifact())
+        {
+          const_cast<Room*>(m_currentRoom)->setArtifactInRoom(false);
+        }
 			}
 		}
 	}
@@ -222,17 +226,15 @@ void Hero::update_current(float ms)
 vec2 Hero::get_next_door_position()
 {
 	float percentage_of_activated_artifacts = 0.0;
-	vector<unique_ptr<Room>>* rooms = m_rooms;
 	int num_artifacts = 0;
 	int num_activated_artifacts = 0;
 
 	for (unique_ptr<Room>& room : *m_rooms)
 	{
-		Room* room_ptr = room.get();
-		if (room_ptr->containsUndiscoveredArtifact())
+		if (room->containsUndiscoveredArtifact())
 		{
 			num_artifacts++;
-			if (room_ptr->get_artifact()->is_activated()) {
+			if (room->get_artifact()->is_activated()) {
 				num_activated_artifacts++;
 			}
 		}
@@ -244,26 +246,17 @@ vec2 Hero::get_next_door_position()
 	}
 
 
-	Room::directions target_room = ValueIteration::getNextRoom(m_currentRoom, *rooms, percentage_of_activated_artifacts);
+	Room::adjacent_room target_room = ValueIteration::getNextRoom(m_currentRoom, *m_rooms, percentage_of_activated_artifacts);
 
-	if (target_room == Room::directions::NORTH)
-	{
-		m_next_room = m_currentRoom->get_north_room();
-		return m_currentRoom->get_north_door()->get_pos();
-	}
-	else if (target_room == Room::directions::SOUTH)
-	{
-		m_next_room = m_currentRoom->get_south_room();
-		return m_currentRoom->get_south_door()->get_pos();
-	}
-	else if (target_room == Room::directions::EAST)
-	{
-		m_next_room = m_currentRoom->get_east_room();
-		return m_currentRoom->get_east_door()->get_pos();
-	}
-	else
-	{
-		m_next_room = m_currentRoom->get_west_room();
-		return m_currentRoom->get_west_door()->get_pos();
-	}
+  m_next_room = target_room.room;
+  if (m_currentRoom->has_door())
+  {
+    // the door's position is in current room's coords.
+    return target_room.door->get_pos();
+  }
+  // else, the door's position is in the target room's coords
+  vec3 room_position_3d = { target_room.door->get_pos().x, target_room.door->get_pos().y, 1.0 };
+  vec3 dungeon_position = mult(target_room.room->transform, room_position_3d);
+  vec3 current_room_pos = mult(inverse(m_currentRoom->transform), dungeon_position);
+  return { current_room_pos.x, current_room_pos.y };
 }

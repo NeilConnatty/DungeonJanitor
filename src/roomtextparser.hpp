@@ -28,10 +28,46 @@ private:
 	
 	vector<vec2> floor_pos;
 	vector<vec2> puddle_pos;
-	vector<vec2> door_pos;
-	vector<Room::wall_pair> wall_pairs;
-	
+	vec2 door_pos;
+	vector<Room::wall_pair> wall_pairs;  
+};
 
-  
+class DungeonParser
+{
+public:
+  bool parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename);
+
+private:
+  bool parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms);
+  bool addLeftTopHallway(Room& hallway, vec2 offset);
+  bool addMiddleTopHallway(Room& hallway, vec2 offset);
+  bool addRightTopHallway(Room& hallway, vec2 offset);
+  bool addLeftHallway(Room& hallway, vec2 offset);
+  bool addMiddleHallway(Room& hallway, vec2 offset);
+  bool addRightHallway(Room& hallway, vec2 offset);
+  bool addLeftBottomHallway(Room& hallway, vec2 offset);
+  bool addMiddleBottomHallway(Room& hallway, vec2 offset);
+  bool addRightBottomHallway(Room& hallway, vec2 offset); 
+  bool addLeftTopBottomHallway(Room& hallway, vec2 offset);
+  bool addRightTopBottomHallway(Room& hallway, vec2 offset);
+  bool addMiddleTopBottomHallway(Room& hallway, vec2 offset);
+  bool addLeftRightTopHallway(Room& hallway, vec2 offset);
+  bool addLeftRightMidHallway(Room& hallway, vec2 offset);
+  bool addLeftRightBottomHallway(Room& hallway, vec2 offset);
+  bool addTopWalls(Room& hallway, vec2 offset);
+  bool addBottomWalls(Room& hallway, vec2 offset);
+  bool addLeftWalls(Room& hallway, vec2 offset, bool addGapFiller);
+  bool addRightWalls(Room& hallway, vec2 offset, bool addGapFiller);
+  bool addTopLeftWall(Room& hallway, vec2 offset);
+  bool addTopRightWall(Room& hallway, vec2 offset);
+  bool addBottomLeftWall(Room& hallway, vec2 offset);
+  bool addBottomRightWall(Room& hallway, vec2 offset);
+  bool addFloors(Room& hallway, vec2 offset, bool addGapFloors);
+  bool addRightFloors(Room& hallway, vec2 offset, bool addGapFiller);
+  bool addHallwayHelper(Room &hallway, vec2 offset,
+                        bool topRow, bool bottomRow, bool startColumn,
+                        bool endColumn);
+
+private:
 };
 

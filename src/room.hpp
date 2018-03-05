@@ -19,6 +19,12 @@ class Room : public GameObject
 public: 
   using wall_pair = pair<vec2, wall_edge>;
 
+  struct adjacent_room
+  {
+    const Room* room;
+    const Door* door;
+  };
+
   enum directions
   {
     NORTH = 0,
@@ -39,8 +45,7 @@ public:
     bool add_floor(vec2 floor);
     bool add_walls(vector<wall_pair>& walls);
     bool add_floors(vector<vec2>& positions);
-	bool add_door(vec2 position);
-	bool add_doors(std::vector<vec2>& positions);
+	  bool add_door(vec2 position);
     bool add_cleanables(vector<vec2>& puddle_positions);
     bool add_artifact(bool has_artifact, vec2 artifact_pos);
     bool add_hero_spawn_loc(bool has_hero_spawn, vec2 hero_spawn_pos);
@@ -49,42 +54,31 @@ public:
 
     vector<Puddle>&  get_cleanables();
 
-    double getReward();
+    const Door& get_door() const { return m_door; }
+    bool has_door() const { return m_has_door; }
+    double getReward() const;
     void setReward(double reward);
-    bool has_hero_spawn_loc();
-    vec2 get_hero_spawn_loc();
-    bool has_boss_spawn_loc();
-    vec2 get_boss_spawn_loc();
-    bool has_janitor_spawn_loc();
-    vec2 get_janitor_spawn_loc();
-    bool containsBoss();
-    bool containsUndiscoveredArtifact();
+    bool has_hero_spawn_loc() const;
+    vec2 get_hero_spawn_loc() const;
+    bool has_boss_spawn_loc() const;
+    vec2 get_boss_spawn_loc() const;
+    bool has_janitor_spawn_loc() const;
+    vec2 get_janitor_spawn_loc() const;
+    bool containsBoss() const;
+    bool containsUndiscoveredArtifact() const;
     void setBossInRoom(bool bossInRoom);
     void setArtifactInRoom(bool artifactInRoom);
-	Artifact* get_artifact();
+	  Artifact* get_artifact();
 
     int get_num_cleanables();
     float get_clean_percent();
     void decrement_cleanables();
 
-	Room* get_north_room();
-	Room* get_south_room();
-	Room* get_east_room();
-	Room* get_west_room();
-	Door* get_north_door();
-	Door* get_south_door();
-	Door* get_east_door();
-	Door* get_west_door();
+    void add_adjacent_room(const Room* rm, const Door* d);
+    void add_adjacent_room(adjacent_room rm);
+    const vector<adjacent_room>& get_adjacent_rooms() const { return m_adjacent_rooms; }
 
-	vector<Door>* get_m_doors(); // temp work around to access doors to in order to set them with the room, hopefully this can later be handled by dungeon parser
-	// This probably wont work when we add more rooms to the dungeon
-
-    void  set_north_room(Room* rm, Door* d);
-    void  set_south_room(Room* rm, Door* d);
-    void  set_east_room(Room* rm, Door* d);
-    void  set_west_room(Room* rm, Door* d);
-
-    int getRoomID();
+    int getRoomID() const { return m_ID; };
     void setRoomID(int id);
 
 private:
@@ -100,6 +94,7 @@ private:
     bool m_has_hero_spawn_loc;
     bool m_has_boss_spawn_loc;
     bool m_has_janitor_spawn_loc;
+    bool m_has_door;
 
     int m_ID; // unique room id
     int m_num_cleanables;
@@ -110,14 +105,12 @@ private:
     vec2 m_boss_spawn_loc;
     vec2 m_janitor_spawn_loc;
     
-    Room * m_NorthRoom, * m_SouthRoom, * m_WestRoom, * m_EastRoom; // Can Be Nullptr
     Artifact		m_artifact;
 
     vector<Floor>		m_floors;
-    vector<Wall>		  m_walls;
-    vector<Puddle>   m_puddles;
-    vector<Door>     m_doors;
-    array<Room*, 4>   m_adjacent_rooms; // implemented as array so that it can be iterated through
-	array<Door*, 4> m_adjacent_doors; // correponds with m_adjacent_rooms
+    vector<Wall>		m_walls;
+    vector<Puddle>  m_puddles;
+    Door            m_door;
+    vector<adjacent_room> m_adjacent_rooms;
 }; 
 

@@ -17,14 +17,7 @@ bool Room::init(vec2 position)
   m_has_hero_spawn_loc = false;
   m_has_janitor_spawn_loc = false;
   m_BossHere = false;
-  m_adjacent_rooms[NORTH] = nullptr;
-  m_adjacent_rooms[SOUTH] = nullptr;
-  m_adjacent_rooms[EAST] = nullptr;
-  m_adjacent_rooms[WEST] = nullptr;
-  m_adjacent_doors[NORTH] = nullptr;
-  m_adjacent_doors[SOUTH] = nullptr;
-  m_adjacent_doors[EAST] = nullptr;
-  m_adjacent_doors[WEST] = nullptr;
+  m_has_door = false;
 
   return true;
 }
@@ -49,10 +42,7 @@ void Room::destroy()
     p.destroy();
   }
 
-  for (Door d : m_doors)
-  {
-    d.destroy();
-  }
+  m_door.destroy();
 }
 
 void Room::update_current(float ms) {}
@@ -91,11 +81,10 @@ void Room::draw_children(const mat3 &projection,
 
   }
 
-  for (Door d : m_doors)
+  if (m_has_door)
   {
-    d.draw(projection, current_transform);
+    m_door.draw(projection, current_transform);
   }
-
 }
 
 bool Room::add_wall(wall_pair wall) 
@@ -120,11 +109,18 @@ bool Room::add_floor(vec2 floor)
 
 bool Room::add_door(vec2 pos)
 {
-  m_doors.emplace_back();
-  if (!m_doors.back().init(pos))
+  if (m_has_door)
+  {
+    m_door.set_pos({ pos.x, pos.y + 25.f });
+    return true;
+  }
+
+  if (!m_door.init({ pos.x, pos.y + 18.f }))
   {
     return false;
   }
+  m_has_door = true;
+
   return true;
 }
 
@@ -140,20 +136,6 @@ bool Room::add_floors(std::vector<vec2> &positions)
 
   return true;
 }
-
-bool Room::add_doors(std::vector<vec2> &positions)
-{
-  for (vec2 &pos : positions)
-  {
-    if (!add_door(pos))
-    {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 
 bool Room::add_walls(std::vector<wall_pair> &walls) 
 {
@@ -232,7 +214,7 @@ int Room::get_num_cleanables() { return m_num_cleanables; }
 float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
 void Room::decrement_cleanables() { m_num_cleanables--; }
 
-double Room::getReward()
+double Room::getReward() const 
 {
     return heroRewardValue;
 }
@@ -242,12 +224,12 @@ void Room::setReward(double reward)
     heroRewardValue = reward;
 }
 
-bool Room::has_hero_spawn_loc()
+bool Room::has_hero_spawn_loc() const
 {
     return m_has_hero_spawn_loc;
 }
 
-vec2 Room::get_hero_spawn_loc()
+vec2 Room::get_hero_spawn_loc() const
 {
     if (!m_has_hero_spawn_loc)
     {
@@ -257,12 +239,12 @@ vec2 Room::get_hero_spawn_loc()
     return m_hero_spawn_loc;
 }
 
-bool Room::has_boss_spawn_loc()
+bool Room::has_boss_spawn_loc() const
 {
     return m_has_boss_spawn_loc;
 }
 
-vec2 Room::get_boss_spawn_loc()
+vec2 Room::get_boss_spawn_loc() const
 {
     if (!m_has_boss_spawn_loc)
     {
@@ -272,12 +254,12 @@ vec2 Room::get_boss_spawn_loc()
     return m_boss_spawn_loc;
 }
 
-bool Room::has_janitor_spawn_loc()
+bool Room::has_janitor_spawn_loc() const
 {
     return m_has_janitor_spawn_loc;
 }
 
-vec2 Room::get_janitor_spawn_loc()
+vec2 Room::get_janitor_spawn_loc() const
 {
     if (!m_has_janitor_spawn_loc)
     {
@@ -288,13 +270,13 @@ vec2 Room::get_janitor_spawn_loc()
 }
 
 // If boss is currently in the room
-bool Room::containsBoss()
+bool Room::containsBoss() const
 {
     // stub
     return m_BossHere;
 }
 
-bool Room::containsUndiscoveredArtifact()
+bool Room::containsUndiscoveredArtifact() const
 {
     // stub
     return m_ArtifactHere;
@@ -315,81 +297,17 @@ Artifact* Room::get_artifact()
 	return &m_artifact;
 }
 
-int Room::getRoomID()
-{
-	return m_ID;
-}
-
 void Room::setRoomID(int id)
 {
-	m_ID = id;
+  m_ID = id;
 }
 
-vector<Door>* Room::get_m_doors()
+void Room::add_adjacent_room(adjacent_room rm)
 {
-	return &m_doors;
+  m_adjacent_rooms.push_back(rm);
 }
 
-void Room::set_north_room(Room* rm, Door* d)
+void Room::add_adjacent_room(const Room* rm, const Door* d)
 {
-	m_adjacent_rooms[NORTH] = rm;
-	m_adjacent_doors[NORTH] = d;
-}
-
-void Room::set_south_room(Room* rm, Door* d)
-{
-  m_adjacent_rooms[SOUTH] = rm;
-  m_adjacent_doors[SOUTH] = d;
-}
-
-void Room::set_east_room(Room* rm, Door* d)
-{
-  m_adjacent_rooms[EAST] = rm;
-  m_adjacent_doors[EAST] = d;
-}
-
-void Room::set_west_room(Room* rm, Door* d)
-{
-  m_adjacent_rooms[WEST] = rm;
-  m_adjacent_doors[WEST] = d;
-}
-
-Room* Room::get_north_room()
-{
-  return m_adjacent_rooms[NORTH];
-}
-
-Room* Room::get_south_room()
-{
-  return m_adjacent_rooms[SOUTH];
-}
-
-Room* Room::get_east_room()
-{
-  return m_adjacent_rooms[EAST];
-}
-
-Room* Room::get_west_room()
-{
-  return m_adjacent_rooms[WEST];
-}
-
-Door* Room::get_north_door()
-{
-	return m_adjacent_doors[NORTH];
-}
-
-Door* Room::get_south_door()
-{
-	return m_adjacent_doors[SOUTH];
-}
-
-Door* Room::get_east_door()
-{
-	return m_adjacent_doors[EAST];
-}
-
-Door* Room::get_west_door()
-{
-	return m_adjacent_doors[WEST];
+  add_adjacent_room({ rm, d });
 }
