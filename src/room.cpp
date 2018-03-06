@@ -307,7 +307,7 @@ void Room::add_adjacent_room(adjacent_room rm)
   m_adjacent_rooms.push_back(rm);
 }
 
-void Room::add_adjacent_room(const Room* rm, const Door* d)
+void Room::add_adjacent_room(Room* rm, Door* d)
 {
   add_adjacent_room({ rm, d });
 }
