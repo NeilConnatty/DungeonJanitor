@@ -114,8 +114,21 @@ void Hero::move_hero(mat3 dungeon_transform)
 	}
 	else if (!is_moving())
 	{
-		vec2 next_door_pos = get_world_coords_from_room_coords(get_next_door_position(), m_currentRoom->transform, dungeon_transform);
-		set_destination(next_door_pos, Hero::destinations::DOOR);
+		if (m_currentRoom->containsUndiscoveredArtifact())
+		{
+			// The call on m_currentRoom-get_Artifact() fails
+			vec2 artifact_pos;// = m_currentRoom->get_artifact()->get_pos();
+			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
+			vector<vec2> path_to_artifact;
+			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_artifact);
+		}
+		else
+		{
+			vec2 next_door_pos = get_world_coords_from_room_coords(get_next_door_position(), m_currentRoom->transform, dungeon_transform);
+			set_destination(next_door_pos, Hero::destinations::DOOR);
+			vector<vec2> path_to_door;
+			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_door);
+		}
 	}
 }
 
@@ -177,9 +190,6 @@ void Hero::update_current(float ms)
 	if (m_is_moving)
 	{
 		float step_size = 10.f; // should probably replace this with collisions 
-		const float SPEED = 100.0f;
-		//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
-		const float Y_SPEED = SPEED * (24.f / 35.f);
 		float timeFactor = ms / 1000;
 		bool will_move = false;
 

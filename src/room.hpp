@@ -68,8 +68,8 @@ public:
     bool containsUndiscoveredArtifact() const;
     void setBossInRoom(bool bossInRoom);
     void setArtifactInRoom(bool artifactInRoom);
-	  Artifact* get_artifact();
-
+	Artifact* get_artifact();
+		
     int get_num_cleanables();
     float get_clean_percent();
     void decrement_cleanables();
