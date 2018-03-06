@@ -104,6 +104,21 @@ void Hero::stop_movement()
 	m_is_moving = false;
 }
 
+// sort of gross passing this in each time
+// alternative is the hero knows it's dungeon :/
+void Hero::move_hero(mat3 dungeon_transform)
+{
+	if (m_currentRoom->containsBoss())
+	{
+		stop_movement();
+	}
+	else if (!is_moving())
+	{
+		vec2 next_door_pos = get_world_coords_from_room_coords(get_next_door_position(), m_currentRoom->transform, dungeon_transform);
+		set_destination(next_door_pos, Hero::destinations::DOOR);
+	}
+}
+
 bool Hero::is_moving()
 {
 	return m_is_moving;

@@ -38,6 +38,7 @@ public:
 	void setAllRooms(vector<unique_ptr<Room>>* rooms);
 	void set_destination(vec2 position, Hero::destinations destination);
 	void stop_movement();
+	void move_hero(mat3 dungeon_transform);
 	bool is_moving();
 	const Room* get_current_room();
 
