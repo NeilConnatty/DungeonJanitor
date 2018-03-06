@@ -19,8 +19,8 @@ public:
 
 private:
 	static Texture hero_texture;
-	const Room * m_currentRoom;
-	const Room* m_next_room;
+	Room * m_currentRoom;
+	Room* m_next_room;
 	Hero::destinations m_destination_type;
 	vec2 m_destination;
 	vec2 m_vel;

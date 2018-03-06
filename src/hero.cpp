@@ -214,7 +214,7 @@ void Hero::update_current(float ms)
 				m_currentRoom = m_next_room;
         if (m_currentRoom->containsUndiscoveredArtifact())
         {
-          const_cast<Room*>(m_currentRoom)->setArtifactInRoom(false);
+          m_currentRoom->setArtifactInRoom(false);
         }
 			}
 		}
