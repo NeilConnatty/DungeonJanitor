@@ -22,7 +22,9 @@ private:
 	Room * m_currentRoom;
 	Room* m_next_room;
 	Hero::destinations m_destination_type;
-	vec2 m_destination;
+	vec2 m_end_destination;
+	vec2 m_current_destination;
+	vector<vec2> m_path;
 	vec2 m_vel;
 	bool m_is_moving;
 	vector<unique_ptr<Room>>* m_rooms; 

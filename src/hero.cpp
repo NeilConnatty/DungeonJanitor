@@ -95,7 +95,7 @@ void Hero::setAllRooms(vector<unique_ptr<Room>>* rooms)
 void Hero::set_destination(vec2 destination_pos, Hero::destinations destination_type )
 {
 	m_is_moving = true;
-	m_destination = destination_pos;
+	m_end_destination = destination_pos;
 	m_destination_type = destination_type;
 }
 
@@ -104,8 +104,7 @@ void Hero::stop_movement()
 	m_is_moving = false;
 }
 
-// sort of gross passing this in each time
-// alternative is the hero knows it's dungeon :/
+// Note to self: Rename and give hero dungeon pointer
 void Hero::move_hero(mat3 dungeon_transform)
 {
 	if (m_currentRoom->containsBoss())
@@ -116,11 +115,12 @@ void Hero::move_hero(mat3 dungeon_transform)
 	{
 		if (m_currentRoom->containsUndiscoveredArtifact())
 		{
-			// The call on m_currentRoom-get_Artifact() fails
-			vec2 artifact_pos;// = m_currentRoom->get_artifact()->get_pos();
+			// Note to self: Mightneed to be world coordS???
+			vec2 artifact_pos = m_currentRoom->get_artifact()->get_pos();
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
 			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_artifact);
+			m_path = path_to_artifact;
 		}
 		else
 		{
@@ -128,6 +128,7 @@ void Hero::move_hero(mat3 dungeon_transform)
 			set_destination(next_door_pos, Hero::destinations::DOOR);
 			vector<vec2> path_to_door;
 			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_door);
+			m_path = path_to_door;
 		}
 	}
 }
@@ -186,20 +187,16 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 
 void Hero::update_current(float ms)
 {
-	// only move if set to move
 	if (m_is_moving)
 	{
 		float step_size = 10.f; // should probably replace this with collisions 
 		float timeFactor = ms / 1000;
 		bool will_move = false;
 
-    //vector<vec2> path;
-    //Pathfinder::getPathFromPositionToDestination(m_position, m_destination, SPEED / 10.f, Y_SPEED / 10.f, path);
-
 		float s_x = m_position.x;
 		float s_y = m_position.y;
-		float d_x = m_destination.x;
-		float d_y = m_destination.y;
+		float d_x = m_end_destination.x;
+		float d_y = m_end_destination.y;
 
 		if (s_x - d_x > step_size)
 		{
