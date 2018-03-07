@@ -115,12 +115,13 @@ void Hero::move_hero(mat3 dungeon_transform)
 	{
 		if (m_currentRoom->containsUndiscoveredArtifact())
 		{
-			// Note to self: Mightneed to be world coordS???
-			vec2 artifact_pos = m_currentRoom->get_artifact()->get_pos();
+			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, dungeon_transform);
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
 			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_artifact);
 			m_path = path_to_artifact;
+			m_current_destination = m_path.back();
+			m_path.pop_back();
 		}
 		else
 		{
@@ -129,6 +130,8 @@ void Hero::move_hero(mat3 dungeon_transform)
 			vector<vec2> path_to_door;
 			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_door);
 			m_path = path_to_door;
+			m_current_destination = m_path.back();
+			m_path.pop_back();
 		}
 	}
 }
@@ -195,8 +198,8 @@ void Hero::update_current(float ms)
 
 		float s_x = m_position.x;
 		float s_y = m_position.y;
-		float d_x = m_end_destination.x;
-		float d_y = m_end_destination.y;
+		float d_x = m_current_destination.x;
+		float d_y = m_current_destination.y;
 
 		if (s_x - d_x > step_size)
 		{
@@ -230,14 +233,22 @@ void Hero::update_current(float ms)
 		} 
 		else
 		{
-			stop_movement();
-			if (m_destination_type == DOOR)
+			if (m_path.empty())
 			{
-				m_currentRoom = m_next_room;
-        if (m_currentRoom->containsUndiscoveredArtifact())
-        {
-          m_currentRoom->setArtifactInRoom(false);
-        }
+				stop_movement();
+				if (m_destination_type == DOOR)
+				{
+					m_currentRoom = m_next_room;
+				}
+				else if (m_destination_type == ARTIFACT)
+				{
+					m_currentRoom->deactivate_artifact();
+				}
+			}
+			else
+			{
+				m_current_destination = m_path.back();
+				m_path.pop_back();
 			}
 		}
 	}

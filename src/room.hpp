@@ -65,9 +65,9 @@ public:
     bool has_janitor_spawn_loc() const;
     vec2 get_janitor_spawn_loc() const;
     bool containsBoss() const;
-    bool containsUndiscoveredArtifact() const;
+    bool containsUndiscoveredArtifact();
     void setBossInRoom(bool bossInRoom);
-    void setArtifactInRoom(bool artifactInRoom);
+    void deactivate_artifact();
 	Artifact* get_artifact();
 		
     int get_num_cleanables();

@@ -272,14 +272,12 @@ vec2 Room::get_janitor_spawn_loc() const
 // If boss is currently in the room
 bool Room::containsBoss() const
 {
-    // stub
     return m_BossHere;
 }
 
-bool Room::containsUndiscoveredArtifact() const
+bool Room::containsUndiscoveredArtifact()
 {
-    // stub
-    return m_ArtifactHere;
+	return m_artifact.is_activated();
 }
 
 void Room::setBossInRoom(bool bossInRoom)
@@ -287,9 +285,10 @@ void Room::setBossInRoom(bool bossInRoom)
     m_BossHere = bossInRoom;
 }
 
-void Room::setArtifactInRoom(bool artifactInRoom)
+void Room::deactivate_artifact()
 {
-    m_ArtifactHere = artifactInRoom;
+	m_artifact.set_active(false);
+	m_ArtifactHere = false; // removes it from scene - if we want to have a different asset for artifacts the boss has interacted with we will need to get rid of this
 }
 
 Artifact* Room::get_artifact()
