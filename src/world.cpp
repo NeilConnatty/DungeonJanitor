@@ -144,6 +144,7 @@ bool World::init_creatures()
 
 	vec2 hero_position = get_world_coords_from_room_coords(m_dungeon.hero_room_position, m_dungeon.hero_start_room->transform, m_dungeon.transform);
 	m_hero.setRoom(m_dungeon.hero_start_room);
+	m_hero.setDungeon(&m_dungeon);
 	if (!m_hero.init(hero_position))
 	{
 		fprintf(stderr, "Failed to init Hero. \n");
@@ -188,7 +189,6 @@ bool World::update(float elapsed_ms)
   glfwGetFramebufferSize(m_window, &w, &h);
   vec2 screen = {(float)w, (float)h};
   m_janitor.update(elapsed_ms);
-  m_hero.move_hero(m_dungeon.transform);
   m_hero.update(elapsed_ms);
   m_boss.update(elapsed_ms);
   m_dungeon.update(elapsed_ms);

@@ -87,6 +87,11 @@ void Hero::setRoom(Room * room)
 	m_currentRoom = room;
 }
 
+void Hero::setDungeon(Dungeon* dungeon)
+{
+	m_dungeon = dungeon;
+}
+
 void Hero::setAllRooms(vector<unique_ptr<Room>>* rooms)
 {
 	m_rooms = rooms;
@@ -104,8 +109,7 @@ void Hero::stop_movement()
 	m_is_moving = false;
 }
 
-// Note to self: Rename and give hero dungeon pointer
-void Hero::move_hero(mat3 dungeon_transform)
+void Hero::update_path()
 {
 	if (m_currentRoom->containsBoss())
 	{
@@ -115,7 +119,7 @@ void Hero::move_hero(mat3 dungeon_transform)
 	{
 		if (m_currentRoom->get_artifact()->is_activated())
 		{
-			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, dungeon_transform);
+			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
 			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_artifact);
@@ -125,7 +129,7 @@ void Hero::move_hero(mat3 dungeon_transform)
 		}
 		else
 		{
-			vec2 next_door_pos = get_world_coords_from_room_coords(get_next_door_position(), m_currentRoom->transform, dungeon_transform);
+			vec2 next_door_pos = get_world_coords_from_room_coords(get_next_door_position(), m_currentRoom->transform, m_dungeon->transform);
 			set_destination(next_door_pos, Hero::destinations::DOOR);
 			vector<vec2> path_to_door;
 			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_door);
@@ -190,6 +194,7 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 
 void Hero::update_current(float ms)
 {
+	update_path();
 	if (m_is_moving)
 	{
 		float step_size = 10.f; // should probably replace this with collisions 

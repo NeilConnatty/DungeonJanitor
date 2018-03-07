@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
+#include "dungeon.hpp"
 #include "pathfinder.hpp"
 #include "ValueIteration.hpp"
 #include <vector>
@@ -20,6 +21,7 @@ public:
 private:
 	static Texture hero_texture;
 	Room * m_currentRoom;
+	Dungeon* m_dungeon;
 	Room* m_next_room;
 	Hero::destinations m_destination_type;
 	vec2 m_end_destination;
@@ -40,10 +42,11 @@ public:
 	bool	init(vec2 position);
 	void	destroy();
 	void setRoom(Room * room);
+	void setDungeon(Dungeon* dungeon);
 	void setAllRooms(vector<unique_ptr<Room>>* rooms);
 	void set_destination(vec2 position, Hero::destinations destination);
 	void stop_movement();
-	void move_hero(mat3 dungeon_transform);
+	void update_path();
 	bool is_moving();
 	const Room* get_current_room();
 
