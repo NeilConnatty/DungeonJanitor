@@ -120,7 +120,7 @@ Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room)
   return max_value.first;	
 }
 
-float ValueIteration::calculateHighestNeighborValue(const Room * room)
+float ValueIteration::calculateHighestNeighborValue(Room * room)
 {
 	vector<float> neighbor_values;
 
@@ -130,7 +130,6 @@ float ValueIteration::calculateHighestNeighborValue(const Room * room)
   {
     neighbor_values.push_back(VI_previous.at(adj.room->getRoomID()));
   }
-
 	return *max_element(neighbor_values.begin(), neighbor_values.end());
 }
 
@@ -140,7 +139,7 @@ bool ValueIteration::continueValueIterating()
 	return (m_difference >= error);
 }
 
-float ValueIteration::calculateInitialRoomValue(const Room * room)
+float ValueIteration::calculateInitialRoomValue(Room * room)
 {
 	float reward = INITIAL_VALUE;
 
@@ -152,7 +151,7 @@ float ValueIteration::calculateInitialRoomValue(const Room * room)
 	return reward;
 }
 
-float ValueIteration::calculateRoomReward(const Room* room, float artifact_probability)
+float ValueIteration::calculateRoomReward(Room* room, float artifact_probability)
 {
 	float reward = NORMAL_ROOM_VALUE;
 

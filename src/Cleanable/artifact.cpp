@@ -5,7 +5,7 @@
 Texture Artifact::activated_artifact_texture;
 Texture Artifact::deactivated_artifact_texture;
 
-Artifact::Artifact() {}
+Artifact::Artifact() : m_is_activated(false) {}
 
 Artifact::~Artifact() {}
 
@@ -33,8 +33,6 @@ bool Artifact::init(vec2 position)
 			return false;
 		}
 	}
-
-	m_is_activated = false;
 	m_position = position;
 
 	// The position corresponds to the center of the texture

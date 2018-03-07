@@ -21,7 +21,7 @@ public:
 	bool	init(vec2 position);
 	void	destroy();
 	bool	is_activated();
-	void    set_active(bool active);
+	void  set_active(bool active);
 
 private:
 	void update_current(float ms) override {};

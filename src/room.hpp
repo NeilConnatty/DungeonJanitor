@@ -21,8 +21,8 @@ public:
 
   struct adjacent_room
   {
-    const Room* room;
-    const Door* door;
+    Room* room;
+    Door* door;
   };
 
   enum directions
@@ -54,7 +54,7 @@ public:
 
     vector<Puddle>&  get_cleanables();
 
-    const Door& get_door() const { return m_door; }
+    Door& get_door() { return m_door; }
     bool has_door() const { return m_has_door; }
     double getReward() const;
     void setReward(double reward);
@@ -65,16 +65,16 @@ public:
     bool has_janitor_spawn_loc() const;
     vec2 get_janitor_spawn_loc() const;
     bool containsBoss() const;
-    bool containsUndiscoveredArtifact() const;
+    bool containsUndiscoveredArtifact();
     void setBossInRoom(bool bossInRoom);
-    void setArtifactInRoom(bool artifactInRoom);
-	  Artifact* get_artifact();
-
+    void deactivate_artifact();
+	Artifact* get_artifact();
+		
     int get_num_cleanables();
     float get_clean_percent();
     void decrement_cleanables();
 
-    void add_adjacent_room(const Room* rm, const Door* d);
+    void add_adjacent_room(Room* rm, Door* d);
     void add_adjacent_room(adjacent_room rm);
     const vector<adjacent_room>& get_adjacent_rooms() const { return m_adjacent_rooms; }
 

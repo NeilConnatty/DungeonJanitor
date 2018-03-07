@@ -87,6 +87,11 @@ void Hero::setRoom(Room * room)
 	m_currentRoom = room;
 }
 
+void Hero::setDungeon(Dungeon* dungeon)
+{
+	m_dungeon = dungeon;
+}
+
 void Hero::setAllRooms(vector<unique_ptr<Room>>* rooms)
 {
 	m_rooms = rooms;
@@ -95,13 +100,44 @@ void Hero::setAllRooms(vector<unique_ptr<Room>>* rooms)
 void Hero::set_destination(vec2 destination_pos, Hero::destinations destination_type )
 {
 	m_is_moving = true;
-	m_destination = destination_pos;
+	m_end_destination = destination_pos;
 	m_destination_type = destination_type;
 }
 
 void Hero::stop_movement()
 {
 	m_is_moving = false;
+}
+
+void Hero::update_path()
+{
+	if (m_currentRoom->containsBoss())
+	{
+		stop_movement();
+	}
+	else if (!is_moving())
+	{
+		if (m_currentRoom->get_artifact()->is_activated())
+		{
+			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
+			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
+			vector<vec2> path_to_artifact;
+			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_artifact);
+			m_path = path_to_artifact;
+			m_current_destination = m_path.back();
+			m_path.pop_back();
+		}
+		else
+		{
+			vec2 next_door_pos = get_world_coords_from_room_coords(get_next_door_position(), m_currentRoom->transform, m_dungeon->transform);
+			set_destination(next_door_pos, Hero::destinations::DOOR);
+			vector<vec2> path_to_door;
+			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_door);
+			m_path = path_to_door;
+			m_current_destination = m_path.back();
+			m_path.pop_back();
+		}
+	}
 }
 
 bool Hero::is_moving()
@@ -158,23 +194,17 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 
 void Hero::update_current(float ms)
 {
-	// only move if set to move
+	update_path();
 	if (m_is_moving)
 	{
 		float step_size = 10.f; // should probably replace this with collisions 
-		const float SPEED = 100.0f;
-		//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
-		const float Y_SPEED = SPEED * (24.f / 35.f);
 		float timeFactor = ms / 1000;
 		bool will_move = false;
 
-    //vector<vec2> path;
-    //Pathfinder::getPathFromPositionToDestination(m_position, m_destination, SPEED / 10.f, Y_SPEED / 10.f, path);
-
 		float s_x = m_position.x;
 		float s_y = m_position.y;
-		float d_x = m_destination.x;
-		float d_y = m_destination.y;
+		float d_x = m_current_destination.x;
+		float d_y = m_current_destination.y;
 
 		if (s_x - d_x > step_size)
 		{
@@ -208,14 +238,22 @@ void Hero::update_current(float ms)
 		} 
 		else
 		{
-			stop_movement();
-			if (m_destination_type == DOOR)
+			if (m_path.empty())
 			{
-				m_currentRoom = m_next_room;
-        if (m_currentRoom->containsUndiscoveredArtifact())
-        {
-          const_cast<Room*>(m_currentRoom)->setArtifactInRoom(false);
-        }
+				stop_movement();
+				if (m_destination_type == DOOR)
+				{
+					m_currentRoom = m_next_room;
+				}
+				else if (m_destination_type == ARTIFACT)
+				{
+					m_currentRoom->deactivate_artifact();
+				}
+			}
+			else
+			{
+				m_current_destination = m_path.back();
+				m_path.pop_back();
 			}
 		}
 	}

@@ -21,9 +21,9 @@ private:
 	static map<int, float> VI_current;
 	static map<int, float> VI_previous;
 
-	static float calculateInitialRoomValue(const Room* room);
-	static float calculateRoomReward(const Room* room, float artifact_probability);
-	static float calculateHighestNeighborValue(const Room* room);
+	static float calculateInitialRoomValue(Room* room);
+	static float calculateRoomReward(Room* room, float artifact_probability);
+	static float calculateHighestNeighborValue(Room* room);
 	static bool continueValueIterating();
 
 	static void initialize(vector<unique_ptr<Room>>& rooms, float artifact_probability);
