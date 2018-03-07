@@ -235,6 +235,7 @@ void Janitor::draw_current(const mat3& projection, const mat3& current_transform
 	glActiveTexture(GL_TEXTURE0);
 	//dereferencing a null pointer ic ic.
 	glBindTexture(GL_TEXTURE_2D, m_curr_tex->id);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);

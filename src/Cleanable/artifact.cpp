@@ -123,6 +123,8 @@ void Artifact::draw_current(const mat3& projection, const mat3& current_transfor
 	{
 		glBindTexture(GL_TEXTURE_2D, deactivated_artifact_texture.id);
 	}
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);

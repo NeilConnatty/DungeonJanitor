@@ -111,6 +111,7 @@ void Door::draw_children(const mat3& projection, const mat3& current_transform)
   // Enabling and binding texture to slot 0
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, door_texture.id);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   // Setting uniform values to the currently bound program
   glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
