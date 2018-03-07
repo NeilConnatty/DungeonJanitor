@@ -116,6 +116,7 @@ unique_ptr<PathNode> Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes
 	return ret;
 }
 
+// Returns path in reverse order. Pop_back to get the next position to go to.
 void Pathfinder::getPathFromGoalNode(PathNode endNode, vector<vec2>& solutionPathList)
 {
 	PathNode* p = &endNode;
@@ -123,7 +124,7 @@ void Pathfinder::getPathFromGoalNode(PathNode endNode, vector<vec2>& solutionPat
 	while (p != nullptr)
 	{
 		vec2 nextNodePosition = vec2{ p->m_xCoord, p->m_yCoord };
-		solutionPathList.emplace(solutionPathList.begin());
+		solutionPathList.emplace_back(nextNodePosition);
 		p = p->parent;
 	}
 }
