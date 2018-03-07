@@ -18,6 +18,7 @@ bool Room::init(vec2 position)
   m_has_janitor_spawn_loc = false;
   m_BossHere = false;
   m_has_door = false;
+  m_ArtifactHere = false;
 
   return true;
 }
@@ -277,7 +278,7 @@ bool Room::containsBoss() const
 
 bool Room::containsUndiscoveredArtifact()
 {
-	return m_artifact.is_activated();
+	return m_ArtifactHere;
 }
 
 void Room::setBossInRoom(bool bossInRoom)

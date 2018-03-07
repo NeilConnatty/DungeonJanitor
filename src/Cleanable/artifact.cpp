@@ -33,8 +33,6 @@ bool Artifact::init(vec2 position)
 			return false;
 		}
 	}
-
-	m_is_activated = false;
 	m_position = position;
 
 	// The position corresponds to the center of the texture

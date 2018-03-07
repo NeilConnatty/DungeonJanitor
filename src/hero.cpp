@@ -113,7 +113,7 @@ void Hero::move_hero(mat3 dungeon_transform)
 	}
 	else if (!is_moving())
 	{
-		if (m_currentRoom->containsUndiscoveredArtifact())
+		if (m_currentRoom->get_artifact()->is_activated())
 		{
 			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, dungeon_transform);
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);

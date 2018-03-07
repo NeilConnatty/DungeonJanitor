@@ -11,7 +11,7 @@ class Artifact : public GameObject
 private:
 	static Texture activated_artifact_texture;
 	static Texture deactivated_artifact_texture;
-	bool m_is_activated;
+	bool m_is_activated = false;
 
 public:
 	Artifact();
