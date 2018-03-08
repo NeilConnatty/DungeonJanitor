@@ -76,3 +76,26 @@ void GameObject::draw(const mat3& projection, const mat3& parent_transform)
 		draw_children(projection, final_transform);
 	}
 }
+
+bool GameObject::collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform) {
+	float jLeftEdge = m_position.x;
+	float jRightEdge = m_position.x+m_size.x;
+	float jTopEdge = m_position.y;
+	float jBottomEdge = m_position.y+m_size.y;
+
+  float objX = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).x;
+  float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;
+
+	float oLeftEdge =  objX;
+	float oRightEdge =  objX+object.get_size().x;
+	float oTopEdge =  objY;
+	float oBottomEdge =  objY+object.get_size().y;
+
+	if ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge))
+	{
+    if ((jTopEdge <= oBottomEdge && jBottomEdge >= oTopEdge) || (jBottomEdge >= oTopEdge && jTopEdge <= oBottomEdge)){
+    	return true;
+    }
+	}
+  return false;
+}

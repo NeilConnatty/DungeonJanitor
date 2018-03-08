@@ -26,6 +26,7 @@ public:
   void toggle_enable();
   void update(float ms);
   void draw(const mat3 &projection, const mat3 &parent_transform) override;
+  bool collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform);
 
 protected:
   virtual void update_current(float ms) = 0;
