@@ -135,6 +135,7 @@ bool World::init_creatures()
 	glfwGetFramebufferSize(m_window, &w, &h);
 	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
 	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
+  m_janitor.setRoom(m_dungeon.janitor_start_room);
 	if (!m_janitor.init(janitor_position))
 	{
 		fprintf(stderr, "Failed to init Janitor.\n");
@@ -247,29 +248,67 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     // key is of 'type' GLFW_KEY_
     // action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
-    //flip a boolean on press and release of the following keys for movement!
-    if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_UP)
-    {
-        m_janitor.key_up();
-    }
-    if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_DOWN)
-    {
-        m_janitor.key_down();
-    }
-    if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_LEFT)
-    {
-        m_janitor.key_left();
-    }
-    if ((action == GLFW_PRESS || action == GLFW_RELEASE) && key == GLFW_KEY_RIGHT)
-    {
-        m_janitor.key_right();
+
+    bool move_up = false;
+    bool move_down = false;
+    bool move_left = false;
+    bool move_right = false;
+
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+        if (key == GLFW_KEY_UP){
+            move_up = true;
+        }
+        if (key == GLFW_KEY_DOWN){
+            move_down = true;
+        }
+        if (key == GLFW_KEY_LEFT){
+            move_left = true;
+        }
+        if (key == GLFW_KEY_RIGHT){
+            move_right = true;
+        }
     }
 
-	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE)
-	{
-		m_dungeon.clean();
-	}
+    for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) {
+        std::vector<Wall>& walls = room->get_walls();
+        for (Wall& w : walls) {
+            if (m_janitor.collides_with(w, m_dungeon.janitor_start_room->transform, m_dungeon.transform)) {
+                if (get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon.transform).y+w.get_size().y < m_janitor.get_pos().y){
+                    // printf("Collide up\n");
+                    move_up = false;
+                }
+                if (get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon.transform).y > m_janitor.get_pos().y+m_janitor.get_size().y){
+                    // printf("Collide down\n");
+                    move_down = false;
+                }
+                if (get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon.transform).x+w.get_size().x < m_janitor.get_pos().x){
+                    // printf("Collide left\n");
+                    move_left = false;
+                }
+                if (get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon.transform).x > m_janitor.get_pos().x+m_janitor.get_size().x){
+                    // printf("Collide right\n");
+                    move_right = false;
+                }
+            }
+        }
+    }
+    m_janitor.key_up(move_up);
+    m_janitor.key_down(move_down);
+    m_janitor.key_left(move_left);
+    m_janitor.key_right(move_right);
+
+		if (action == GLFW_PRESS && key == GLFW_KEY_SPACE){
+      for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) {
+        if (room->getRoomID() == m_janitor.get_current_room()->getRoomID()) {
+          std::vector<Puddle>& cleanables = room->get_cleanables();
+          for (Puddle& p : cleanables) {
+            if (p.is_enabled() && m_janitor.collides_with(p, m_dungeon.janitor_start_room->transform, m_dungeon.transform)) {
+              p.toggle_enable();
+            }
+          }
+        }
+      }
+    }
 
 	// temporary keybind, probably will bind it to space once we have collisions
 	if (action == GLFW_PRESS && key == GLFW_KEY_A)

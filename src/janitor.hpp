@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "gameobject.hpp"
+#include "room.hpp"
 
 #include <vector>
 
@@ -24,11 +25,12 @@ public:
 	bool init(vec2 position);
 // Releases all associated resources
 	void destroy();
+	void setRoom(Room * room);
 
-	void key_up();
-	void key_down();
-	void key_left();
-	void key_right();
+	void key_up(bool move);
+	void key_down(bool move);
+	void key_left(bool move);
+	void key_right(bool move);
 	enum DIRECTION {
 		up, up_right, up_left, down, down_right, down_left, left, right
 	};
@@ -37,13 +39,15 @@ public:
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
-	//bool collides_with(GameObject& object);
+	bool collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform);
+	const Room* get_current_room();
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;
 	void draw_current(const mat3& projection, const mat3& current_transform)override;
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 private:
+	const Room * m_currentRoom;
 	vec2 m_accel;
 	vec2 m_vel;
 

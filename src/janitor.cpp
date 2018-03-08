@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include "wall.hpp"
+
 //This is ugly af
 Texture Janitor::up1; Texture Janitor::up2; Texture Janitor::up3; Texture Janitor::up4;
 Texture Janitor::up_right1; Texture Janitor::up_right2; Texture Janitor::up_right3; Texture Janitor::up_right4;
@@ -253,10 +255,81 @@ void Janitor::draw_children(const mat3& projection, const mat3& current_transfor
 void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
 void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
 
-void Janitor::key_up() { m_key_up = !m_key_up; }
-void Janitor::key_down() { m_key_down = !m_key_down; }
-void Janitor::key_left() { m_key_left = !m_key_left; }
-void Janitor::key_right() { m_key_right = !m_key_right; }
+void Janitor::setRoom(Room * room)
+{
+	m_currentRoom = room;
+}
+
+const Room* Janitor::get_current_room()
+{
+	return m_currentRoom;
+}
+
+
+
+void Janitor::key_up(bool move) {
+	if (move) {
+		m_key_up = true;
+	} else {
+		m_key_up = false;
+	}
+}
+
+void Janitor::key_down(bool move) {
+	if (move) {
+		m_key_down = true;
+	} else {
+		m_key_down = false;
+	}
+}
+void Janitor::key_left(bool move) {
+	if (move) {
+		m_key_left = true;
+	} else {
+		m_key_left = false;
+	}
+}
+void Janitor::key_right(bool move) {
+	if (move) {
+		m_key_right = true;
+	} else {
+		m_key_right = false;
+	}
+}
+
+bool Janitor::collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform) {
+	float jLeftEdge = m_position.x;
+	float jRightEdge = m_position.x+m_size.x;
+	float jTopEdge = m_position.y;
+	float jBottomEdge = m_position.y+m_size.y;
+
+  float objX = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).x;
+  float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;
+
+	float oLeftEdge =  objX;
+	float oRightEdge =  objX+object.get_size().x;
+	float oTopEdge =  objY;
+	float oBottomEdge =  objY+object.get_size().y;
+
+	// Handle wall case
+	// if (Wall* is_wall = dynamic_cast< Wall* >( &object ) ){
+		// oLeftEdge -= m_vel.x*2;
+		// oRightEdge += m_vel.x*2;
+		// oTopEdge -=  m_vel.y*2;
+		// oBottomEdge += m_vel.y*2;
+	// }
+
+	if ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge))
+	{
+    if ((jTopEdge <= oBottomEdge && jBottomEdge >= oTopEdge) || (jBottomEdge >= oTopEdge && jTopEdge <= oBottomEdge)){
+			// printf("Collision\n");
+    	return true;
+    }
+	}
+  return false;
+}
+
+
 
 //Helper function for draw_current
 //sets *m_curr_tex = &some_tex where some_tex is based on timing and key(s) pressed
