@@ -65,7 +65,6 @@ bool Janitor::init(vec2 position)
 		return false;
 
 	//Initialize member variables
-
 	m_position = position;
 	m_size = {static_cast<float>(up2.width), static_cast<float>(up2.height)};
 	m_time_pressed = 0;
@@ -255,17 +254,15 @@ void Janitor::draw_children(const mat3& projection, const mat3& current_transfor
 void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
 void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
 
-void Janitor::setRoom(Room * room)
+void Janitor::set_room(int id)
 {
-	m_currentRoom = room;
+	m_currentRoom = id;
 }
 
-const Room* Janitor::get_current_room()
+int Janitor::get_current_room_id()
 {
 	return m_currentRoom;
 }
-
-
 
 void Janitor::key_up(bool move) {
 	if (move) {
@@ -311,25 +308,14 @@ bool Janitor::collides_with(GameObject& object, mat3 room_transform, mat3 dungeo
 	float oTopEdge =  objY;
 	float oBottomEdge =  objY+object.get_size().y;
 
-	// Handle wall case
-	// if (Wall* is_wall = dynamic_cast< Wall* >( &object ) ){
-		// oLeftEdge -= m_vel.x*2;
-		// oRightEdge += m_vel.x*2;
-		// oTopEdge -=  m_vel.y*2;
-		// oBottomEdge += m_vel.y*2;
-	// }
-
 	if ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge))
 	{
     if ((jTopEdge <= oBottomEdge && jBottomEdge >= oTopEdge) || (jBottomEdge >= oTopEdge && jTopEdge <= oBottomEdge)){
-			// printf("Collision\n");
     	return true;
     }
 	}
   return false;
 }
-
-
 
 //Helper function for draw_current
 //sets *m_curr_tex = &some_tex where some_tex is based on timing and key(s) pressed

@@ -55,7 +55,7 @@ public:
     vector<Wall>& get_walls();
     vector<Puddle>&  get_cleanables();
 
-    const Door& get_door() const { return m_door; }
+    Door& get_door() { return m_door; }
     bool has_door() const { return m_has_door; }
     double getReward() const;
     void setReward(double reward);

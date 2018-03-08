@@ -36,7 +36,6 @@ void GameObject::set_rotation(float rotation)
 	m_rotation = rotation;
 }
 
-
 vec2 GameObject::get_pos() const { return m_position; }
 vec2 GameObject::get_scale() const { return m_scale; }
 vec2 GameObject::get_size() const { return m_size; }

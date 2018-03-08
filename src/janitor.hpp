@@ -25,7 +25,7 @@ public:
 	bool init(vec2 position);
 // Releases all associated resources
 	void destroy();
-	void setRoom(Room * room);
+	void set_room(int id);
 
 	void key_up(bool move);
 	void key_down(bool move);
@@ -40,14 +40,14 @@ public:
 	void set_vel(vec2 newVel);
 
 	bool collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform);
-	const Room* get_current_room();
+	int get_current_room_id();
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;
 	void draw_current(const mat3& projection, const mat3& current_transform)override;
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 private:
-	const Room * m_currentRoom;
+	int m_currentRoom;
 	vec2 m_accel;
 	vec2 m_vel;
 

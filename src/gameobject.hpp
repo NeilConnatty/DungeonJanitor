@@ -23,7 +23,6 @@ public:
   float get_rot() const;
   bool is_enabled() const;
 
-
   void toggle_enable();
   void update(float ms);
   void draw(const mat3 &projection, const mat3 &parent_transform) override;
