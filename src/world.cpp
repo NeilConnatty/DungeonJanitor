@@ -279,29 +279,12 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     }
 
     for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) {
-        std::vector<Wall>& walls = room->get_walls();
-        for (Wall& w : walls) {
-            if (m_janitor.collides_with(w, room->transform, m_dungeon.transform)) {
-              // printf("Wall collision\n");
-                if (m_janitor.get_pos().y-get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon.transform).y+w.get_size().y < 15.f){
-                    // printf("Collide up\n");
-                    // move_up = false;
-                }
-                if (get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon.transform).y > m_janitor.get_pos().y+m_janitor.get_size().y){
-                    // printf("Collide down\n");
-                    // move_down = false;
-                }
-                if (get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon.transform).x+w.get_size().x < m_janitor.get_pos().x){
-                    // printf("Collide left\n");
-                    // move_left = false;
-                }
-                if (get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon.transform).x > m_janitor.get_pos().x+m_janitor.get_size().x){
-                    // printf("Collide right\n");
-                    // move_right = false;
-                }
-            }
-        }
+      std::vector<Wall>& walls = room->get_walls();
+      for (Wall& w : walls) {
+        // Wall collision check goes here
+      }
     }
+
     m_janitor.key_up(move_up);
     m_janitor.key_down(move_down);
     m_janitor.key_left(move_left);
