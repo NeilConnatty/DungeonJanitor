@@ -29,7 +29,6 @@ bool Janitor::init(vec2 position)
 	//all the player textures are the same size so it's fine to pick one arbitrarily
 	float wr = up2.width * 0.5f;
 	float hr = up2.height * 0.5f;
-	m_size = {wr, hr};
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -66,8 +65,9 @@ bool Janitor::init(vec2 position)
 		return false;
 
 	//Initialize member variables
-	
+
 	m_position = position;
+	m_size = {static_cast<float>(up2.width), static_cast<float>(up2.height)};
 	m_time_pressed = 0;
 	m_key_up = false;
 	m_key_down = false;
