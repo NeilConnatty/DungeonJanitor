@@ -6,6 +6,7 @@
 GameObject::GameObject() :
 	m_position({0.f, 0.f}),
 	m_scale({1.f, 1.f}),
+	m_size({1.f , 1.f}),
 	m_rotation(0.f),
 	m_enabled(true)
 {
@@ -25,6 +26,11 @@ void GameObject::set_scale(vec2 scale)
 	m_scale = scale;
 }
 
+void GameObject::set_size(vec2 size)
+{
+	m_size = size;
+}
+
 void GameObject::set_rotation(float rotation)
 {
 	m_rotation = rotation;
@@ -33,8 +39,10 @@ void GameObject::set_rotation(float rotation)
 
 vec2 GameObject::get_pos() const { return m_position; }
 vec2 GameObject::get_scale() const { return m_scale; }
+vec2 GameObject::get_size() const { return m_size; }
 float GameObject::get_rot() const { return m_rotation; }
 bool GameObject::is_enabled() const { return m_enabled; }
+
 
 void GameObject::toggle_enable()
 {
