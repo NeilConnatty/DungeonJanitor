@@ -258,7 +258,6 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
         }
         rooms.back()->setRoomID(num_rooms);
         ++num_rooms;
-        // TODO: find adjacent hallway for door location -- prefer bottom
         // TODO: change room type to be classroom, office, or bathroom
       }
       else if (ch == HALLWAY)
@@ -270,17 +269,39 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
         
         addHallwayHelper(*hallway, offset, topRow, bottomRow, startColumn, endColumn);
       }
-      else if (ch == EMPTY)
+      else if (ch == EMPTY || ch == SPACE)
       {
         // do nothing! We let the offset increase
       }
       else
       {
-        fprintf(stderr,
-          "Error parsing room file. Invalid character %c at line %d, "
-          "column %d.\n",
-          ch, row + 1, column + 1);
-        return false;
+        std::string str;
+        size_t num;
+
+        // convert the ch to a number, which we will use to index into the array
+        // of room text files
+        str += ch; // need to do it this way to ensure it's null terminated for
+                   // passing into std::atoi
+        num = std::atoi(str.c_str());
+
+        if (num > num_room_files || num == 0) // check that the character passed in is valid
+        {
+          fprintf(stderr,
+            "Error parsing room file. Invalid character %c at line %d, "
+            "column %d.\n",
+            ch, row + 1, column + 1);
+          return false;
+        }
+
+        rooms.emplace_back(new Room);
+        rooms.back()->init(offset*2.f);
+        if (!roomParser.parseRoom(*rooms.back(), room_files[num-1]))
+        {
+          return false;
+        }
+        rooms.back()->setRoomID(num_rooms);
+        ++num_rooms;        
+        // TODO: change room type to be classroom, office, or bathroom
       }
       
       offset.x += ROOM_X_OFFSET;      
