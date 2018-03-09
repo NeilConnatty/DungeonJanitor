@@ -200,7 +200,8 @@ void Hero::update_current(float ms)
 	{
 		float step_size = 10.f; // should probably replace this with collisions 
 		float timeFactor = ms / 1000;
-		bool will_move = false;
+		bool will_move_x = false;
+		bool will_move_y = false;
 
 		float s_x = m_position.x;
 		float s_y = m_position.y;
@@ -209,33 +210,38 @@ void Hero::update_current(float ms)
 
 		if (s_x - d_x > step_size)
 		{
-			will_move = true;
+			will_move_x = true;
 			m_vel.x = -SPEED;
 		}
 		else if (d_x - s_x > step_size)
 		{
-			will_move = true;
+			will_move_x = true;
 			m_vel.x = SPEED;
 		}
 
 		if (s_y - d_y > step_size)
 		{
-			will_move = true;
+			will_move_y = true;
 			m_vel.y = -Y_SPEED;
 		}
 		else if (d_y - s_y > step_size)
 		{
-			will_move = true;
+			will_move_y = true;
 			m_vel.y = Y_SPEED;
 		}
 
-		if (will_move) 
+		if (will_move_x || will_move_y) 
 		{
-			float new_position_x = m_position.x + m_vel.x * timeFactor;
-			float new_position_y = m_position.y + m_vel.y * timeFactor;
-
-			m_position.x = new_position_x;
-			m_position.y = new_position_y;
+			if (will_move_x)
+			{
+				float new_position_x = m_position.x + m_vel.x * timeFactor;
+				m_position.x = new_position_x;
+			}
+			if (will_move_y)
+			{
+				float new_position_y = m_position.y + m_vel.y * timeFactor;
+				m_position.y = new_position_y;
+			}
 		} 
 		else
 		{
