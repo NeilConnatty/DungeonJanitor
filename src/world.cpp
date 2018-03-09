@@ -195,10 +195,11 @@ bool World::update(float elapsed_ms)
   m_dungeon.update(elapsed_ms);
 
   for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) {
-    if (m_janitor.collides_with(room->get_door(), room->transform, m_dungeon.transform)) {
-      // printf("ROOM ID: %i\n", room->getRoomID());
-      if (room->getRoomID() != m_janitor.get_current_room_id()) {
-        m_janitor.set_room(room->getRoomID());
+    if (room->has_door()){
+      if (m_janitor.collides_with(room->get_door(), room->transform, m_dungeon.transform)) {
+        if (room->getRoomID() != m_janitor.get_current_room_id()) {
+          m_janitor.set_room(room->getRoomID());
+        }
       }
     }
   }
