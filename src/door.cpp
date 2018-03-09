@@ -4,7 +4,7 @@
 
 Texture Door::door_texture;
 
-Door::Door() {}
+Door::Door() : GameObject() {}
 Door::~Door() {}
 
 bool Door::init(vec2 pos)

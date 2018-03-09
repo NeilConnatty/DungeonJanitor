@@ -6,6 +6,7 @@
 GameObject::GameObject() :
 	m_position({0.f, 0.f}),
 	m_scale({1.f, 1.f}),
+	m_size({1.f , 1.f}),
 	m_rotation(0.f),
 	m_enabled(true)
 {
@@ -25,16 +26,22 @@ void GameObject::set_scale(vec2 scale)
 	m_scale = scale;
 }
 
+void GameObject::set_size(vec2 size)
+{
+	m_size = size;
+}
+
 void GameObject::set_rotation(float rotation)
 {
 	m_rotation = rotation;
 }
 
-
 vec2 GameObject::get_pos() const { return m_position; }
 vec2 GameObject::get_scale() const { return m_scale; }
+vec2 GameObject::get_size() const { return m_size; }
 float GameObject::get_rot() const { return m_rotation; }
 bool GameObject::is_enabled() const { return m_enabled; }
+
 
 void GameObject::toggle_enable()
 {
@@ -68,4 +75,27 @@ void GameObject::draw(const mat3& projection, const mat3& parent_transform)
 		draw_current(projection, final_transform);
 		draw_children(projection, final_transform);
 	}
+}
+
+bool GameObject::collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform) {
+	float jLeftEdge = m_position.x;
+	float jRightEdge = m_position.x+m_size.x;
+	float jTopEdge = m_position.y;
+	float jBottomEdge = m_position.y+m_size.y;
+
+  float objX = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).x;
+  float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;
+
+	float oLeftEdge =  objX;
+	float oRightEdge =  objX+object.get_size().x;
+	float oTopEdge =  objY;
+	float oBottomEdge =  objY+object.get_size().y;
+
+	if ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge))
+	{
+    if ((jTopEdge <= oBottomEdge && jBottomEdge >= oTopEdge) || (jBottomEdge >= oTopEdge && jTopEdge <= oBottomEdge)){
+    	return true;
+    }
+	}
+  return false;
 }

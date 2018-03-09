@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include "wall.hpp"
+
 //This is ugly af
 Texture Janitor::up1; Texture Janitor::up2; Texture Janitor::up3; Texture Janitor::up4;
 Texture Janitor::up_right1; Texture Janitor::up_right2; Texture Janitor::up_right3; Texture Janitor::up_right4;
@@ -63,8 +65,8 @@ bool Janitor::init(vec2 position)
 		return false;
 
 	//Initialize member variables
-	
 	m_position = position;
+	m_size = {static_cast<float>(up2.width), static_cast<float>(up2.height)};
 	m_time_pressed = 0;
 	m_key_up = false;
 	m_key_down = false;
@@ -253,10 +255,45 @@ void Janitor::draw_children(const mat3& projection, const mat3& current_transfor
 void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
 void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
 
-void Janitor::key_up() { m_key_up = !m_key_up; }
-void Janitor::key_down() { m_key_down = !m_key_down; }
-void Janitor::key_left() { m_key_left = !m_key_left; }
-void Janitor::key_right() { m_key_right = !m_key_right; }
+void Janitor::set_room(int id)
+{
+	m_currentRoom = id;
+}
+
+int Janitor::get_current_room_id()
+{
+	return m_currentRoom;
+}
+
+void Janitor::key_up(bool move) {
+	if (move) {
+		m_key_up = true;
+	} else {
+		m_key_up = false;
+	}
+}
+
+void Janitor::key_down(bool move) {
+	if (move) {
+		m_key_down = true;
+	} else {
+		m_key_down = false;
+	}
+}
+void Janitor::key_left(bool move) {
+	if (move) {
+		m_key_left = true;
+	} else {
+		m_key_left = false;
+	}
+}
+void Janitor::key_right(bool move) {
+	if (move) {
+		m_key_right = true;
+	} else {
+		m_key_right = false;
+	}
+}
 
 //Helper function for draw_current
 //sets *m_curr_tex = &some_tex where some_tex is based on timing and key(s) pressed

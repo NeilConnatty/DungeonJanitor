@@ -23,8 +23,9 @@ bool Puddle::init(vec2 position)
 			return false;
 		}
 	}
-	
+
   m_position = position;
+	m_size = {static_cast<float>(puddle_texture.width), static_cast<float>(puddle_texture.height)};
 
 	// The position corresponds to the center of the texture
 	float wr = puddle_texture.width * 0.5f;

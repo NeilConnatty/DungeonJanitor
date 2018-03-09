@@ -52,6 +52,7 @@ public:
     bool add_boss_spawn_loc(bool has_boss_spawn, vec2 boss_spawn_pos);
     bool add_janitor_spawn_loc(bool has_janitor_spawn, vec2 janitor_spawn_pos);
 
+    vector<Wall>& get_walls();
     vector<Puddle>&  get_cleanables();
 
     Door& get_door() { return m_door; }
