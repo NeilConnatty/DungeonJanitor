@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <string>
+#include <filesystem>
 
 // Characters
 #define SPACE ' '
@@ -26,9 +27,6 @@
 #define WALL_Y_OFFSET 60.f
 #define FLOOR_X_OFFSET 35.f
 #define FLOOR_Y_OFFSET 25.f
-
-const char* room_files[] = { room_path("1.rm"), room_path("2.rm"), room_path("3.rm") };
-const size_t num_room_files = 3;
 
 bool RoomParser::parseLine(std::string &line, float y, bool first_line) 
 {
@@ -210,6 +208,29 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
 }
 
 //======================= DungeonParser ======================//
+// this function design is pulled from http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
+void read_directory(const char* dirname, std::vector<std::string>& vec)
+{
+  struct path_leaf_string
+  {
+    std::string operator()(const std::experimental::filesystem::directory_entry& entry) const
+    {
+      return entry.path().relative_path().string();
+    }
+  };
+
+  std::experimental::filesystem::path p(dirname);
+  std::experimental::filesystem::directory_iterator start(p);
+  std::experimental::filesystem::directory_iterator end;
+  std::transform(start, end, std::back_inserter(vec), path_leaf_string());
+}
+
+DungeonParser::DungeonParser() :
+  m_room_files()
+{
+  read_directory(room_path(), m_room_files);
+}
+
 bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename)
 {
   std::string line;
@@ -252,35 +273,56 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
       {
         rooms.emplace_back(new Room);
         rooms.back()->init(offset*2.f);
-        if (!roomParser.parseRoom(*rooms.back(), room_files[num_rooms%num_room_files]))
+        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num_rooms%m_room_files.size()].c_str()))
         {
           return false;
         }
         rooms.back()->setRoomID(num_rooms);
         ++num_rooms;
-        // TODO: find adjacent hallway for door location -- prefer bottom
         // TODO: change room type to be classroom, office, or bathroom
       }
       else if (ch == HALLWAY)
       {
-        bool topRow = (row == 0) || (lines[row-1][column] == EMPTY);
-        bool bottomRow = (row == lines.size() - 1) || (lines[row + 1][column] == EMPTY);
-        bool startColumn = (column == 0) || (line[column - 1] == EMPTY);
-        bool endColumn = (column == line.size() - 1) || (line[column + 1] == EMPTY);
+        bool topRow = (row == 0) || (lines[row-1][column] == EMPTY) || (lines[row - 1][column] == SPACE);
+        bool bottomRow = (row == lines.size() - 1) || (lines[row + 1][column] == EMPTY) || (lines[row + 1][column] == SPACE);
+        bool startColumn = (column == 0) || (line[column - 1] == EMPTY) || (line[column - 1] == SPACE);
+        bool endColumn = (column == line.size() - 1) || (line[column + 1] == EMPTY) || (line[column + 1] == SPACE);
         
         addHallwayHelper(*hallway, offset, topRow, bottomRow, startColumn, endColumn);
       }
-      else if (ch == EMPTY)
+      else if (ch == EMPTY || ch == SPACE)
       {
         // do nothing! We let the offset increase
       }
       else
       {
-        fprintf(stderr,
-          "Error parsing room file. Invalid character %c at line %d, "
-          "column %d.\n",
-          ch, row + 1, column + 1);
-        return false;
+        std::string str;
+        size_t num;
+
+        // convert the ch to a number, which we will use to index into the array
+        // of room text files
+        str += ch; // need to do it this way to ensure it's null terminated for
+                   // passing into std::atoi
+        num = std::atoi(str.c_str());
+
+        if (num > m_room_files.size() || num == 0) // check that the character passed in is valid
+        {
+          fprintf(stderr,
+            "Error parsing room file. Invalid character %c at line %d, "
+            "column %d.\n",
+            ch, row + 1, column + 1);
+          return false;
+        }
+
+        rooms.emplace_back(new Room);
+        rooms.back()->init(offset*2.f);
+        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num-1].c_str()))
+        {
+          return false;
+        }
+        rooms.back()->setRoomID(num_rooms);
+        ++num_rooms;        
+        // TODO: change room type to be classroom, office, or bathroom
       }
       
       offset.x += ROOM_X_OFFSET;      

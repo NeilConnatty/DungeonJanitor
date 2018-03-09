@@ -35,6 +35,8 @@ private:
 class DungeonParser
 {
 public:
+  DungeonParser();
+
   bool parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename);
 
 private:
@@ -69,5 +71,6 @@ private:
                         bool endColumn);
 
 private:
+  std::vector<std::string> m_room_files;
 };
 
