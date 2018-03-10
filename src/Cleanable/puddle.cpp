@@ -17,15 +17,18 @@ bool Puddle::init(vec2 position)
 {
 	if (!puddle_texture.is_valid())
 	{
-		if (!puddle_texture.load_from_file(textures_path("puddle_placeholder.png")))
+		if (!puddle_texture.load_from_file(textures_path("d1_cleanable_puddle-l.png")))
 		{
 			fprintf(stderr, "Failed to load puddle texture\n");
 			return false;
 		}
 	}
 
-  m_position = position;
+	m_position = position;
 	m_size = {static_cast<float>(puddle_texture.width), static_cast<float>(puddle_texture.height)};
+	// Setting initial scale values
+	m_scale.x = 1.5f;
+	m_scale.y = 1.5f;
 
 	// The position corresponds to the center of the texture
 	float wr = puddle_texture.width * 0.5f;
@@ -65,10 +68,6 @@ bool Puddle::init(vec2 position)
 	// Loading shaders
 	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
-
-	// Setting initial scale values
-	m_scale.x = 1.f;
-	m_scale.y = 1.f;
 
 	return true;
 }
