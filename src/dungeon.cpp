@@ -99,6 +99,11 @@ void Dungeon::update_children(float ms)
 	{
 		room->update(ms);
 	}
+
+  for (std::unique_ptr<Door>& door : m_doors)
+  {
+    door->update(ms);
+  }
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
@@ -111,4 +116,9 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
 	{
 		room->draw(projection, current_transform);
 	}
+
+  for (std::unique_ptr<Door>& door : m_doors)
+  {
+    door->draw(projection, current_transform);
+  }
 }

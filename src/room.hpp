@@ -56,7 +56,6 @@ public:
     vector<Puddle>&  get_cleanables();
 
     Door& get_door() { return m_door; }
-    bool has_door() const { return m_has_door; }
     double getReward() const;
     void setReward(double reward);
     bool has_hero_spawn_loc() const;
@@ -69,7 +68,7 @@ public:
     bool containsUndiscoveredArtifact();
     void setBossInRoom(bool bossInRoom);
     void deactivate_artifact();
-	Artifact* get_artifact();
+	  Artifact* get_artifact();
 		
     int get_num_cleanables();
     float get_clean_percent();
@@ -95,7 +94,6 @@ private:
     bool m_has_hero_spawn_loc;
     bool m_has_boss_spawn_loc;
     bool m_has_janitor_spawn_loc;
-    bool m_has_door;
 
     int m_ID; // unique room id
     int m_num_cleanables;
@@ -107,11 +105,11 @@ private:
     vec2 m_janitor_spawn_loc;
     
     Artifact		m_artifact;
+    Door m_door;
 
-    vector<Floor>		m_floors;
-    vector<Wall>		m_walls;
-    vector<Puddle>  m_puddles;
-    Door            m_door;
-    vector<adjacent_room> m_adjacent_rooms;
+    vector<Floor>		          m_floors;
+    vector<Wall>		          m_walls;
+    vector<Puddle>            m_puddles;
+    vector<adjacent_room>     m_adjacent_rooms;
 }; 
 

@@ -66,7 +66,7 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
     } 
 	else if (ch == DOOR)
 	{
-		door_pos = { x,y };
+		door_pos.push_back({ x,y });
 		tile_dim = Floor::get_dimensions();
 		x = x + tile_dim.x;
 	}
@@ -129,14 +129,14 @@ void RoomParser::clearPositions()
   wall_pairs.clear();
   floor_pos.clear();
   puddle_pos.clear();
-  door_pos = { 0.f,0.f };
+  door_pos.clear();
 }
 
 bool RoomParser::populateRoom(Room &room) 
 {
-  if (door_pos.x != 0.f && door_pos.y != 0.f) 
+  if (door_pos[0].x != 0.f && door_pos[0].y != 0.f) 
   {
-    if (!room.add_door(door_pos)) 
+    if (!room.add_door(door_pos[0])) 
     {
       return false;
     }
@@ -208,6 +208,12 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
 }
 
 //======================= DungeonParser ======================//
+
+struct SubRenderable : public Renderable
+{
+  void draw(const mat3& projection, const mat3& parent_transform) {}
+};
+
 // this function design is pulled from http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
 void read_directory(const char* dirname, std::vector<std::string>& vec)
 {
@@ -231,7 +237,7 @@ DungeonParser::DungeonParser() :
   read_directory(room_path(), m_room_files);
 }
 
-bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename)
+bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename, Dungeon& dungeon)
 {
   std::string line;
   std::ifstream file(filename);
@@ -242,10 +248,30 @@ bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, cons
     lines.emplace_back(line);
   }
 
-  return parseLines(lines, rooms);
+  return parseLines(lines, rooms, dungeon);
 }
 
-bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms)
+void transform_positions(vector<vec2>& positions, SubRenderable& rend)
+{
+  for (vec2& pos : positions)
+  {
+    pos = get_world_coords_from_room_coords(pos, rend.transform, identity_matrix);
+  }
+}
+
+void add_doors_to_dungeon(vector<vec2>& door_pos, Dungeon& dungeon, vec2 offset, int roomID)
+{
+  // hack to add the door to dungeon
+  SubRenderable rend;
+  rend.transform_begin();
+  rend.transform_translate(offset*2.f);
+  rend.transform_end();
+
+  transform_positions(door_pos, rend);
+  dungeon.add_doors(door_pos, roomID);
+}
+
+bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms, Dungeon& dungeon)
 {
   size_t row, column, num_rooms = 0;
   vec2 offset = { 0.f,0.f };
@@ -277,6 +303,9 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
         {
           return false;
         }
+
+        add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms);
+
         rooms.back()->setRoomID(num_rooms);
         ++num_rooms;
         // TODO: change room type to be classroom, office, or bathroom
@@ -320,8 +349,11 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
         {
           return false;
         }
+        
+        add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms);
+
         rooms.back()->setRoomID(num_rooms);
-        ++num_rooms;        
+        ++num_rooms;
         // TODO: change room type to be classroom, office, or bathroom
       }
       
