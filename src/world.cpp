@@ -194,24 +194,14 @@ bool World::update(float elapsed_ms)
   m_boss.update(elapsed_ms);
   m_dungeon.update(elapsed_ms);
 
-  for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) 
+  // TODO This needs to be thoroughly tested
+  for (Room::adjacent_room& adjacent : m_dungeon.get_adjacent_rooms(m_janitor.get_current_room_id())) 
   {
-    if (room->has_door())
-    {
-      if (m_janitor.collides_with(room->get_door(), room->transform, m_dungeon.transform)) 
+      if (m_janitor.collides_with(*adjacent.door, m_dungeon.transform, identity_matrix)) // door is in dungeon coords 
       {
-        if (room->getRoomID() != m_janitor.get_current_room_id()) 
-        {
-          m_janitor.set_room(room->getRoomID());
-        }
-        else
-        {
-          m_janitor.set_room(room->get_adjacent_rooms().back().room->getRoomID());
-        }
-
+        m_janitor.set_room(adjacent.room->getRoomID());
         break; // don't need to check against other doors for this frame
       }
-    }
   }
 
   return true;

@@ -45,7 +45,6 @@ public:
     bool add_floor(vec2 floor);
     bool add_walls(vector<wall_pair>& walls);
     bool add_floors(vector<vec2>& positions);
-	  bool add_door(vec2 position);
     bool add_cleanables(vector<vec2>& puddle_positions);
     bool add_artifact(bool has_artifact, vec2 artifact_pos);
     bool add_hero_spawn_loc(bool has_hero_spawn, vec2 hero_spawn_pos);
@@ -55,7 +54,6 @@ public:
     vector<Wall>& get_walls();
     vector<Puddle>&  get_cleanables();
 
-    Door& get_door() { return m_door; }
     double getReward() const;
     void setReward(double reward);
     bool has_hero_spawn_loc() const;
@@ -73,10 +71,6 @@ public:
     int get_num_cleanables();
     float get_clean_percent();
     void decrement_cleanables();
-
-    void add_adjacent_room(Room* rm, Door* d);
-    void add_adjacent_room(adjacent_room rm);
-    const vector<adjacent_room>& get_adjacent_rooms() const { return m_adjacent_rooms; }
 
     int getRoomID() const { return m_ID; };
     void setRoomID(int id);
@@ -105,11 +99,9 @@ private:
     vec2 m_janitor_spawn_loc;
     
     Artifact		m_artifact;
-    Door m_door;
 
     vector<Floor>		          m_floors;
     vector<Wall>		          m_walls;
     vector<Puddle>            m_puddles;
-    vector<adjacent_room>     m_adjacent_rooms;
 }; 
 

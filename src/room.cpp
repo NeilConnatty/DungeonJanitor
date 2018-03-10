@@ -100,16 +100,6 @@ bool Room::add_floor(vec2 floor)
   return true;
 }
 
-bool Room::add_door(vec2 pos)
-{
-  if (!m_door.init({ pos.x, pos.y + 18.f }))
-  {
-    return false;
-  }
-
-  return true;
-}
-
 bool Room::add_floors(std::vector<vec2> &positions) 
 {
   for (vec2 &pos : positions) 
@@ -288,12 +278,3 @@ void Room::setRoomID(int id)
   m_ID = id;
 }
 
-void Room::add_adjacent_room(adjacent_room rm)
-{
-  m_adjacent_rooms.push_back(rm);
-}
-
-void Room::add_adjacent_room(Room* rm, Door* d)
-{
-  add_adjacent_room({ rm, d });
-}

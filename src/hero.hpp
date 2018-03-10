@@ -50,7 +50,7 @@ public:
 	bool is_moving();
 	const Room* get_current_room();
 
-	vec2 get_next_door_position(); // which door to go to next
+	vec2 get_next_door_position(); // which door to go to next, returned in world coordinates
 
 private:
 	void update_current(float ms) override;
