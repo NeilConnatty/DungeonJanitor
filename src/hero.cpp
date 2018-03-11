@@ -287,7 +287,7 @@ vec2 Hero::get_next_door_position()
 	}
 	if (num_artifacts > 0)
 	{
-		percentage_of_activated_artifacts = num_activated_artifacts / num_artifacts;
+		percentage_of_activated_artifacts = (float)num_activated_artifacts / (float)num_artifacts;
 	}
 
 

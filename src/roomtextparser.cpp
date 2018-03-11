@@ -16,7 +16,6 @@
 #define HERO 'h'
 #define BOSS 'b'
 #define DOOR 'd'
-#define ROOM 'r'
 #define HALLWAY 'h'
 #define EMPTY 'e'
 
@@ -234,7 +233,7 @@ void read_directory(const char* dirname, std::vector<std::string>& vec)
 DungeonParser::DungeonParser() :
   m_room_files()
 {
-  read_directory(room_path(), m_room_files);
+  read_directory(room_path(""), m_room_files);
 }
 
 bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename, Dungeon& dungeon)
@@ -298,7 +297,8 @@ bool add_doors_to_dungeon(vector<vec2>& door_pos, Dungeon& dungeon, vec2 offset,
 
 bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms, Dungeon& dungeon)
 {
-  size_t row, column, num_rooms = 0;
+  size_t row, column;
+  int num_rooms = 0;
   vec2 offset = { 0.f,0.f };
   RoomParser roomParser;
 
@@ -320,22 +320,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
     {
       char& ch = line[column];
 
-      if (ch == ROOM)
-      {
-        rooms.emplace_back(new Room);
-        rooms.back()->init(offset*2.f);
-        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num_rooms%m_room_files.size()].c_str()))
-        {
-          return false;
-        }
-        rooms.back()->setRoomID(num_rooms);
-
-        add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway);
-
-        ++num_rooms;
-        // TODO: change room type to be classroom, office, or bathroom
-      }
-      else if (ch == HALLWAY)
+      if (ch == HALLWAY)
       {
         bool topRow = (row == 0) || (lines[row-1][column] == EMPTY) || (lines[row - 1][column] == SPACE);
         bool bottomRow = (row == lines.size() - 1) || (lines[row + 1][column] == EMPTY) || (lines[row + 1][column] == SPACE);
@@ -364,7 +349,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
           fprintf(stderr,
             "Error parsing room file. Invalid character %c at line %d, "
             "column %d.\n",
-            ch, row + 1, column + 1);
+            ch, (int)(row + 1), (int)(column + 1));
           return false;
         }
 

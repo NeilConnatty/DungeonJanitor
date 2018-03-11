@@ -3,12 +3,12 @@
 #include "ValueIteration.hpp"
 
 #define INITIAL_VALUE 0 // Fixed at 0
-#define NORMAL_ROOM_VALUE -0.04 // Fixed at -0.04
+#define NORMAL_ROOM_VALUE -0.04f // Fixed at -0.04
 #define BOSS_VALUE 1 // Fixed at 1
-#define ARTIFACT_VALUE 0.50 // Fixed at 0.50
-#define DISCOUNT_FACTOR 0.8 // Can play with
+#define ARTIFACT_VALUE 0.50f // Fixed at 0.50
+#define DISCOUNT_FACTOR 0.8f // Can play with
 #define LOW_NUMBER_HACK -100
-#define MAX_ERROR 0.01 // Can play with
+#define MAX_ERROR 0.01f // Can play with
 
 #include <fstream> // for testing
 #include <string>// for testing
