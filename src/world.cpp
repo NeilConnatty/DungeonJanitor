@@ -136,6 +136,7 @@ bool World::init_creatures()
 	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
 	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
   m_janitor.set_current_room(m_dungeon.janitor_start_room);
+  m_janitor.set_dungeon(&m_dungeon);
 	if (!m_janitor.init(janitor_position))
 	{
 		fprintf(stderr, "Failed to init Janitor.\n");
@@ -190,7 +191,6 @@ bool World::update(float elapsed_ms)
   glfwGetFramebufferSize(m_window, &w, &h);
   vec2 screen = {(float)w, (float)h};
   m_janitor.update(elapsed_ms);
-  m_janitor.check_collisions(m_dungeon);
   m_hero.update(elapsed_ms);
   m_boss.update(elapsed_ms);
   m_dungeon.update(elapsed_ms);

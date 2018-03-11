@@ -102,6 +102,9 @@ void Janitor::update_current(float ms)
 		m_time_pressed = 0;
 	const int NUM_FRAMES = 4;	//4 frames of animation per direction
 	const int FRAME_TIMING = 80; //80 ms per frame of animation (12.5fps)
+
+  check_collisions();
+
 	//UP
 	if (m_key_up)
 	{ 
@@ -200,16 +203,15 @@ void Janitor::update_current(float ms)
 
 	m_position.x = new_position_x;
 	m_position.y = new_position_y;
-
 }
 
-void Janitor::check_collisions(Dungeon& dungeon)
+void Janitor::check_collisions()
 {
   bool door_collision_this_frame = false;
 
-  for (Room::adjacent_room& adjacent : dungeon.get_adjacent_rooms(m_currentRoom->getRoomID()))
+  for (Room::adjacent_room& adjacent : m_dungeon->get_adjacent_rooms(m_currentRoom->getRoomID()))
   {
-    if (collides_with(*adjacent.door, dungeon.transform, identity_matrix)) // door is in dungeon coords 
+    if (collides_with(*adjacent.door, m_dungeon->transform, identity_matrix)) // door is in dungeon coords 
     {
       if (!m_door_collision_last_frame)
       {
@@ -277,6 +279,8 @@ void Janitor::draw_children(const mat3& projection, const mat3& current_transfor
 
 void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
 void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
+
+void Janitor::set_dungeon(Dungeon* dungeon) { m_dungeon = dungeon; }
 
 void Janitor::set_current_room(Room* room)
 {

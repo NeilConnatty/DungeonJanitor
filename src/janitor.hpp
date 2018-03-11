@@ -40,11 +40,13 @@ public:
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
+  void set_dungeon(Dungeon* dungeon);
+
 	int get_current_room_id();
   void set_current_room(Room* room);
   Room* get_current_room();
 
-  void check_collisions(Dungeon& dungeon);
+  void check_collisions();
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;
@@ -52,6 +54,7 @@ public:
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 private:
 	Room* m_currentRoom;
+  Dungeon* m_dungeon;
 	vec2 m_accel;
 	vec2 m_vel;
 
