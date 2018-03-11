@@ -191,9 +191,6 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
       fprintf(stderr, "Issue parsing room file: %s.\n", filename);
       return false;
     }
-
-    clearPositions();
-
   }
 
   return true;
@@ -259,18 +256,20 @@ bool add_doors_to_dungeon(vector<vec2>& door_pos, Dungeon& dungeon, vec2 offset,
   SubRenderable rend;
   rend.transform_begin();
   rend.transform_translate(offset*2.f);
+  rend.transform_scale({ 2.f, 2.f });
   rend.transform_end();
 
   transform_positions(door_pos, rend);
 
   for (vec2& pos : door_pos)
   {
-    doors.emplace_back();
-    if (!doors.back()->init({ pos.x, pos.y + 18.f }))
+    doors.emplace_back(new Door);
+    if (!doors.back()->init({ pos.x, pos.y + 35.f }))
     {
       // TODO ERROR
       return false;
     }
+    doors.back()->set_scale({ 2.f, 2.f });
   }
 
   Door* the_door = doors[0].get(); // for now there's only one door for each room, this will hopefully change in the future
