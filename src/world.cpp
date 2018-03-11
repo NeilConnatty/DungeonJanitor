@@ -135,7 +135,7 @@ bool World::init_creatures()
 	glfwGetFramebufferSize(m_window, &w, &h);
 	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
 	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
-  m_janitor.set_room(m_dungeon.janitor_start_room->getRoomID());
+  m_janitor.set_current_room(m_dungeon.janitor_start_room);
 	if (!m_janitor.init(janitor_position))
 	{
 		fprintf(stderr, "Failed to init Janitor.\n");
@@ -190,19 +190,10 @@ bool World::update(float elapsed_ms)
   glfwGetFramebufferSize(m_window, &w, &h);
   vec2 screen = {(float)w, (float)h};
   m_janitor.update(elapsed_ms);
+  m_janitor.check_collisions(m_dungeon);
   m_hero.update(elapsed_ms);
   m_boss.update(elapsed_ms);
   m_dungeon.update(elapsed_ms);
-
-  // TODO This needs to be thoroughly tested
-  for (Room::adjacent_room& adjacent : m_dungeon.get_adjacent_rooms(m_janitor.get_current_room_id())) 
-  {
-      if (m_janitor.collides_with(*adjacent.door, m_dungeon.transform, identity_matrix)) // door is in dungeon coords 
-      {
-        m_janitor.set_room(adjacent.room->getRoomID());
-        break; // don't need to check against other doors for this frame
-      }
-  }
 
   return true;
 }
@@ -287,22 +278,20 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
         m_janitor.key_right(false);
       }
     }
-
-    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE){
-      for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) {
-        std::vector<Puddle>& cleanables = room->get_cleanables();
-        for (Puddle& p : cleanables) {
-          if (p.is_enabled() && m_janitor.collides_with(p, room->transform, m_dungeon.transform)) {
-            p.toggle_enable();
-          }
+    
+    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+      std::vector<Puddle> &cleanables = m_janitor.get_current_room()->get_cleanables();
+      for (Puddle &p : cleanables) {
+        if (p.is_enabled() &&
+          m_janitor.collides_with(p, m_janitor.get_current_room()->transform, m_dungeon.transform)) {
+          p.toggle_enable();
         }
       }
     }
 
-	// temporary keybind, probably will bind it to space once we have collisions
-	if (action == GLFW_PRESS && key == GLFW_KEY_A)
-	{
-		m_dungeon.activate_artifact();
+    // temporary keybind, probably will bind it to space once we have collisions
+    if (action == GLFW_PRESS && key == GLFW_KEY_A) {
+      m_dungeon.activate_artifact();
 	}
 
     // Resetting game
