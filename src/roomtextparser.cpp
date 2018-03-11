@@ -132,14 +132,18 @@ void RoomParser::clearPositions()
   door_pos.clear();
 }
 
-bool RoomParser::populateRoom(Room &room) 
+bool RoomParser::populateRoomWalls(Room &room)
 {
-  return (room.add_floors(floor_pos) && room.add_walls(wall_pairs) &&
-    room.add_cleanables(puddle_pos) &&
-    room.add_artifact(has_artifact, artifact_pos) &&
-    room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
-    room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&
-    room.add_janitor_spawn_loc(has_janitor_spawn, janitor_spawn_pos));
+  return room.add_walls(wall_pairs);
+}
+
+bool RoomParser::populateRoomExceptWalls(Room &room) 
+{
+  return (room.add_floors(floor_pos) && room.add_cleanables(puddle_pos) &&
+          room.add_artifact(has_artifact, artifact_pos) &&
+          room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
+          room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&
+          room.add_janitor_spawn_loc(has_janitor_spawn, janitor_spawn_pos));
 }
 
 bool RoomParser::parseRoom(Room &room, const char *filename) 
@@ -186,11 +190,18 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
       }
     }
 
-    if (!populateRoom(room)) 
+    if (!populateRoomWalls(room))
     {
       fprintf(stderr, "Issue parsing room file: %s.\n", filename);
       return false;
     }
+    wall_pairs.clear();
+  }
+
+  if (!populateRoomExceptWalls(room))
+  {
+    fprintf(stderr, "Issue parsing room file: %s.\n", filename);
+    return false;
   }
 
   return true;
