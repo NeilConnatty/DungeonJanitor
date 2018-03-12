@@ -4,7 +4,6 @@
 
 #include <fstream>
 #include <string>
-#include <experimental/filesystem>
 
 // Characters
 #define SPACE ' '
@@ -18,6 +17,7 @@
 #define DOOR 'd'
 #define HALLWAY 'h'
 #define EMPTY 'e'
+#define ROOM 'r'
 
 //Offsets
 #define ROOM_X_OFFSET 185.f
@@ -216,6 +216,10 @@ struct SubRenderable : public Renderable
 // this function design is pulled from http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
 void read_directory(const char* dirname, std::vector<std::string>& vec)
 {
+  /* this part of the code had to be reverted, as it had a dependency on
+  std::filesystem that wasn't building on mac. keeping it for hopefully
+  the future.
+
   struct path_leaf_string
   {
     std::string operator()(const std::experimental::filesystem::directory_entry& entry) const
@@ -228,12 +232,18 @@ void read_directory(const char* dirname, std::vector<std::string>& vec)
   std::experimental::filesystem::directory_iterator start(p);
   std::experimental::filesystem::directory_iterator end;
   std::transform(start, end, std::back_inserter(vec), path_leaf_string());
+  */
 }
 
 DungeonParser::DungeonParser() :
   m_room_files()
 {
-  read_directory(room_path(""), m_room_files);
+  //read_directory(room_path(""), m_room_files);
+
+  m_room_files.emplace_back(room_path("1.rm"));
+  m_room_files.emplace_back(room_path("2.rm"));
+  m_room_files.emplace_back(room_path("3.rm"));
+  m_room_files.emplace_back(room_path("4.rm"));
 }
 
 bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename, Dungeon& dungeon)
@@ -333,8 +343,27 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
       {
         // do nothing! We let the offset increase
       }
+      else if (ch == ROOM)
+      {
+        rooms.emplace_back(new Room);
+        rooms.back()->init(offset*2.f);
+        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num_rooms].c_str()))
+        {
+          return false;
+        }
+        rooms.back()->setRoomID(num_rooms);
+
+        add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway);
+
+        ++num_rooms;
+        // TODO: change room type to be classroom, office, or bathroom
+      }
       else
       {
+        /* this part of the code had to be reverted, as it had a dependency on
+        std::filesystem that wasn't building on mac. keeping it for hopefully
+        the future.
+
         std::string str;
         size_t num;
 
@@ -365,6 +394,13 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
 
         ++num_rooms;
         // TODO: change room type to be classroom, office, or bathroom
+        */
+
+        fprintf(stderr,
+          "Error parsing room file. Invalid character %c at line %d, "
+          "column %d.\n",
+          ch, (int)(row + 1), (int)(column + 1));
+        return false;
       }
       
       offset.x += ROOM_X_OFFSET;      
