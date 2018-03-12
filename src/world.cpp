@@ -268,38 +268,35 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     // key is of 'type' GLFW_KEY_
     // action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    bool move_up = false;
-    bool move_down = false;
-    bool move_left = false;
-    bool move_right = false;
-
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-        if (key == GLFW_KEY_UP){
-            move_up = true;
-        }
-        if (key == GLFW_KEY_DOWN){
-            move_down = true;
-        }
-        if (key == GLFW_KEY_LEFT){
-            move_left = true;
-        }
-        if (key == GLFW_KEY_RIGHT){
-            move_right = true;
-        }
-    }
-
-    for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) {
-      std::vector<Wall>& walls = room->get_walls();
-      for (Wall& w : walls) {
-        // Wall collision check goes here
+      if (key == GLFW_KEY_UP){
+        m_janitor.key_up(true);
+      }
+      if (key == GLFW_KEY_DOWN){
+        m_janitor.key_down(true);
+      }
+      if (key == GLFW_KEY_LEFT){
+        m_janitor.key_left(true);
+      }
+      if (key == GLFW_KEY_RIGHT) {
+        m_janitor.key_right(true);
       }
     }
 
-    m_janitor.key_up(move_up);
-    m_janitor.key_down(move_down);
-    m_janitor.key_left(move_left);
-    m_janitor.key_right(move_right);
+    if (action == GLFW_RELEASE) {
+      if (key == GLFW_KEY_UP){
+        m_janitor.key_up(false);
+      }
+      if (key == GLFW_KEY_DOWN){
+        m_janitor.key_down(false);
+      }
+      if (key == GLFW_KEY_LEFT){
+        m_janitor.key_left(false);
+      }
+      if (key == GLFW_KEY_RIGHT){
+        m_janitor.key_right(false);
+      }
+    }
 
     if (action == GLFW_PRESS && key == GLFW_KEY_SPACE){
       for (std::unique_ptr<Room>& room : m_dungeon.get_rooms()) {
