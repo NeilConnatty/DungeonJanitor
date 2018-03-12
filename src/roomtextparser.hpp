@@ -2,17 +2,21 @@
 
 #include "common.hpp"
 #include "room.hpp"
+#include "dungeon.hpp"
+
 using namespace std;
 
 class RoomParser
 {
 public:
 	bool parseRoom(Room& room, const char* filename);
+  vector<vec2>& get_door_pos() { return door_pos; }
 
 private:
 	void clearPositions();
 	bool parseLine(string& line, float y, bool first_line);
-	bool populateRoom(Room &room);
+	bool populateRoomExceptWalls(Room &room);
+  bool populateRoomWalls(Room &room);
 
 private:
 
@@ -28,7 +32,7 @@ private:
 	
 	vector<vec2> floor_pos;
 	vector<vec2> puddle_pos;
-	vec2 door_pos;
+	vector<vec2> door_pos;
 	vector<Room::wall_pair> wall_pairs;  
 };
 
@@ -37,10 +41,10 @@ class DungeonParser
 public:
   DungeonParser();
 
-  bool parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename);
+  bool parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename, Dungeon& dungeon);
 
 private:
-  bool parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms);
+  bool parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms, Dungeon& dungeon);
   bool addLeftTopHallway(Room& hallway, vec2 offset);
   bool addMiddleTopHallway(Room& hallway, vec2 offset);
   bool addRightTopHallway(Room& hallway, vec2 offset);

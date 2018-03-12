@@ -1,8 +1,10 @@
 #include "janitor.hpp"
+#include "wall.hpp"
+#include "dungeon.hpp"
+
 #include <algorithm>
 #include <iostream>
 #include <string>
-#include "wall.hpp"
 
 //This is ugly af
 Texture Janitor::up1; Texture Janitor::up2; Texture Janitor::up3; Texture Janitor::up4;
@@ -72,6 +74,7 @@ bool Janitor::init(vec2 position)
 	m_key_down = false;
 	m_key_left = false;
 	m_key_right = false;
+  m_door_collision_last_frame = false;
 	m_curr_tex = &up1;
 	return true;
 }
@@ -99,6 +102,9 @@ void Janitor::update_current(float ms)
 		m_time_pressed = 0;
 	const int NUM_FRAMES = 4;	//4 frames of animation per direction
 	const int FRAME_TIMING = 80; //80 ms per frame of animation (12.5fps)
+
+  check_collisions();
+
 	//UP
 	if (m_key_up)
 	{ 
@@ -197,7 +203,26 @@ void Janitor::update_current(float ms)
 
 	m_position.x = new_position_x;
 	m_position.y = new_position_y;
+}
 
+void Janitor::check_collisions()
+{
+  bool door_collision_this_frame = false;
+
+  for (Room::adjacent_room& adjacent : m_dungeon->get_adjacent_rooms(m_currentRoom->getRoomID()))
+  {
+    if (collides_with(*adjacent.door, m_dungeon->transform, identity_matrix)) // door is in dungeon coords 
+    {
+      if (!m_door_collision_last_frame)
+      {
+        set_current_room(adjacent.room);
+      }
+      door_collision_this_frame = true;
+      break; // don't need to check against other doors for this frame
+    }
+  }
+
+  m_door_collision_last_frame = door_collision_this_frame;
 }
 
 void Janitor::update_children(float ms) {}
@@ -255,14 +280,21 @@ void Janitor::draw_children(const mat3& projection, const mat3& current_transfor
 void Janitor::set_accel(vec2 newAccel) { m_accel = newAccel; }
 void Janitor::set_vel(vec2 newVel) { m_vel = newVel; }
 
-void Janitor::set_room(int id)
+void Janitor::set_dungeon(Dungeon* dungeon) { m_dungeon = dungeon; }
+
+void Janitor::set_current_room(Room* room)
 {
-	m_currentRoom = id;
+	m_currentRoom = room;
+}
+
+Room* Janitor::get_current_room()
+{
+  return m_currentRoom;
 }
 
 int Janitor::get_current_room_id()
 {
-	return m_currentRoom;
+	return m_currentRoom->getRoomID();
 }
 
 void Janitor::key_up(bool move) {

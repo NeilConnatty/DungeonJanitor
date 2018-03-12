@@ -15,7 +15,7 @@ Dungeon::~Dungeon() {}
 bool Dungeon::init() 
 {
   DungeonParser parser;
-  if (!parser.parseDungeon(m_rooms, dungeon_path("1.dn")))
+  if (!parser.parseDungeon(m_rooms, dungeon_path("1.dn"), *this))
   {
     fprintf(stderr, "Failed to parse dungeon");
     return false;
@@ -99,6 +99,11 @@ void Dungeon::update_children(float ms)
 	{
 		room->update(ms);
 	}
+
+  for (std::unique_ptr<Door>& door : m_doors)
+  {
+    door->update(ms);
+  }
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
@@ -111,4 +116,34 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
 	{
 		room->draw(projection, current_transform);
 	}
+
+  for (std::unique_ptr<Door>& door : m_doors)
+  {
+    door->draw(projection, current_transform);
+  }
+}
+
+bool Dungeon::add_doors(vector<std::unique_ptr<Door>>& doors)
+{
+  for (std::unique_ptr<Door>& door : doors)
+  {
+    m_doors.push_back(std::move(door));
+  }
+
+  return true;
+}
+
+void Dungeon::add_adjacency(int roomID, Room::adjacent_room adj)
+{
+  auto search = m_adjacency_map.find(roomID);
+  
+  if (search != m_adjacency_map.end())
+  {
+    search->second.push_back(adj);
+  }
+  else
+  {
+    m_adjacency_map.emplace(roomID, std::vector<Room::adjacent_room>());
+    m_adjacency_map.at(roomID).push_back(adj);
+  }
 }

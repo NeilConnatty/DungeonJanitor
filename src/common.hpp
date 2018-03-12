@@ -40,6 +40,8 @@ vec2  normalize(vec2 v);
 mat3  inverse(mat3 m);
 float det(mat3 m);
 
+#define identity_matrix { {1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}, {0.f, 0.f, 1.f} }
+
 vec2 get_world_coords_from_room_coords(vec2 room_coords, mat3 room_transform, mat3 dungeon_transform);
 
 enum wall_edge

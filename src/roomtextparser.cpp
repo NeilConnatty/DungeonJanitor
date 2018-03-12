@@ -16,7 +16,6 @@
 #define HERO 'h'
 #define BOSS 'b'
 #define DOOR 'd'
-#define ROOM 'r'
 #define HALLWAY 'h'
 #define EMPTY 'e'
 
@@ -66,7 +65,7 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
     } 
 	else if (ch == DOOR)
 	{
-		door_pos = { x,y };
+		door_pos.push_back({ x,y });
 		tile_dim = Floor::get_dimensions();
 		x = x + tile_dim.x;
 	}
@@ -129,25 +128,21 @@ void RoomParser::clearPositions()
   wall_pairs.clear();
   floor_pos.clear();
   puddle_pos.clear();
-  door_pos = { 0.f,0.f };
+  door_pos.clear();
 }
 
-bool RoomParser::populateRoom(Room &room) 
+bool RoomParser::populateRoomWalls(Room &room)
 {
-  if (door_pos.x != 0.f && door_pos.y != 0.f) 
-  {
-    if (!room.add_door(door_pos)) 
-    {
-      return false;
-    }
-  }
+  return room.add_walls(wall_pairs);
+}
 
-  return (room.add_floors(floor_pos) && room.add_walls(wall_pairs) &&
-    room.add_cleanables(puddle_pos) &&
-    room.add_artifact(has_artifact, artifact_pos) &&
-    room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
-    room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&
-    room.add_janitor_spawn_loc(has_janitor_spawn, janitor_spawn_pos));
+bool RoomParser::populateRoomExceptWalls(Room &room) 
+{
+  return (room.add_floors(floor_pos) && room.add_cleanables(puddle_pos) &&
+          room.add_artifact(has_artifact, artifact_pos) &&
+          room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
+          room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&
+          room.add_janitor_spawn_loc(has_janitor_spawn, janitor_spawn_pos));
 }
 
 bool RoomParser::parseRoom(Room &room, const char *filename) 
@@ -194,20 +189,30 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
       }
     }
 
-    if (!populateRoom(room)) 
+    if (!populateRoomWalls(room))
     {
       fprintf(stderr, "Issue parsing room file: %s.\n", filename);
       return false;
     }
+    wall_pairs.clear();
+  }
 
-    clearPositions();
-
+  if (!populateRoomExceptWalls(room))
+  {
+    fprintf(stderr, "Issue parsing room file: %s.\n", filename);
+    return false;
   }
 
   return true;
 }
 
 //======================= DungeonParser ======================//
+
+struct SubRenderable : public Renderable
+{
+  void draw(const mat3& projection, const mat3& parent_transform) {}
+};
+
 // this function design is pulled from http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
 void read_directory(const char* dirname, std::vector<std::string>& vec)
 {
@@ -228,10 +233,10 @@ void read_directory(const char* dirname, std::vector<std::string>& vec)
 DungeonParser::DungeonParser() :
   m_room_files()
 {
-  read_directory(room_path(), m_room_files);
+  read_directory(room_path(""), m_room_files);
 }
 
-bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename)
+bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename, Dungeon& dungeon)
 {
   std::string line;
   std::ifstream file(filename);
@@ -242,12 +247,58 @@ bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, cons
     lines.emplace_back(line);
   }
 
-  return parseLines(lines, rooms);
+  return parseLines(lines, rooms, dungeon);
 }
 
-bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms)
+void transform_positions(vector<vec2>& positions, SubRenderable& rend)
 {
-  size_t row, column, num_rooms = 0;
+  for (vec2& pos : positions)
+  {
+    pos = get_world_coords_from_room_coords(pos, rend.transform, identity_matrix);
+  }
+}
+
+bool add_doors_to_dungeon(vector<vec2>& door_pos, Dungeon& dungeon, vec2 offset, int roomID, Room* room, Room* hallway)
+{
+  std::vector<std::unique_ptr<Door>> doors;
+
+  // hack to add the door to dungeon
+  SubRenderable rend;
+  rend.transform_begin();
+  rend.transform_translate(offset*2.f);
+  rend.transform_scale({ 2.f, 2.f });
+  rend.transform_end();
+
+  transform_positions(door_pos, rend);
+
+  for (vec2& pos : door_pos)
+  {
+    doors.emplace_back(new Door);
+    if (!doors.back()->init({ pos.x, pos.y + 35.f }))
+    {
+      // TODO ERROR
+      return false;
+    }
+    doors.back()->set_scale({ 2.f, 2.f });
+  }
+
+  Door* the_door = doors[0].get(); // for now there's only one door for each room, this will hopefully change in the future
+  dungeon.add_adjacency(roomID, { hallway, the_door }); // adjacency going from room -> hallway
+  dungeon.add_adjacency(-1, { room, the_door }); // adjacency going from hallway -> room (-1 is special id for hallway)
+
+  if (!dungeon.add_doors(doors))
+  {
+    // TODO ERROR
+    return false;
+  }
+
+  return true;
+}
+
+bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms, Dungeon& dungeon)
+{
+  size_t row, column;
+  int num_rooms = 0;
   vec2 offset = { 0.f,0.f };
   RoomParser roomParser;
 
@@ -269,19 +320,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
     {
       char& ch = line[column];
 
-      if (ch == ROOM)
-      {
-        rooms.emplace_back(new Room);
-        rooms.back()->init(offset*2.f);
-        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num_rooms%m_room_files.size()].c_str()))
-        {
-          return false;
-        }
-        rooms.back()->setRoomID(num_rooms);
-        ++num_rooms;
-        // TODO: change room type to be classroom, office, or bathroom
-      }
-      else if (ch == HALLWAY)
+      if (ch == HALLWAY)
       {
         bool topRow = (row == 0) || (lines[row-1][column] == EMPTY) || (lines[row - 1][column] == SPACE);
         bool bottomRow = (row == lines.size() - 1) || (lines[row + 1][column] == EMPTY) || (lines[row + 1][column] == SPACE);
@@ -310,7 +349,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
           fprintf(stderr,
             "Error parsing room file. Invalid character %c at line %d, "
             "column %d.\n",
-            ch, row + 1, column + 1);
+            ch, (int)(row + 1), (int)(column + 1));
           return false;
         }
 
@@ -321,7 +360,10 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
           return false;
         }
         rooms.back()->setRoomID(num_rooms);
-        ++num_rooms;        
+
+        add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway);
+
+        ++num_rooms;
         // TODO: change room type to be classroom, office, or bathroom
       }
       
@@ -329,19 +371,6 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
     } // for (; column < line.size(); ++column)
     offset.y += ROOM_Y_OFFSET;
   } // for (; row < lines.size(); ++row)
-
-  // set up adjacencies
-  for (std::unique_ptr<Room>& room : rooms)
-  {
-    if (room->getRoomID() == -1) // special id set for hallway
-    {
-      continue;
-    }
-
-    Door& door = room->get_door();
-    room->add_adjacent_room({ hallway, &door });
-    hallway->add_adjacent_room({ room.get(), &door });
-  }
 
   return true;
 }

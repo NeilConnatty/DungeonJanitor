@@ -6,6 +6,8 @@
 
 #include <vector>
 
+class Dungeon;
+
 class Janitor : public GameObject
 {
 	static Texture up1, up2, up3, up4,
@@ -25,7 +27,6 @@ public:
 	bool init(vec2 position);
 // Releases all associated resources
 	void destroy();
-	void set_room(int id);
 
 	void key_up(bool move);
 	void key_down(bool move);
@@ -39,14 +40,21 @@ public:
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
+  void set_dungeon(Dungeon* dungeon);
+
 	int get_current_room_id();
+  void set_current_room(Room* room);
+  Room* get_current_room();
+
+  void check_collisions();
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;
 	void draw_current(const mat3& projection, const mat3& current_transform)override;
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 private:
-	int m_currentRoom;
+	Room* m_currentRoom;
+  Dungeon* m_dungeon;
 	vec2 m_accel;
 	vec2 m_vel;
 
@@ -57,4 +65,6 @@ private:
 	bool m_key_down;
 	bool m_key_left;
 	bool m_key_right;
+
+  bool m_door_collision_last_frame;
 };
