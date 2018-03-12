@@ -29,6 +29,7 @@ public:
 	void key_down();
 	void key_left();
 	void key_right();
+	void fire_projectile();
 	enum DIRECTION {
 		up, up_right, up_left, down, down_right, down_left, left, right
 	};

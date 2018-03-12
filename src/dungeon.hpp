@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
+#include "emitter.hpp"
 
 #include <vector>
 #include <memory>
@@ -30,7 +31,7 @@ private:
   void draw_children(const mat3 &projection,
                      const mat3 &current_transform) override;
 
-	void test_value_iteration(); // for testing Jay
+	//void test_value_iteration(); // for testing Jay
 
 public:
 	Room * janitor_start_room;
@@ -41,6 +42,6 @@ public:
 	vec2 boss_room_position;
 private:
 	vector<std::unique_ptr<Room>> m_rooms;
-
+  vector<Emitter> m_emitters;
 };
 

@@ -7,6 +7,7 @@
 #include "door.hpp"
 #include "Cleanable/puddle.hpp"
 #include "Cleanable/artifact.hpp"
+#include "emitter.hpp"
 
 #include <vector>
 #include <array>

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 //This is ugly af
+//Fam...
 Texture Janitor::up1; Texture Janitor::up2; Texture Janitor::up3; Texture Janitor::up4;
 Texture Janitor::up_right1; Texture Janitor::up_right2; Texture Janitor::up_right3; Texture Janitor::up_right4;
 Texture Janitor::up_left1; Texture Janitor::up_left2; Texture Janitor::up_left3; Texture Janitor::up_left4;
@@ -256,6 +257,10 @@ void Janitor::key_up() { m_key_up = !m_key_up; }
 void Janitor::key_down() { m_key_down = !m_key_down; }
 void Janitor::key_left() { m_key_left = !m_key_left; }
 void Janitor::key_right() { m_key_right = !m_key_right; }
+
+void Janitor::fire_projectile() {
+	
+}
 
 
 bool Janitor::collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform) {

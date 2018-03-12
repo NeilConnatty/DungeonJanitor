@@ -27,14 +27,14 @@ bool Dungeon::init()
     {
       janitor_start_room = room.get();
       janitor_room_position = room->get_janitor_spawn_loc();
-    }
-
+      m_emitters.emplace_back();
+      m_emitters.back().init(janitor_room_position, {1.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, 1.0f, 0.0f, 1.0f, 10.0f, 20);
+  	}
     if (room->has_hero_spawn_loc()) 
     {
       hero_start_room = room.get();
       hero_room_position = room->get_hero_spawn_loc();
     }
-
     if (room->has_boss_spawn_loc()) 
     {
       boss_start_room = room.get();
@@ -50,6 +50,10 @@ void Dungeon::destroy()
 	for (std::unique_ptr<Room>& room : m_rooms)
 	{
 		room->destroy();
+	}
+	for (Emitter emitter : m_emitters)
+	{
+		emitter.destroy();
 	}
 }
 
@@ -99,6 +103,10 @@ void Dungeon::update_children(float ms)
 	{
 		room->update(ms);
 	}
+	for (Emitter emitter : m_emitters)
+	{
+		emitter.update(ms);
+	}
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
@@ -110,5 +118,9 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
 	for (std::unique_ptr<Room>& room : m_rooms)
 	{
 		room->draw(projection, current_transform);
+	}
+	for (Emitter emitter : m_emitters)
+	{
+		emitter.draw(projection, current_transform);
 	}
 }
