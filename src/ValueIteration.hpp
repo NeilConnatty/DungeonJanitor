@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 #include "room.hpp"
+#include "dungeon.hpp"
+
 #include <map>
 #include <algorithm>
 #include <list>
@@ -14,7 +16,7 @@ class ValueIteration
 {
 public:
 	
-	static Room::adjacent_room getNextRoom(const Room* current_room, vector<unique_ptr<Room>>& rooms, float artifact_probability);	
+	static Room::adjacent_room getNextRoom(const Room* current_room, vector<unique_ptr<Room>>& rooms, float artifact_probability, Dungeon& dungeon);	
 
 private:
 	static float m_difference;
@@ -23,11 +25,11 @@ private:
 
 	static float calculateInitialRoomValue(Room* room);
 	static float calculateRoomReward(Room* room, float artifact_probability);
-	static float calculateHighestNeighborValue(Room* room);
+	static float calculateHighestNeighborValue(Room* room, Dungeon& dungeon);
 	static bool continueValueIterating();
 
-	static void initialize(vector<unique_ptr<Room>>& rooms, float artifact_probability);
-	static void updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability);
-	static Room::adjacent_room getNextRoom(const Room* current_room);
+	static void initialize(vector<unique_ptr<Room>>& rooms, float artifact_probability, Dungeon& dungeon);
+	static void updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability, Dungeon& dungeon);
+	static Room::adjacent_room getNextRoom(const Room* current_room, Dungeon& dungeon);
 
 };

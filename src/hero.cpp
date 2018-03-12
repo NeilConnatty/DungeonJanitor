@@ -129,7 +129,7 @@ void Hero::update_path()
 		}
 		else
 		{
-			vec2 next_door_pos = get_world_coords_from_room_coords(get_next_door_position(), m_currentRoom->transform, m_dungeon->transform);
+      vec2 next_door_pos = get_next_door_position();
 			set_destination(next_door_pos, Hero::destinations::DOOR);
 			vector<vec2> path_to_door;
 			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_door);
@@ -287,21 +287,12 @@ vec2 Hero::get_next_door_position()
 	}
 	if (num_artifacts > 0)
 	{
-		percentage_of_activated_artifacts = num_activated_artifacts / num_artifacts;
+		percentage_of_activated_artifacts = (float)num_activated_artifacts / (float)num_artifacts;
 	}
 
 
-	Room::adjacent_room target_room = ValueIteration::getNextRoom(m_currentRoom, *m_rooms, percentage_of_activated_artifacts);
+	Room::adjacent_room target_room = ValueIteration::getNextRoom(m_currentRoom, *m_rooms, percentage_of_activated_artifacts, *m_dungeon);
 
   m_next_room = target_room.room;
-  if (m_currentRoom->has_door())
-  {
-    // the door's position is in current room's coords.
-    return target_room.door->get_pos();
-  }
-  // else, the door's position is in the target room's coords
-  vec3 room_position_3d = { target_room.door->get_pos().x, target_room.door->get_pos().y, 1.0 };
-  vec3 dungeon_position = mult(target_room.room->transform, room_position_3d);
-  vec3 current_room_pos = mult(inverse(m_currentRoom->transform), dungeon_position);
-  return { current_room_pos.x, current_room_pos.y };
+  return get_world_coords_from_room_coords(target_room.door->get_pos(), m_dungeon->transform, identity_matrix); // door is in dungeon coords
 }

@@ -3,12 +3,12 @@
 #include "ValueIteration.hpp"
 
 #define INITIAL_VALUE 0 // Fixed at 0
-#define NORMAL_ROOM_VALUE -0.04 // Fixed at -0.04
+#define NORMAL_ROOM_VALUE -0.04f // Fixed at -0.04
 #define BOSS_VALUE 1 // Fixed at 1
-#define ARTIFACT_VALUE 0.50 // Fixed at 0.50
-#define DISCOUNT_FACTOR 0.8 // Can play with
+#define ARTIFACT_VALUE 0.50f // Fixed at 0.50
+#define DISCOUNT_FACTOR 0.8f // Can play with
 #define LOW_NUMBER_HACK -100
-#define MAX_ERROR 0.01 // Can play with
+#define MAX_ERROR 0.01f // Can play with
 
 #include <fstream> // for testing
 #include <string>// for testing
@@ -20,13 +20,13 @@ map<int, float> ValueIteration::VI_current;
 map<int, float> ValueIteration::VI_previous;
 
 
-Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room, vector<unique_ptr<Room>>& rooms, float artifact_probability)
+Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room, vector<unique_ptr<Room>>& rooms, float artifact_probability, Dungeon& dungeon)
 {
-	initialize(rooms, artifact_probability);
-	return getNextRoom(current_room);
+	initialize(rooms, artifact_probability, dungeon);
+	return getNextRoom(current_room, dungeon);
 }
 
-void ValueIteration::initialize(vector<unique_ptr<Room>>& rooms, float artifact_probability)
+void ValueIteration::initialize(vector<unique_ptr<Room>>& rooms, float artifact_probability, Dungeon& dungeon)
 {
 	//m_rooms = &rooms;
 
@@ -42,18 +42,18 @@ void ValueIteration::initialize(vector<unique_ptr<Room>>& rooms, float artifact_
 		printf("The initial value for room %d is %f \n", room_ptr->getRoomID(), value);
 	}
 
-	updateValues(rooms, artifact_probability);
+	updateValues(rooms, artifact_probability, dungeon);
 
 	int test_number_of_cycles = 1;
 	while (continueValueIterating())
 	{
-		updateValues(rooms, artifact_probability);
+		updateValues(rooms, artifact_probability, dungeon);
 		test_number_of_cycles++;
 	}
 	printf("Value Iteration Ended After %d Cycles.\n", test_number_of_cycles);
 }
 
-void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability)
+void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability, Dungeon& dungeon)
 {
 	VI_previous = VI_current;
 	VI_current.clear();
@@ -76,7 +76,7 @@ void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifac
 		else
 		{
 
-			float V = calculateHighestNeighborValue(room.get());
+			float V = calculateHighestNeighborValue(room.get(), dungeon);
 
 			new_value = calculateRoomReward(room.get(), artifact_probability) + DISCOUNT_FACTOR * V;
 		}
@@ -96,7 +96,7 @@ void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifac
 	}
 }
 
-Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room)
+Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room, Dungeon& dungeon)
 {
   using room_value = std::pair<Room::adjacent_room, float>;
   
@@ -109,7 +109,7 @@ Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room)
   };
 
   std::vector<room_value> values;
-  const std::vector<Room::adjacent_room>& adjacents = current_room->get_adjacent_rooms();
+  const std::vector<Room::adjacent_room>& adjacents = dungeon.get_adjacent_rooms(current_room->getRoomID());
 
   for (const Room::adjacent_room& adj : adjacents)
   {
@@ -120,11 +120,11 @@ Room::adjacent_room ValueIteration::getNextRoom(const Room * current_room)
   return max_value.first;	
 }
 
-float ValueIteration::calculateHighestNeighborValue(Room * room)
+float ValueIteration::calculateHighestNeighborValue(Room * room, Dungeon& dungeon)
 {
 	vector<float> neighbor_values;
 
-  const vector<Room::adjacent_room>& adjacents = room->get_adjacent_rooms();
+  const vector<Room::adjacent_room>& adjacents = dungeon.get_adjacent_rooms(room->getRoomID());
 
   for (const Room::adjacent_room& adj : adjacents)
   {

@@ -32,10 +32,11 @@ void PathNode::getSuccessorNodes(vector<unique_ptr<PathNode>> * successor_nodes,
 {
 	float diagonal = sqrt(pow(x_speed, 2) + pow(y_speed, 2));
 
-	if (m_xCoord < 0 || m_yCoord < 0)
-	{
-		int problem;
-	}
+  if (m_xCoord < 0 || m_yCoord < 0)
+  {
+    fprintf(stderr, "Arrived at an invalid part of Path-finding code in "
+                    "PathNode::getSuccessorNodes(). Check with Jay.\n");
+  }
 
 	PathNode* pn1 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord);
 	PathNode* pn2 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord);

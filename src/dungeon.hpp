@@ -5,6 +5,7 @@
 #include "room.hpp"
 
 #include <vector>
+#include <unordered_map>
 #include <memory>
 
 using namespace std;
@@ -21,6 +22,9 @@ public:
   void clean();
   void activate_artifact();
   vector<unique_ptr<Room>>& get_rooms();
+  bool add_doors(vector<std::unique_ptr<Door>>& doors);
+  void add_adjacency(int roomID, Room::adjacent_room adj);
+  vector<Room::adjacent_room>& get_adjacent_rooms(int roomID) { return m_adjacency_map.at(roomID); }
 
 private:
   void update_current(float ms) override;
@@ -41,6 +45,7 @@ public:
 	vec2 boss_room_position;
 private:
 	vector<std::unique_ptr<Room>> m_rooms;
-
+  vector<std::unique_ptr<Door>> m_doors;
+  unordered_map<int, vector<Room::adjacent_room>>     m_adjacency_map;
 };
 

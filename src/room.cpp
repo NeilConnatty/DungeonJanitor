@@ -17,7 +17,6 @@ bool Room::init(vec2 position)
   m_has_hero_spawn_loc = false;
   m_has_janitor_spawn_loc = false;
   m_BossHere = false;
-  m_has_door = false;
   m_ArtifactHere = false;
 
   return true;
@@ -42,8 +41,6 @@ void Room::destroy()
   {
     p.destroy();
   }
-
-  m_door.destroy();
 }
 
 void Room::update_current(float ms) {}
@@ -81,11 +78,6 @@ void Room::draw_children(const mat3 &projection,
 		m_artifact.draw(projection, current_transform);
 
   }
-
-  if (m_has_door)
-  {
-    m_door.draw(projection, current_transform);
-  }
 }
 
 bool Room::add_wall(wall_pair wall) 
@@ -105,23 +97,6 @@ bool Room::add_floor(vec2 floor)
   {
     return false;
   }
-  return true;
-}
-
-bool Room::add_door(vec2 pos)
-{
-  if (m_has_door)
-  {
-    m_door.set_pos({ pos.x, pos.y + 25.f });
-    return true;
-  }
-
-  if (!m_door.init({ pos.x, pos.y + 18.f }))
-  {
-    return false;
-  }
-  m_has_door = true;
-
   return true;
 }
 
@@ -303,12 +278,3 @@ void Room::setRoomID(int id)
   m_ID = id;
 }
 
-void Room::add_adjacent_room(adjacent_room rm)
-{
-  m_adjacent_rooms.push_back(rm);
-}
-
-void Room::add_adjacent_room(Room* rm, Door* d)
-{
-  add_adjacent_room({ rm, d });
-}
