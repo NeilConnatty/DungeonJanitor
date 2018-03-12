@@ -52,7 +52,11 @@ private:
 
 	//Potentially make this a vector of pointers later.
 	Texture* m_curr_tex;
-	float m_time_pressed;
+	float m_animation_time;
+	float m_time_pressed_up;
+	float m_time_pressed_down;
+	float m_time_pressed_left;
+	float m_time_pressed_right;
 	bool m_key_up;
 	bool m_key_down;
 	bool m_key_left;
