@@ -12,7 +12,7 @@ else
 endif
 
 BIN=main
-OBJ=$(BIN).o common.o world.o camera.o dungeon.o floor.o gameobject.o janitor.o door.o room.o roomtextparser.o wall.o hero.o boss.o $(CURDIR)/src/Cleanable/puddle.o ValueIteration.o $(CURDIR)/src/Cleanable/artifact.o pathfinder.o pathfindernode.o emitter.o
+OBJ=$(BIN).o common.o world.o camera.o dungeon.o floor.o gameobject.o janitor.o door.o room.o roomtextparser.o wall.o hero.o boss.o $(CURDIR)/src/Cleanable/puddle.o ValueIteration.o $(CURDIR)/src/Cleanable/artifact.o pathfinder.o pathfindernode.o emitter.o particle.o
 
 default: build
 
@@ -22,7 +22,7 @@ test: build
 	./$(BIN)
 
 %.o: src/%.cpp
-	g++ -c $(CXXFLAGS) -o $@ $<
+	g++ -c -g $(CXXFLAGS) -o $@ $<
 
 $(BIN): $(OBJ)
 	g++ -o $@ $(OBJ) $(LIB)

@@ -93,6 +93,11 @@ vec3 mult(const mat3 & l, const vec3 & r)
 	return ret;
 }
 
+vec2  operator+(const vec2& v1, const vec2& v2)
+{
+	return {v1.x + v2.x, v1.y + v2.y};
+}
+
 mat3 operator*(const mat3 & l, const mat3 & r)
 {
 	return mul(l, r);

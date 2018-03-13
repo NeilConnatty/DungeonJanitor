@@ -33,6 +33,7 @@ struct mat3 { vec3 c0, c1, c2; };
 // Utility functions
 float dot(vec2 l, vec2 r);
 float dot(vec3 l, vec3 r);
+vec2  operator+(const vec2& v1, const vec2& v2);
 vec2  operator*(const vec2& vec, const float& n);
 vec3  mult(const mat3& l, const vec3& r);
 mat3  mul(const mat3& l, const mat3& r);

@@ -27,8 +27,9 @@ bool Dungeon::init()
     {
       janitor_start_room = room.get();
       janitor_room_position = room->get_janitor_spawn_loc();
-      m_emitters.emplace_back();
-      m_emitters.back().init(janitor_room_position, {1.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, 1.0f, 0.0f, 1.0f, 10.0f, 20);
+      vec2 vel = {1.0f, 1.0f};
+      vec4 clr = {1.0f, 0.0f, 0.0f, 1.0f};
+      m_emitters.emplace_back(janitor_room_position, vel, clr, 1000.0f, 20);
   	}
     if (room->has_hero_spawn_loc()) 
     {
