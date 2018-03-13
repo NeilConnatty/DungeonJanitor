@@ -5,7 +5,7 @@
 Particle::Particle()
 {
 	vec2 m_position = {0.0f, 0.0f};
-	vec2 m_velocity = {1.0f, 0.0f};
+	vec2 m_velocity = {1.0f, 1.0f};
 	vec4 m_color = {1.0f, 0.0f, 0.0f, 1.0f};
 	float m_life = -1.0f;
 }

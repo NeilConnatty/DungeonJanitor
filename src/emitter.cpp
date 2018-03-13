@@ -3,26 +3,14 @@
 #include "emitter.hpp"
 #include <iostream>
 
-// static GLfloat* m_particle_positions_data = new GLfloat[100];
-// static GLfloat* m_particle_colors_data = new GLfloat[100];
-// static constexpr GLfloat k_vertex_buffer_data[] = {
-//  -0.5f, -0.5f, 0.0f,
-//  0.5f, -0.5f, 0.0f,
-//  -0.5f, 0.5f, 0.0f,
-//  0.5f, 0.5f, 0.0f,
-// };
+static constexpr GLfloat k_vertex_buffer_data[] = {
+ -0.5f, -0.5f, 0.0f,
+ 0.5f, -0.5f, 0.0f,
+ -0.5f, 0.5f, 0.0f,
+ 0.5f, 0.5f, 0.0f,
+};
 
 Emitter::Emitter() {}
-
-Emitter::Emitter(vec2 position, vec2 velocity, vec4 color, float lifetime, int max_particles)
-{
-	m_position = position;
-	m_velocity = velocity;
-	m_color = color; 
-	m_lifetime = lifetime;
-	m_max_particles = max_particles;
-	m_particle_count = 0;
-}
 
 Emitter::~Emitter() {}
 
@@ -33,36 +21,36 @@ bool Emitter::init()
 
 bool Emitter::init(vec2 position, vec2 velocity, vec4 color, float lifetime, int max_particles)
 {
-	// m_position = position;
-	// m_velocity = velocity;
-	// m_color = color; 
-	// m_lifetime = lifetime;
-	// m_max_particles = max_particles;
-	// m_particle_count = 0;
+	m_position = position;
+	m_velocity = velocity;
+	m_color = color; 
+	m_lifetime = lifetime;
+	m_max_particles = max_particles;
+	m_particle_count = 0;
 
-	// // Clearing errors
-	// gl_flush_errors();
+	// Clearing errors
+	gl_flush_errors();
 
-	// // Loading shaders
-	// if (!effect.load_from_file(shader_path("particle.vs.glsl"), shader_path("particle.fs.glsl")))
-	// 	return false;
+	// Loading shaders
+	if (!effect.load_from_file(shader_path("particle.vs.glsl"), shader_path("particle.fs.glsl")))
+		return false;
 
-	// // VBO for particle vertices
-	// glGenBuffers(1, &mesh.vbo);
-	// glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	// glBufferData(GL_ARRAY_BUFFER, sizeof(k_vertex_buffer_data), k_vertex_buffer_data, GL_STATIC_DRAW);
+	// VBO for particle vertices
+	glGenBuffers(1, &mesh.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(k_vertex_buffer_data), k_vertex_buffer_data, GL_STATIC_DRAW);
 
-	// // VBO for particle positions
-	// glGenBuffers(1, &mesh.ibo);
-	// glBindBuffer(GL_ARRAY_BUFFER, mesh.ibo);
-	// // Initialize with empty (NULL) buffer : it will be updated later, each frame.
-	// glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+	// VBO for particle positions
+	glGenBuffers(1, &mesh.ibo);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.ibo);
+	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
+	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
-	// // VBO for particle colors
-	// glGenBuffers(1, &mesh.vao);
-	// glBindBuffer(GL_ARRAY_BUFFER, mesh.vao);
-	// // Initialize with empty (NULL) buffer : it will be updated later, each frame.
-	// glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+	// VBO for particle colors
+	glGenBuffers(1, &mesh.vao);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vao);
+	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
+	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
 	return true;
 }
@@ -78,18 +66,24 @@ void Emitter::destroy()
 	// glDeleteShader(effect.program);
 }
 
-void Emitter::update_current(float ms)
+// void Emitter::update_current(float ms)
+// {
+// 	std::cout << "size: " << m_particle_container.size() << std::endl;
+// 	if (m_particle_count < m_max_particles)
+// 	{
+// 		m_particle_container.emplace_back(m_position, m_lifetime);
+// 		m_particle_count++;
+// 	}
+// }
+
+void Emitter::update_children(float ms) 
 {
+	std::cout << "size: " << m_particle_container.size() << std::endl;
 	if (m_particle_count < m_max_particles)
 	{
 		m_particle_container.emplace_back(m_position, m_lifetime);
 		m_particle_count++;
-		// std::cout << "pos: " << m_particle_container.back().get_position().x << std::endl;
 	}
-}
-
-void Emitter::update_children(float ms) 
-{
 	// Iterate over all particles in the vector
 	std::vector<Particle>::iterator i;
 	for (i = m_particle_container.begin(); i != m_particle_container.end(); ++i)
@@ -97,7 +91,6 @@ void Emitter::update_children(float ms)
 		// If the particle time to live is more than zero...
 		if (i->get_alive_time() > 0)
 		{
-			std::cout << "count: " << m_particle_count << std::endl;
 			// ...update the particle position position and draw it.
 			i->update(ms);
 		}
@@ -113,6 +106,7 @@ void Emitter::update_children(float ms)
 			// until it gets to the end of a vector --- which, ya know, we're actually changing
 			// as we go! If you don't assign the next element back to the iterator when calling
 			// erase - don't be surprised when your code bombs out with a segfault, k? ;-D
+
 			i = m_particle_container.erase(i);
  
 			// ...and then add a new particle to replace it!

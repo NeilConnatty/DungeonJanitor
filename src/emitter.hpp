@@ -10,7 +10,6 @@ class Emitter : public GameObject
 public:
 
 	Emitter();
-	Emitter(vec2 position, vec2 velocity, vec4 color, float lifetime, int max_particles);
 	~Emitter();
 
 	bool init() override;
@@ -18,12 +17,10 @@ public:
 	void destroy() override;
 	
 protected:
-	void update_current(float ms) override;
+	void update_current(float ms) override {}
     void update_children(float ms) override;
     void draw_current(const mat3& projection, const mat3& current_transform) override {}
     void draw_children(const mat3& projection, const mat3& current_transform) override;
-
-    std::vector<Particle> m_particle_container; // container for emitters particles.
 
     struct DataGPU
 	{
@@ -45,5 +42,7 @@ private:
 	int m_max_particles; // max awake particles.
 	int m_particle_count; // num active particles.
 	GameObject* attached_to; // gameobject emitter is attached to.
-	
+	std::vector<Particle> m_particle_container; // container for emitters particles.
+	std::vector<float> m_particle_positions_data; // container for emitters particles.
+	std::vector<float> m_particle_colors_data; // container for emitters particles.
 };
