@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <cmath>
 
 //This is ugly af
 Texture Janitor::up1; Texture Janitor::up2; Texture Janitor::up3; Texture Janitor::up4;
@@ -192,7 +193,28 @@ void Janitor::update_current(float ms)
 	{
 		m_vel.x = 0;
 	}
-	
+
+	if (!(can_move_up)){
+		if (m_vel.y < 0) {
+			m_vel.y = 0;
+		}
+	}
+	if (!(can_move_down)){
+		if (m_vel.y > 0) {
+			m_vel.y = 0;
+		}
+	}
+		if (!(can_move_left)){
+		if (m_vel.x < 0) {
+			m_vel.x = 0;
+		}
+	}
+	if (!(can_move_right)){
+		if (m_vel.x > 0) {
+			m_vel.x = 0;
+		}
+	}
+
 	if (m_time_pressed > FRAME_TIMING*NUM_FRAMES)
 		m_time_pressed = 0;
 	else m_time_pressed += ms;
@@ -295,6 +317,71 @@ Room* Janitor::get_current_room()
 int Janitor::get_current_room_id()
 {
 	return m_currentRoom->getRoomID();
+}
+
+void Janitor::check_movement()
+{
+	float jLeftEdge = m_position.x;
+  float jRightEdge = m_position.x+m_size.x;
+  float jTopEdge = m_position.y;
+  float jBottomEdge = m_position.y+m_size.y;
+  float wLeftEdge, wRightEdge, wTopEdge, wBottomEdge;
+  float wLeftEdge2, wRightEdge2, wTopEdge2, wBottomEdge2;
+
+  vec2 wall, wall2;
+
+	can_move_up = true;
+	can_move_down = true;
+	can_move_left = true;
+	can_move_right = true;
+
+	if (m_currentRoom->getRoomID() == -1) {
+  	for (std::unique_ptr<Room>& room : m_dungeon->get_rooms()) {
+			std::vector<Wall>& walls = room->get_walls();
+			for (Wall& w : walls) {
+				wall = get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon->transform);
+				wLeftEdge = wall.x;
+				wRightEdge = wall.x + w.get_size().x;
+				wTopEdge = wall.y;
+				wBottomEdge = wall.y + w.get_size().y;
+
+				if (jTopEdge - wBottomEdge <= 60.f && jTopEdge - wBottomEdge >= 0.f && abs (jLeftEdge-wLeftEdge) <= 45.f){
+					can_move_up = false;
+				}
+				if (wTopEdge - jBottomEdge <= 60.f && wTopEdge - jBottomEdge >= 0.f && abs (jLeftEdge-wLeftEdge) <= 40.f){
+					can_move_down = false;
+				}
+				if (jLeftEdge - wRightEdge <= 25.f && jLeftEdge - wRightEdge >= 0.f && abs (jTopEdge - wTopEdge) <= 35.f){
+					can_move_left = false;
+				}
+				if (wLeftEdge - jRightEdge <= 35.f && wLeftEdge - jRightEdge >= 0.f && abs (jTopEdge - wTopEdge) <= 35.f){
+					can_move_right = false;
+				}
+			}
+		}
+	} else {
+		std::vector<Wall>& walls = m_currentRoom->get_walls();
+		for (Wall& w : walls) {
+			wall2 = get_world_coords_from_room_coords(w.get_pos(), m_currentRoom->transform, m_dungeon->transform);
+			wLeftEdge2 = wall2.x;
+			wRightEdge2 = wall2.x + w.get_size().x;
+			wTopEdge2 = wall2.y;
+			wBottomEdge2 = wall2.y + w.get_size().y;
+
+			if (jTopEdge - wBottomEdge2 <= 60.f && jTopEdge - wBottomEdge2 >= 0.f && abs (jLeftEdge-wLeftEdge2) <= 45.f){
+				can_move_up = false;
+			}
+			if (wTopEdge2 - jBottomEdge <= 60.f && wTopEdge2 - jBottomEdge >= 0.f && abs (jLeftEdge-wLeftEdge2) <= 40.f){
+				can_move_down = false;
+			}
+			if (jLeftEdge - wRightEdge2 <= 25.f && jLeftEdge - wRightEdge2 >= 0.f && abs (jTopEdge - wTopEdge2) <= 35.f){
+				can_move_left = false;
+			}
+			if (wLeftEdge2 - jRightEdge <= 35.f && wLeftEdge2 - jRightEdge >= 0.f && abs (jTopEdge - wTopEdge2) <= 35.f){
+				can_move_right = false;
+			}
+		}
+	}
 }
 
 void Janitor::key_up(bool move) {

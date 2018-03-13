@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
+#include "dungeon.hpp"
 
 #include <vector>
 
@@ -47,6 +48,7 @@ public:
   Room* get_current_room();
 
   void check_collisions();
+	void check_movement();
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;
@@ -65,6 +67,9 @@ private:
 	bool m_key_down;
 	bool m_key_left;
 	bool m_key_right;
-
+	bool can_move_up;
+ 	bool can_move_down;
+ 	bool can_move_left;
+ 	bool can_move_right;
   bool m_door_collision_last_frame;
 };

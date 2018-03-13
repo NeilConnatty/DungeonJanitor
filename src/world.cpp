@@ -195,6 +195,7 @@ bool World::update(float elapsed_ms)
   m_boss.update(elapsed_ms);
   m_dungeon.update(elapsed_ms);
 
+  m_janitor.check_movement();
   return true;
 }
 
