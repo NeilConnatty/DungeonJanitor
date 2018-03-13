@@ -339,7 +339,7 @@ void Janitor::check_movement()
   	for (std::unique_ptr<Room>& room : m_dungeon->get_rooms()) {
 			std::vector<Wall>& walls = room->get_walls();
 			for (Wall& w : walls) {
-				wall = get_world_coords_from_room_coords(w.get_pos(), m_currentRoom->transform, m_dungeon->transform);
+				wall = get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon->transform);
 				wLeftEdge = wall.x;
 				wRightEdge = wall.x + w.get_size().x;
 				wTopEdge = wall.y;
