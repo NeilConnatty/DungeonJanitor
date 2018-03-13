@@ -70,7 +70,11 @@ bool Janitor::init(vec2 position)
 	//Initialize member variables
 	m_position = position;
 	m_size = {static_cast<float>(up2.width), static_cast<float>(up2.height)};
-	m_time_pressed = 0;
+	m_animation_time = 0;
+	m_time_pressed_up = 0;
+	m_time_pressed_down = 0;
+	m_time_pressed_left = 0;
+	m_time_pressed_right = 0;
 	m_key_up = false;
 	m_key_down = false;
 	m_key_left = false;
@@ -94,107 +98,148 @@ void Janitor::destroy()
 
 void Janitor::update_current(float ms) 
 {
-	const float SPEED = 180.0f;
+	vec2 force_sum = { 0, 0 };
+	vec2 movement_force = { 0, 0 };
+	vec2 friction = { 0, 0 };
+
+	//Starts high but quickly tapers down
+	float const BUTTON_FORCE = 360.f;
+	//Friction constant of concrete
+	float const FRICTIONAL_CONST = 0.6;
+	float const MASS = 60.f;
+	float const G = 9.81;
+	float friction_scalar = FRICTIONAL_CONST * MASS * G;
+	friction_scalar = friction_scalar * friction_scalar;
+	/* MIN_VEL is holdover, currently it has no effect, but it may be useful later, please leave for now*/
+	float const MIN_VEL = 0.f;
+	float const MAX_VEL = 220.f;
+	float const MAX_ACCEL = 600.f;
+
+	//const float SPEED = 180.0f;
 	//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
-	const float Y_SPEED = SPEED * (24.f / 35.f);
+	//const float Y_SPEED = SPEED * (24.f / 35.f);
 	float time_factor = ms / 1000;
-	//ms is how long it's been since the previous iteration, ranges from 10 - 30, generally.
-	if (!m_key_up && !m_key_down && !m_key_left && !m_key_right)
-		m_time_pressed = 0;
+
 	const int NUM_FRAMES = 4;	//4 frames of animation per direction
 	const int FRAME_TIMING = 80; //80 ms per frame of animation (12.5fps)
 
-  check_collisions();
 
+	if (m_animation_time > FRAME_TIMING * NUM_FRAMES)
+		m_animation_time = 0;
+	else
+		m_animation_time += ms;
+  
+  check_collisions();
 	//UP
 	if (m_key_up)
-	{ 
-		m_vel.y = -Y_SPEED;
-		
-		if (m_key_right)
-		{
-			m_vel.x = SPEED;
-			pick_movement_tex(up_right, FRAME_TIMING);
-
-		}
-		else if (m_key_left)
-		{
-			m_vel.x = -SPEED;
-			pick_movement_tex(up_left, FRAME_TIMING);
-		}
-		else 
-		{
-			pick_movement_tex(up, FRAME_TIMING);
-		}		
+	{
+		m_time_pressed_up += ms;
+		movement_force.y = (BUTTON_FORCE - (m_time_pressed_up*m_time_pressed_up));
+		if (abs(movement_force.y) < friction_scalar)
+			movement_force.y = -friction_scalar;
+		//if (m_vel.y > -MIN_VEL) m_vel.y = -MIN_VEL;
 	}
+	else m_time_pressed_up = 0;
 	//DOWN
-	else if (m_key_down)
+	if (m_key_down)
 	{
-		m_vel.y = Y_SPEED;
-		if (m_key_right)
-		{
-			m_vel.x = SPEED;
-			pick_movement_tex(down_right, FRAME_TIMING);
-		}
-		else if (m_key_left)
-		{
-			m_vel.x = -SPEED;
-			pick_movement_tex(down_left, FRAME_TIMING);
-		}
-		else
-		{
-			pick_movement_tex(down, FRAME_TIMING);
-		}
+		m_time_pressed_down += ms;
+		movement_force.y = -(BUTTON_FORCE - (m_time_pressed_down*m_time_pressed_down));
+		if (abs(movement_force.y) < friction_scalar)
+			movement_force.y = friction_scalar;
+		//if (m_vel.y < MIN_VEL) m_vel.y = MIN_VEL;
 	}
-	else
+	else m_time_pressed_down = 0;
+	if (!m_key_up && !m_key_down)
 	{
-		m_vel.y = 0;
+		if ((m_vel.y > 0 && m_vel.y < 20.f) || m_vel.y < 0 && m_vel.y > -20.f) {
+			m_vel.y = 0;
+			m_accel.y = 0;
+		}
 	}
 	//LEFT
 	if (m_key_left)
 	{
-		m_vel.x = -SPEED;
-		if (m_key_up)
-		{
-			m_vel.y = -Y_SPEED;
-			pick_movement_tex(up_left, FRAME_TIMING);
-		}
-		else if (m_key_down)
-		{
-			m_vel.y = Y_SPEED;
-			pick_movement_tex(down_left, FRAME_TIMING);
-		}
-		else
-		{
-			pick_movement_tex(left, FRAME_TIMING);
-		}
+		m_time_pressed_left += ms;
+		movement_force.x = (BUTTON_FORCE - (m_time_pressed_left *m_time_pressed_left));
+		if (abs(movement_force.x) < friction_scalar)
+			movement_force.x = -friction_scalar;
+		//if (m_vel.x > -MIN_VEL) m_vel.x = -MIN_VEL;
 	}
+	else m_time_pressed_left = 0;
 	//RIGHT
-	else if (m_key_right) 
+	if (m_key_right)
 	{
-		m_vel.x = SPEED;
-		
-		if (m_key_up)
-		{
-			m_vel.y = -Y_SPEED;
-			pick_movement_tex(up_right, FRAME_TIMING);
-		}
-		else if (m_key_down)
-		{
-			m_vel.y = Y_SPEED;
-			pick_movement_tex(down_right, FRAME_TIMING);
-		}
-		else 
-		{
-			pick_movement_tex(right, FRAME_TIMING);
-		}
+		m_time_pressed_right += ms;
+		movement_force.x = -(BUTTON_FORCE - (m_time_pressed_right*m_time_pressed_right));
+		if (abs(movement_force.x) < friction_scalar)
+			movement_force.x = friction_scalar;
+		//if (m_vel.x < MIN_VEL) m_vel.x = MIN_VEL;
 	}
-	else
+	else m_time_pressed_right = 0;
+	if (!m_key_left && !m_key_right)
 	{
-		m_vel.x = 0;
+		if ((m_vel.x > 0 && m_vel.x < 20.f) || m_vel.x < 0 && m_vel.x > -20.f) {
+			m_vel.x = 0;
+			m_accel.x = 0;
+		}
 	}
 
-	if (!(can_move_up)){
+	//simulation steps
+	//sum forces
+
+	force_sum.x += movement_force.x;
+	force_sum.y += movement_force.y;
+  
+  //set friction to oppose velocity
+	if (m_vel.x > 0)
+		friction.x = -friction_scalar;
+	else if (m_vel.x < 0)
+		friction.x = friction_scalar;
+	if (m_vel.y > 0)
+		friction.y = -friction_scalar;
+	else if (m_vel.y < 0)
+		friction.y = friction_scalar;
+
+	force_sum.x += friction.x;
+	force_sum.y += friction.y;
+
+	m_accel.x += force_sum.x * time_factor;
+	m_accel.y += force_sum.y * time_factor;
+  
+  //clamp acceleration
+	if (m_accel.x > MAX_ACCEL) {
+		m_accel.x = MAX_ACCEL;
+	}
+	else if (m_accel.x < -MAX_ACCEL) {
+		m_accel.x = -MAX_ACCEL;
+	}
+	if (m_accel.y > MAX_ACCEL) {
+		m_accel.y = MAX_ACCEL;
+	}
+	else if (m_accel.y < -MAX_ACCEL) {
+		m_accel.y = -MAX_ACCEL;
+  }
+  
+	m_vel.x += m_accel.x * time_factor;
+	m_vel.y += m_accel.y * time_factor;
+  
+  //clamp velocity
+	if (m_vel.x > MAX_VEL) {
+		m_vel.x = MAX_VEL;
+	}
+	else if (m_vel.x < -MAX_VEL) {
+		m_vel.x = -MAX_VEL;
+	}
+	if (m_vel.y > MAX_VEL) {
+		m_vel.y = MAX_VEL;
+	}
+	else if (m_vel.y < -MAX_VEL) {
+		m_vel.y = -MAX_VEL;
+	}
+  
+  //Wall collision reactions (no change in force modelled yet)
+  if (!(can_move_up)){
 		if (m_vel.y < 0) {
 			m_vel.y = 0;
 		}
@@ -215,16 +260,35 @@ void Janitor::update_current(float ms)
 		}
 	}
 
-	if (m_time_pressed > FRAME_TIMING*NUM_FRAMES)
-		m_time_pressed = 0;
-	else m_time_pressed += ms;
-
-	//std::cout << m_time_pressed;
-	float new_position_x = m_position.x + m_vel.x * time_factor;
-	float new_position_y = m_position.y + m_vel.y * time_factor;
-
-	m_position.x = new_position_x;
-	m_position.y = new_position_y;
+	m_position.x = m_position.x + m_vel.x * time_factor;
+	m_position.y = m_position.y + m_vel.y * time_factor;
+  
+	//Pick current texture based on direction of velocity
+	vec2 vel_dir = normalize(m_vel);
+	vec2 default_dir = { 1, 0 };
+	float theta = acos(dot(vel_dir, default_dir)); //gives the angle of our velocity (but only from 0-pi in rads)
+	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
+	float pi = atan(1) * 4;
+	DIRECTION animation_dir = right;
+	if (theta < 3 * pi / 8 && theta > pi / 8)
+		animation_dir = up_right;
+	else if (theta < 5 * pi / 8 && theta > 3 * pi / 8)
+		animation_dir = up;
+	else if (theta < 7 * pi / 8 && theta > 5 * pi / 8)
+		animation_dir = up_left;
+	else if (theta < -5 * pi / 8 && theta > -7 * pi / 8)
+		animation_dir = down_left;
+	else if (theta < -3 * pi / 8 && theta > -5 * pi / 8)
+		animation_dir = down;
+	else if (theta < -pi / 8 && theta > -3 * pi / 8)
+		animation_dir = down_right;
+	//odd case
+	else if (theta > 7 * pi / 8 || theta < -7 * pi / 8)
+		animation_dir = left;
+	//if (theta < pi / 8 || theta > -pi / 8)
+	else
+		animation_dir = right;
+	pick_movement_tex(animation_dir, FRAME_TIMING);
 }
 
 void Janitor::check_collisions()
@@ -417,101 +481,107 @@ void Janitor::key_right(bool move) {
 //Helper function for draw_current
 //sets *m_curr_tex = &some_tex where some_tex is based on timing and key(s) pressed
 void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
+	float x_vel = abs(m_vel.x);
+	float y_vel = abs(m_vel.y);
+	float vel_magnitude = y_vel;
+	if (x_vel > y_vel)
+		vel_magnitude = x_vel;
+	if (vel_magnitude == 0) return;
 	switch (dir)
 	{
 		case up:
 		{
-			if (m_time_pressed < FRAME_TIMING)	
+			if (m_animation_time < FRAME_TIMING)	
 				m_curr_tex = &up1;
-			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
 				m_curr_tex = &up2;
-			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
 				m_curr_tex = &up3;
-			else if (m_time_pressed >= 3 * FRAME_TIMING)
+			else if (m_animation_time >= 3 * FRAME_TIMING)
 				m_curr_tex = &up4;
 			break;
 		}
 		case up_right:
 		{
-			if (m_time_pressed < FRAME_TIMING)						
+			if (m_animation_time < FRAME_TIMING)						
 				m_curr_tex = &up_right1;
-			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
 				m_curr_tex = &up_right2;
-			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
 				m_curr_tex = &up_right3;
-			else if (m_time_pressed >= 3 * FRAME_TIMING)				
+			else if (m_animation_time >= 3 * FRAME_TIMING)				
 				m_curr_tex = &up_right4;
 			break;
 		}
 		case up_left:
 		{
-			if (m_time_pressed < FRAME_TIMING)
+			if (m_animation_time < FRAME_TIMING)
 				m_curr_tex = &up_left1;
-			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)
 				m_curr_tex = &up_left2;
-			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)
 				m_curr_tex = &up_left3;
-			else if (m_time_pressed >= 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 3 * FRAME_TIMING)	
 				m_curr_tex = &up_left4;
 			break;
 		}
 		case down:
 		{
-			if (m_time_pressed < FRAME_TIMING)
+			if (m_animation_time < FRAME_TIMING)
 				m_curr_tex = &down1;
-			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)
 				m_curr_tex = &down2;
-			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)
 				m_curr_tex = &down3;
-			else if (m_time_pressed >= 3 * FRAME_TIMING)
+			else if (m_animation_time >= 3 * FRAME_TIMING)
 				m_curr_tex = &down4;
 			break;
 		}
 		case down_right:
 		{
-			if (m_time_pressed < FRAME_TIMING)	
+			if (m_animation_time < FRAME_TIMING)	
 				m_curr_tex = &down_right1;
-			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
 				m_curr_tex = &down_right2;
-			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
 				m_curr_tex = &down_right3;
-			else if (m_time_pressed >= 3 * FRAME_TIMING)
+			else if (m_animation_time >= 3 * FRAME_TIMING)
 				m_curr_tex = &down_right4;
 			break;
 		}
 		case down_left:
 		{
-			if (m_time_pressed < FRAME_TIMING)	
+			if (m_animation_time < FRAME_TIMING)	
 				m_curr_tex = &down_left1;
-			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
 				m_curr_tex = &down_left2;
-			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
 				m_curr_tex = &down_left3;
-			else if (m_time_pressed >= 3 * FRAME_TIMING)				
+			else if (m_animation_time >= 3 * FRAME_TIMING)				
 				m_curr_tex = &down_left4;
 			break;
 		}
 		case right:
 		{
-			if (m_time_pressed < FRAME_TIMING)	
+			if (m_animation_time < FRAME_TIMING)	
 				m_curr_tex = &right1;
-			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
 				m_curr_tex = &right2;
-			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
 				m_curr_tex = &right3;
-			else if (m_time_pressed >= 3 * FRAME_TIMING)
+			else if (m_animation_time >= 3 * FRAME_TIMING)
 				m_curr_tex = &right4;
 			break;
 		}
 		case left:
 		{
-			if (m_time_pressed < FRAME_TIMING)	
+			if (m_animation_time < FRAME_TIMING)	
 				m_curr_tex = &left1;
-			else if (m_time_pressed >= FRAME_TIMING && m_time_pressed < 2 * FRAME_TIMING)	
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
 				m_curr_tex = &left2;
-			else if (m_time_pressed >= 2 * FRAME_TIMING && m_time_pressed < 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
 				m_curr_tex = &left3;
-			else if (m_time_pressed >= 3 * FRAME_TIMING) 
+			else if (m_animation_time >= 3 * FRAME_TIMING) 
 				m_curr_tex = &left4;
 		}
 	}

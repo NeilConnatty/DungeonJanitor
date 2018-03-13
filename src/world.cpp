@@ -245,26 +245,25 @@ bool World::is_over()const
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // HANDLE JANITOR MOVEMENT HERE YO
-    // key is of 'type' GLFW_KEY_
-    // action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-      if (key == GLFW_KEY_UP){
-        m_janitor.key_up(true);
-      }
-      if (key == GLFW_KEY_DOWN){
-        m_janitor.key_down(true);
-      }
-      if (key == GLFW_KEY_LEFT){
-        m_janitor.key_left(true);
-      }
-      if (key == GLFW_KEY_RIGHT) {
-        m_janitor.key_right(true);
-      }
-    }
-
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// HANDLE JANITOR MOVEMENT HERE YO
+	// key is of 'type' GLFW_KEY_
+	// action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+		if (key == GLFW_KEY_UP) {
+			m_janitor.key_up(true);
+		}
+		if (key == GLFW_KEY_DOWN) {
+			m_janitor.key_down(true);
+		}
+		if (key == GLFW_KEY_LEFT) {
+			m_janitor.key_left(true);
+		}
+		if (key == GLFW_KEY_RIGHT) {
+			m_janitor.key_right(true);
+		}
+	}
     if (action == GLFW_RELEASE) {
       if (key == GLFW_KEY_UP){
         m_janitor.key_up(false);
@@ -295,13 +294,13 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
       m_dungeon.activate_artifact();
 	}
 
-    // Resetting game
-    if (action == GLFW_RELEASE && key == GLFW_KEY_R)
-    {
-        int w, h;
-        glfwGetWindowSize(m_window, &w, &h);
-        //Destructor functions for game objects go below:
-    }
+	// Resetting game
+	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
+	{
+		int w, h;
+		glfwGetWindowSize(m_window, &w, &h);
+		//Destructor functions for game objects go below:
+	}
 }
 
 //left it just because.
