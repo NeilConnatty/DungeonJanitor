@@ -506,6 +506,7 @@
     <ClCompile Include="..\src\door.cpp" />
     <ClCompile Include="..\src\dungeon.cpp" />
     <ClCompile Include="..\src\Cleanable\puddle.cpp" />
+    <ClCompile Include="..\src\emitter.cpp" />
     <ClCompile Include="..\src\floor.cpp" />
     <ClCompile Include="..\src\gameobject.cpp" />
     <ClCompile Include="..\src\hero.cpp" />
@@ -513,6 +514,7 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\common.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\world.cpp" />
+    <ClCompile Include="..\src\particle.cpp" />
     <ClCompile Include="..\src\pathfinder.cpp" />
     <ClCompile Include="..\src\pathfindernode.cpp" />
     <ClCompile Include="..\src\room.cpp" />
@@ -528,10 +530,12 @@
     <ClInclude Include="..\src\common.hpp" />
     <ClInclude Include="..\src\door.hpp" />
     <ClInclude Include="..\src\dungeon.hpp" />
+    <ClInclude Include="..\src\emitter.hpp" />
     <ClInclude Include="..\src\floor.hpp" />
     <ClInclude Include="..\src\gameobject.hpp" />
     <ClInclude Include="..\src\hero.hpp" />
     <ClInclude Include="..\src\janitor.hpp" />
+    <ClInclude Include="..\src\particle.hpp" />
     <ClInclude Include="..\src\pathfinder.hpp" />
     <ClInclude Include="..\src\pathfindernode.hpp" />
     <ClInclude Include="..\src\room.hpp" />

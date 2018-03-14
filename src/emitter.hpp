@@ -30,7 +30,8 @@ protected:
 		GLuint vbo_pos;
 		GLuint vbo_translation;
 		GLuint vbo_color;
-	} data;
+		GLuint vao;
+	};
 
 private:
 
@@ -43,6 +44,5 @@ private:
 	int m_particle_count; // num active particles.
 	GameObject* attached_to; // gameobject emitter is attached to.
 	std::vector<Particle> m_particle_container; // container for emitters particles.
-	std::vector<float> m_particle_positions_data; // container for emitters particles.
-	std::vector<float> m_particle_colors_data; // container for emitters particles.
+	DataGPU data;
 };

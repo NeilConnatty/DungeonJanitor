@@ -12,7 +12,7 @@ Particle::Particle()
 
 Particle::Particle(vec2 position, float lifetime)
 {
-	m_position = position;
+	m_position = {800.0f,800.0f};
 	m_velocity = {1.0f, 0.0f};
 	m_color = {1.0f, 0.0f, 0.0f, 1.0f};
 	m_life = lifetime;
