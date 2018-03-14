@@ -58,6 +58,9 @@
     <ClCompile Include="..\src\janitor.cpp">
       <Filter>src\Creatues</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\gameover.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -113,6 +116,9 @@
     </ClInclude>
     <ClInclude Include="..\src\janitor.hpp">
       <Filter>headers\Creatues</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gameover.hpp">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
