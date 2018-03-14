@@ -37,17 +37,17 @@ public:
 		up, up_right, up_left, down, down_right, down_left, left, right
 	};
 	bool validate_textures();
-	void pick_movement_tex(DIRECTION dir, const int FRAME_TIMING);
+	void pick_movement_tex(const int FRAME_TIMING);
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
-  void set_dungeon(Dungeon* dungeon);
+	void set_dungeon(Dungeon* dungeon);
 
 	int get_current_room_id();
-  void set_current_room(Room* room);
-  Room* get_current_room();
+	void set_current_room(Room* room);
+	Room* get_current_room();
 
-  void check_collisions();
+	void check_collisions();
 	void check_movement();
 
 	void update_current(float ms)override;
@@ -56,7 +56,7 @@ public:
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 private:
 	Room* m_currentRoom;
-  Dungeon* m_dungeon;
+	Dungeon* m_dungeon;
 	vec2 m_accel;
 	vec2 m_vel;
 
@@ -75,5 +75,5 @@ private:
  	bool can_move_down;
  	bool can_move_left;
  	bool can_move_right;
-  bool m_door_collision_last_frame;
+	bool m_door_collision_last_frame;
 };

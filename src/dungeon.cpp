@@ -47,9 +47,14 @@ bool Dungeon::init()
 
 void Dungeon::destroy()
 {
+	m_adjacency_map.clear();
 	for (std::unique_ptr<Room>& room : m_rooms)
 	{
 		room->destroy();
+	}
+	for (std::unique_ptr<Door>& door : m_doors)
+	{
+		door->destroy();
 	}
 }
 

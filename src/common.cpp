@@ -6,7 +6,7 @@
 // stlib
 #include <vector>
 #include <sstream>
-
+#include <iostream>
 void gl_flush_errors()
 {
 	while (glGetError() != GL_NO_ERROR);
@@ -209,6 +209,8 @@ bool Texture::load_from_file(const char* path)
 	
 	stbi_uc* data = stbi_load(path, &width, &height, NULL, 4);
 	if (data == NULL) {
+		//next line just gets a bit more failure information
+		std::cout << stbi_failure_reason();
 		fprintf(stderr, "data is null");
 		return false;
 	}

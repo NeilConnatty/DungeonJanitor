@@ -79,7 +79,7 @@ bool Janitor::init(vec2 position)
 	m_key_down = false;
 	m_key_left = false;
 	m_key_right = false;
-  m_door_collision_last_frame = false;
+	m_door_collision_last_frame = false;
 	m_curr_tex = &up1;
 	return true;
 }
@@ -103,13 +103,13 @@ void Janitor::update_current(float ms)
 	vec2 friction = { 0, 0 };
 
 	//Starts high but quickly tapers down
-	float const BUTTON_FORCE = 360.f;
+	float const BUTTON_FORCE = 800.f;
 	//Friction constant of concrete
 	float const FRICTIONAL_CONST = 0.6;
 	float const MASS = 60.f;
 	float const G = 9.81;
 	float friction_scalar = FRICTIONAL_CONST * MASS * G;
-	friction_scalar = friction_scalar * friction_scalar;
+	friction_scalar = friction_scalar*friction_scalar;
 	/* MIN_VEL is holdover, currently it has no effect, but it may be useful later, please leave for now*/
 	float const MIN_VEL = 0.f;
 	float const MAX_VEL = 220.f;
@@ -185,6 +185,7 @@ void Janitor::update_current(float ms)
 		}
 	}
 
+
 	//simulation steps
 	//sum forces
 
@@ -239,7 +240,7 @@ void Janitor::update_current(float ms)
 	}
   
   //Wall collision reactions (no change in force modelled yet)
-  if (!(can_move_up)){
+	if (!(can_move_up)){
 		if (m_vel.y < 0) {
 			m_vel.y = 0;
 		}
@@ -249,7 +250,7 @@ void Janitor::update_current(float ms)
 			m_vel.y = 0;
 		}
 	}
-		if (!(can_move_left)){
+	if (!(can_move_left)){
 		if (m_vel.x < 0) {
 			m_vel.x = 0;
 		}
@@ -263,38 +264,12 @@ void Janitor::update_current(float ms)
 	m_position.x = m_position.x + m_vel.x * time_factor;
 	m_position.y = m_position.y + m_vel.y * time_factor;
   
-	//Pick current texture based on direction of velocity
-	vec2 vel_dir = normalize(m_vel);
-	vec2 default_dir = { 1, 0 };
-	float theta = acos(dot(vel_dir, default_dir)); //gives the angle of our velocity (but only from 0-pi in rads)
-	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
-	float pi = atan(1) * 4;
-	DIRECTION animation_dir = right;
-	if (theta < 3 * pi / 8 && theta > pi / 8)
-		animation_dir = up_right;
-	else if (theta < 5 * pi / 8 && theta > 3 * pi / 8)
-		animation_dir = up;
-	else if (theta < 7 * pi / 8 && theta > 5 * pi / 8)
-		animation_dir = up_left;
-	else if (theta < -5 * pi / 8 && theta > -7 * pi / 8)
-		animation_dir = down_left;
-	else if (theta < -3 * pi / 8 && theta > -5 * pi / 8)
-		animation_dir = down;
-	else if (theta < -pi / 8 && theta > -3 * pi / 8)
-		animation_dir = down_right;
-	//odd case
-	else if (theta > 7 * pi / 8 || theta < -7 * pi / 8)
-		animation_dir = left;
-	//if (theta < pi / 8 || theta > -pi / 8)
-	else
-		animation_dir = right;
-	pick_movement_tex(animation_dir, FRAME_TIMING);
+	pick_movement_tex(FRAME_TIMING);
 }
 
 void Janitor::check_collisions()
 {
   bool door_collision_this_frame = false;
-
   for (Room::adjacent_room& adjacent : m_dungeon->get_adjacent_rooms(m_currentRoom->getRoomID()))
   {
     if (collides_with(*adjacent.door, m_dungeon->transform, identity_matrix)) // door is in dungeon coords 
@@ -480,14 +455,42 @@ void Janitor::key_right(bool move) {
 
 //Helper function for draw_current
 //sets *m_curr_tex = &some_tex where some_tex is based on timing and key(s) pressed
-void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
+void Janitor::pick_movement_tex(const int FRAME_TIMING) {
+	
+	//if velocity is 0, return, leaving the current animation frame as is
 	float x_vel = abs(m_vel.x);
 	float y_vel = abs(m_vel.y);
 	float vel_magnitude = y_vel;
 	if (x_vel > y_vel)
 		vel_magnitude = x_vel;
 	if (vel_magnitude == 0) return;
-	switch (dir)
+	
+	//Pick current texture based on direction of velocity
+	vec2 vel_dir = normalize(m_vel);
+	vec2 default_dir = { 1, 0 };
+	float theta = acos(dot(vel_dir, default_dir)); //gives the angle of our velocity (but only from 0-pi in rads)
+	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
+	float pi = atan(1) * 4;
+	DIRECTION animation_dir = right;
+	if (theta < 3 * pi / 8 && theta > pi / 8)
+		animation_dir = up_right;
+	else if (theta < 5 * pi / 8 && theta > 3 * pi / 8)
+		animation_dir = up;
+	else if (theta < 7 * pi / 8 && theta > 5 * pi / 8)
+		animation_dir = up_left;
+	else if (theta < -5 * pi / 8 && theta > -7 * pi / 8)
+		animation_dir = down_left;
+	else if (theta < -3 * pi / 8 && theta > -5 * pi / 8)
+		animation_dir = down;
+	else if (theta < -pi / 8 && theta > -3 * pi / 8)
+		animation_dir = down_right;
+	//odd case
+	else if (theta > 7 * pi / 8 || theta < -7 * pi / 8)
+		animation_dir = left;
+	//if (theta < pi / 8 || theta > -pi / 8)
+	else
+		animation_dir = right;
+	switch (animation_dir)
 	{
 		case up:
 		{
@@ -516,13 +519,13 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		case up_left:
 		{
 			if (m_animation_time < FRAME_TIMING)
-				m_curr_tex = &up_left1;
-			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)
-				m_curr_tex = &up_left2;
-			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)
-				m_curr_tex = &up_left3;
-			else if (m_animation_time >= 3 * FRAME_TIMING)	
 				m_curr_tex = &up_left4;
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)
+				m_curr_tex = &up_left3;
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)
+				m_curr_tex = &up_left2;
+			else if (m_animation_time >= 3 * FRAME_TIMING)	
+				m_curr_tex = &up_left1;
 			break;
 		}
 		case down:
@@ -540,13 +543,13 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		case down_right:
 		{
 			if (m_animation_time < FRAME_TIMING)	
-				m_curr_tex = &down_right1;
-			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
-				m_curr_tex = &down_right2;
-			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
-				m_curr_tex = &down_right3;
-			else if (m_animation_time >= 3 * FRAME_TIMING)
 				m_curr_tex = &down_right4;
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
+				m_curr_tex = &down_right3;
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
+				m_curr_tex = &down_right2;
+			else if (m_animation_time >= 3 * FRAME_TIMING)
+				m_curr_tex = &down_right1;
 			break;
 		}
 		case down_left:
@@ -564,13 +567,13 @@ void Janitor::pick_movement_tex(DIRECTION dir, const int FRAME_TIMING) {
 		case right:
 		{
 			if (m_animation_time < FRAME_TIMING)	
-				m_curr_tex = &right1;
-			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
-				m_curr_tex = &right2;
-			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
-				m_curr_tex = &right3;
-			else if (m_animation_time >= 3 * FRAME_TIMING)
 				m_curr_tex = &right4;
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
+				m_curr_tex = &right3;
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
+				m_curr_tex = &right2;
+			else if (m_animation_time >= 3 * FRAME_TIMING)
+				m_curr_tex = &right1;
 			break;
 		}
 		case left:

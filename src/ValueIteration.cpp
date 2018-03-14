@@ -39,7 +39,7 @@ void ValueIteration::initialize(vector<unique_ptr<Room>>& rooms, float artifact_
 		VI_current.emplace(room_ptr->getRoomID(), value);
 
 		//for testing
-		printf("The initial value for room %d is %f \n", room_ptr->getRoomID(), value);
+		//printf("The initial value for room %d is %f \n", room_ptr->getRoomID(), value);
 	}
 
 	updateValues(rooms, artifact_probability, dungeon);
@@ -50,7 +50,7 @@ void ValueIteration::initialize(vector<unique_ptr<Room>>& rooms, float artifact_
 		updateValues(rooms, artifact_probability, dungeon);
 		test_number_of_cycles++;
 	}
-	printf("Value Iteration Ended After %d Cycles.\n", test_number_of_cycles);
+	//printf("Value Iteration Ended After %d Cycles.\n", test_number_of_cycles);
 }
 
 void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifact_probability, Dungeon& dungeon)
@@ -92,7 +92,7 @@ void ValueIteration::updateValues(vector<unique_ptr<Room>>& rooms, float artifac
 		}
 		
 		//for testing
-		printf("The new value for room %d is %f \n", room->getRoomID(), new_value);
+		//printf("The new value for room %d is %f \n", room->getRoomID(), new_value);
 	}
 }
 

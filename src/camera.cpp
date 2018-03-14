@@ -52,7 +52,7 @@ void Camera::follow_object(const GameObject* object)
 {
   m_follow = object;
 }
-
+const GameObject* Camera::get_m_follow() { return m_follow; }
 void Camera::stop_following()
 {
   m_follow = nullptr;
