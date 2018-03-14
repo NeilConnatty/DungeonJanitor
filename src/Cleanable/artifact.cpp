@@ -18,7 +18,7 @@ bool Artifact::init(vec2 position)
 {
 	if (!activated_artifact_texture.is_valid())
 	{
-		if (!activated_artifact_texture.load_from_file(textures_path("artifact_placeholder.png")))
+		if (!activated_artifact_texture.load_from_file(textures_path("placeholders/artifact_placeholder.png")))
 		{
 			fprintf(stderr, "Failed to load activated artifact texture\n");
 			return false;
@@ -27,7 +27,7 @@ bool Artifact::init(vec2 position)
 
 	if (!deactivated_artifact_texture.is_valid())
 	{
-		if (!deactivated_artifact_texture.load_from_file(textures_path("deactivated_artifact_placeholder.png")))
+		if (!deactivated_artifact_texture.load_from_file(textures_path("placeholders/deactivated_artifact_placeholder.png")))
 		{
 			fprintf(stderr, "Failed to load deactivated artifact texture\n");
 			return false;
