@@ -84,6 +84,12 @@ bool Artifact::init(vec2 position)
 void Artifact::destroy()
 {
 	glDeleteBuffers(1, &mesh.vbo);
+	glDeleteBuffers(1, &mesh.ibo);
+	glDeleteBuffers(1, &mesh.vao);
+
+	glDeleteShader(effect.vertex);
+	glDeleteShader(effect.fragment);
+	glDeleteShader(effect.program);
 }
 
 void Artifact::draw_current(const mat3& projection, const mat3& current_transform)

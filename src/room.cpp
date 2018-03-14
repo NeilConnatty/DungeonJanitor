@@ -41,6 +41,7 @@ void Room::destroy()
   {
     p.destroy();
   }
+
 }
 
 void Room::update_current(float ms) {}

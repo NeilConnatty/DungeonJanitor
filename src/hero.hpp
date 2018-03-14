@@ -29,7 +29,7 @@ private:
 	vector<vec2> m_path;
 	vec2 m_vel;
 	bool m_is_moving;
-	vector<unique_ptr<Room>>* m_rooms; 
+	vector<unique_ptr<Room>>* m_rooms;
 	const float SPEED = 100.0f;
 	//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
 	const float Y_SPEED = SPEED * (24.f / 35.f);

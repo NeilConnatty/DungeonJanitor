@@ -11,6 +11,7 @@ public:
   ~Camera();
   
   void follow_object(const GameObject* object);
+  const GameObject* get_m_follow();
   void stop_following();
 
   // Pass in window width and height
@@ -18,7 +19,7 @@ public:
   mat3 get_transform(int w, int h);
 
   void draw(const mat3& projection, const mat3& parent_transform) override {}
-
+  
 private:
   const GameObject* m_follow;
 };

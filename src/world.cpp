@@ -108,7 +108,7 @@ bool World::init(vec2 screen)
 	{
 		fprintf(stderr, "Failed to init Dungeon.\n");
 		return false;
-  }
+	}
 
   
 	if (!init_creatures())
@@ -117,10 +117,10 @@ bool World::init(vec2 screen)
 		return false;
 	}
   
-  // Make camera follow janitor
-  m_camera.follow_object(&m_janitor);
+	// Make camera follow janitor
+	m_camera.follow_object(&m_janitor);
   
-  return true;
+	return true;
 }
 
 bool World::init_creatures()
@@ -190,12 +190,19 @@ bool World::update(float elapsed_ms)
   int w, h;
   glfwGetFramebufferSize(m_window, &w, &h);
   vec2 screen = {(float)w, (float)h};
-  m_janitor.update(elapsed_ms);
-  m_hero.update(elapsed_ms);
-  m_boss.update(elapsed_ms);
-  m_dungeon.update(elapsed_ms);
+  if (!game_is_over)
+  {
+	  m_janitor.update(elapsed_ms);
+	  m_hero.update(elapsed_ms);
+	  m_boss.update(elapsed_ms);
+	  m_dungeon.update(elapsed_ms);
 
-  m_janitor.check_movement();
+	  m_janitor.check_movement();
+  }
+  else 
+  {
+	  m_game_over_screen.update(elapsed_ms);
+  }
   return true;
 }
 
@@ -225,12 +232,20 @@ void World::draw()
   mat3 transform = m_camera.get_transform(w, h);
 
   // Drawing entities
-
-  m_dungeon.draw(projection_2D, transform);
-  m_janitor.draw(projection_2D, transform);
-  m_hero.draw(projection_2D, transform);
-  m_boss.draw(projection_2D, transform);
-
+  if (!game_is_over) 
+  {
+	  m_dungeon.draw(projection_2D, transform);
+	  m_janitor.draw(projection_2D, transform);
+	  m_hero.draw(projection_2D, transform);
+	  m_boss.draw(projection_2D, transform);
+  }
+  else
+  {
+	  m_game_over_screen.draw(projection_2D, transform);
+	  if (!m_camera.get_m_follow()) {
+		  m_camera.follow_object(&m_game_over_screen);
+	  }
+  }
   // Presenting
   glfwSwapBuffers(m_window);
 }
@@ -241,6 +256,12 @@ bool World::is_over()const
     return glfwWindowShouldClose(m_window);
 }
 
+void World::game_over() 
+{
+	game_is_over = true;
+	m_game_over_screen.init();
+	m_camera.stop_following();
+}
 
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
@@ -295,11 +316,28 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	}
 
 	// Resetting game
-	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
+	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
 	{
+		game_is_over = false;
 		int w, h;
 		glfwGetWindowSize(m_window, &w, &h);
 		//Destructor functions for game objects go below:
+		m_dungeon.destroy();
+		m_janitor.destroy();
+		m_hero.destroy();
+		m_boss.destroy();
+
+		if (!m_dungeon.init())
+		{
+			fprintf(stderr, "Failed to init Dungeon.\n");
+			return;
+		}
+		if (!init_creatures())
+		{
+			fprintf(stderr, "Failed to init Creatures. \n");
+			return;
+		}
+		m_camera.follow_object(&m_janitor);
 	}
 }
 

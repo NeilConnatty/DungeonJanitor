@@ -7,6 +7,7 @@
 #include "hero.hpp"
 #include "boss.hpp"
 #include "camera.hpp"
+#include "gameover.hpp"
 #include "ValueIteration.hpp"
 // stlib
 #include <vector>
@@ -38,9 +39,11 @@ public:
 	// Renders our scene
 	void draw();
 
-	// Should the game be over ?
+	// Should the game be over ? (closes the window)
 	bool is_over()const;
 
+	//sets game_is_over = true for drawing the game over screen
+	void game_over();
 private:
 
 
@@ -68,9 +71,12 @@ private:
 	// Boss
 	Boss m_boss;
 
-  //Camera
-  Camera m_camera;
+	//Camera
+	Camera m_camera;
 
+	//Game Over Screen
+	GameOver m_game_over_screen;
+	bool game_is_over;
 
 	// C++ rng
 	std::default_random_engine m_rng;
