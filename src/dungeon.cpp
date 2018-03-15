@@ -63,18 +63,6 @@ vector<unique_ptr<Room>>& Dungeon::get_rooms()
 	return m_rooms;
 }
 
-void Dungeon::activate_artifact()
-{
-	for (std::unique_ptr<Room>& room : m_rooms)
-	{
-		Room* room_ptr = room.get();
-		if (room_ptr->containsUndiscoveredArtifact())
-		{
-			room_ptr->get_artifact()->set_active(true);
-		}
-	}
-}
-
 void Dungeon::update_current(float ms)
 {
 }

@@ -305,11 +305,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	  janitors_current_room->clean(&m_janitor, m_dungeon.transform);
     }
 
-    // temporary keybind, probably will bind it to space once we have collisions
-    if (action == GLFW_PRESS && key == GLFW_KEY_A) {
-      m_dungeon.activate_artifact();
-	}
-
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
 	{

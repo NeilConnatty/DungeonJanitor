@@ -19,7 +19,6 @@ public:
   
 	bool init();
 	void destroy();
-	void activate_artifact();
 	vector<unique_ptr<Room>>& get_rooms();
 	bool add_doors(vector<std::unique_ptr<Door>>& doors);
 	void add_adjacency(int roomID, Room::adjacent_room adj);

@@ -154,7 +154,6 @@ bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
         {
             return false;
         }
-        m_artifact.set_scale({ 0.5f, 0.5f });
     }
     return true;
 }
@@ -190,8 +189,16 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 {
 	for (Puddle &p : get_cleanables()) {
 		if (p.is_enabled() &&
-			janitor->collides_with(p, janitor->get_current_room()->transform, dungeon_transform)) {
+			janitor->collides_with(p, this->transform, dungeon_transform)) {
 			p.toggle_enable();
+		}
+	}
+
+	if (containsUndiscoveredArtifact())
+	{
+		if (janitor->collides_with(*get_artifact(), this->transform, dungeon_transform))
+		{
+			get_artifact()->set_active(true);
 		}
 	}
 }
