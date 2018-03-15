@@ -301,13 +301,8 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     }
     
     if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
-      std::vector<Puddle> &cleanables = m_janitor.get_current_room()->get_cleanables();
-      for (Puddle &p : cleanables) {
-        if (p.is_enabled() &&
-          m_janitor.collides_with(p, m_janitor.get_current_room()->transform, m_dungeon.transform)) {
-          p.toggle_enable();
-        }
-      }
+      Room* janitors_current_room = m_janitor.get_current_room();
+	  janitors_current_room->clean(&m_janitor, m_dungeon.transform);
     }
 
     // temporary keybind, probably will bind it to space once we have collisions

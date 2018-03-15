@@ -1,6 +1,7 @@
 // room.cpp
 
 #include "room.hpp"
+#include "janitor.hpp"
 
 #define SPRITE_SIZE 64.f
 
@@ -184,6 +185,16 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 //int Room::get_num_cleanables() { return m_num_cleanables; }
 //float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
 //void Room::decrement_cleanables() { m_num_cleanables--; }
+
+void Room::clean(Janitor* janitor, mat3 dungeon_transform)
+{
+	for (Puddle &p : get_cleanables()) {
+		if (p.is_enabled() &&
+			janitor->collides_with(p, janitor->get_current_room()->transform, dungeon_transform)) {
+			p.toggle_enable();
+		}
+	}
+}
 
 std::vector<Wall> &Room::get_walls() { return m_walls; }
 

@@ -63,25 +63,6 @@ vector<unique_ptr<Room>>& Dungeon::get_rooms()
 	return m_rooms;
 }
 
-void Dungeon::clean()
-{
-	for (std::unique_ptr<Room>& room : m_rooms)
-	{
-		std::vector<Puddle>& cleanables = room->get_cleanables();
-		for (Puddle& p : cleanables)
-		{
-			if (p.is_enabled())
-			{
-				// Collision stuff goes here
-				if (true)
-				{
-					p.toggle_enable();
-				}
-			}
-		}
-	}
-}
-
 void Dungeon::activate_artifact()
 {
 	for (std::unique_ptr<Room>& room : m_rooms)

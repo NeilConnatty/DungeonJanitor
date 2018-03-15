@@ -5,6 +5,7 @@
 #include "floor.hpp"
 #include "wall.hpp"
 #include "door.hpp"
+//#include "janitor.hpp"
 #include "Cleanable/puddle.hpp"
 #include "Cleanable/artifact.hpp"
 
@@ -13,6 +14,8 @@
 #include <memory>
 
 using namespace std;
+
+class Janitor;
 
 class Room : public GameObject
 {
@@ -66,12 +69,12 @@ public:
     bool containsUndiscoveredArtifact();
     void setBossInRoom(bool bossInRoom);
     void deactivate_artifact();
-	  Artifact* get_artifact();
+	Artifact* get_artifact();
 		
     int get_num_cleanables();
     float get_clean_percent();
     void decrement_cleanables();
-
+	void clean(Janitor* janitor, mat3 dungeon_transform);
     int getRoomID() const { return m_ID; };
     void setRoomID(int id);
 
