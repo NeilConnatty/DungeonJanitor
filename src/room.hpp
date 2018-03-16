@@ -8,6 +8,7 @@
 //#include "janitor.hpp"
 #include "Cleanable/puddle.hpp"
 #include "Cleanable/artifact.hpp"
+#include "Cleanable/cleanable.hpp"
 
 #include <vector>
 #include <array>
