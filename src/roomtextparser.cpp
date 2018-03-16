@@ -19,6 +19,12 @@
 #define EMPTY 'e'
 #define ROOM 'r'
 
+// Room types
+#define HALLWAY_R 'l'
+#define OFFICE_R 'o'
+#define CLASS_R 'c'
+#define BATH_R 't'
+
 //Offsets
 #define ROOM_X_OFFSET 185.f
 #define ROOM_Y_OFFSET 160.f;
@@ -27,7 +33,25 @@
 #define FLOOR_X_OFFSET 35.f
 #define FLOOR_Y_OFFSET 25.f
 
-bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool last_line) 
+void parseWallHelper(size_t &i, std::string &line, wall_edge &edge,
+                     vec2 &tile_dim, std::vector<Room::wall_pair> &wall_pairs,
+                     bool first_line, float& x, float& y) 
+{
+  edge = NONE;
+  if (first_line)
+  {
+    edge = TOP;
+  }
+  if (i == 0 || i == line.size() - 1)
+  {
+    edge = (wall_edge)(edge | VERTICAL);
+  }
+  wall_pairs.push_back({ { x, y }, edge });
+  tile_dim = Wall::get_dimensions(edge);
+  x = x + tile_dim.x;
+}
+
+bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool last_line)
 {
   float x = 0.f;
   size_t i = 0;
@@ -44,19 +68,28 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
     } 
     else if (ch == WALL) 
     {
-      edge = NONE;
-      if (first_line)
-      {
-        edge = TOP;
-      }
-      if (i == 0 || i == line.size() - 1)
-      {
-        edge = (wall_edge)(edge | VERTICAL);
-      }
-      wall_pairs.push_back({{x, y}, edge});
-      tile_dim = Wall::get_dimensions(edge);
-      x = x + tile_dim.x;
-    } 
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+    }
+    else if (ch == HALLWAY_R)
+    {
+      room_t = HALLWAY_ROOM;
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+    }
+    else if (ch == OFFICE_R)
+    {
+      room_t = OFFICE_ROOM;
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+    }
+    else if (ch == BATH_R)
+    {
+      room_t = BATH_ROOM;
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+    }
+    else if (ch == CLASS_R)
+    {
+      room_t = CLASS_ROOM;
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+    }
     else if (ch == FLOOR) 
     {
       floor_pos.push_back({ x, y });
@@ -173,6 +206,7 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
   has_hero_spawn = false;
   has_janitor_spawn = false;
   has_boss_spawn = false;
+  room_t = HALLWAY_ROOM;
 
   for (size_t i = 0; i < lines.size(); ++i)
   {
@@ -205,6 +239,8 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
         edge = (wall_edge)(edge | BOTTOM);
       }
     }
+
+    room.set_room_type(room_t);
 
     if (!populateRoomWalls(room))
     {
@@ -363,7 +399,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
       else if (ch == ROOM)
       {
         rooms.emplace_back(new Room);
-        rooms.back()->init(offset*2.f);
+        rooms.back()->init(offset*2.f, HALLWAY_ROOM);
         if (!roomParser.parseRoom(*rooms.back(), m_room_files[num_rooms].c_str()))
         {
           return false;
