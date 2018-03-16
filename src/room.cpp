@@ -204,10 +204,10 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 
 void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 {
-	for (Puddle &p : get_cleanables()) {
-		if (p.is_enabled() &&
-			janitor->collides_with(p, this->transform, dungeon_transform)) {
-			p.toggle_enable();
+	for (unique_ptr<Cleanable>& c : get_cleanables()) {
+		if (c->is_enabled() &&
+			janitor->collides_with(*c, this->transform, dungeon_transform)) {
+			c.get()->toggle_enable();
 		}
 	}
 
@@ -220,9 +220,9 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 	}
 }
 
-std::vector<Wall> &Room::get_walls() { return m_walls; }
+vector<Wall> &Room::get_walls() { return m_walls; }
 
-std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
+vector<unique_ptr<Cleanable>> &Room::get_cleanables() { return m_cleanables; }
 int Room::get_num_cleanables() { return m_num_cleanables; }
 float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
 void Room::decrement_cleanables() { m_num_cleanables--; }
