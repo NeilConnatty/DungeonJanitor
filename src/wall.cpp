@@ -55,7 +55,7 @@ bool Wall::init(vec2 position, wall_edge edge)
       fprintf(stderr, "Failed to load wall texture\n");
       return false;
     }
-    if (!vert_t.load_from_file(textures_path("dungeon1/d1_walltile_cement-strip-1.png")))
+    if (!vert_t.load_from_file(textures_path("dungeon1/d1_walltile_cement-top-v-1.png")))
     {
       fprintf(stderr, "Failed to load wall texture\n");
       return false;

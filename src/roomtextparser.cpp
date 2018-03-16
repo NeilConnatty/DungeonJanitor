@@ -303,7 +303,7 @@ bool add_doors_to_dungeon(vector<Door::door_pair>& door_pos, Dungeon& dungeon, v
     doors.emplace_back(new Door);
     if (!doors.back()->init({ pair.first.x, pair.first.y + 35.f }, pair.second))
     {
-      // TODO ERROR
+      fprintf(stderr, "Error adding doors to dungeon.\n");
       return false;
     }
     doors.back()->set_scale({ 2.f, 2.f });
@@ -370,7 +370,11 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
         }
         rooms.back()->setRoomID(num_rooms);
 
-        add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway);
+        if (!add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway))
+        {
+          //error
+          return false;
+        }
 
         ++num_rooms;
         // TODO: change room type to be classroom, office, or bathroom
@@ -407,7 +411,11 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
         }
         rooms.back()->setRoomID(num_rooms);
 
-        add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway);
+        if (!add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway))
+        {
+          // error
+          return false;
+        }
 
         ++num_rooms;
         // TODO: change room type to be classroom, office, or bathroom
