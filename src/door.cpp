@@ -7,7 +7,7 @@ Texture Door::door_texture;
 Door::Door() : GameObject() {}
 Door::~Door() {}
 
-bool Door::init(vec2 pos)
+bool Door::init(vec2 pos, door_dir dir)
 {
   if (!door_texture.is_valid())
   {
@@ -19,6 +19,7 @@ bool Door::init(vec2 pos)
   }
 
   m_position = pos;
+  m_door_dir = dir;
 
   // The position corresponds to the center of the texture
   float wr = door_texture.width * 0.5f;

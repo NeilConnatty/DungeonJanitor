@@ -27,7 +27,7 @@
 #define FLOOR_X_OFFSET 35.f
 #define FLOOR_Y_OFFSET 25.f
 
-bool RoomParser::parseLine(std::string &line, float y, bool first_line) 
+bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool last_line) 
 {
   float x = 0.f;
   size_t i = 0;
@@ -59,16 +59,24 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
     } 
     else if (ch == FLOOR) 
     {
-      floor_pos.push_back({x, y});
+      floor_pos.push_back({ x, y });
       tile_dim = Floor::get_dimensions();
       x = x + tile_dim.x;
-    } 
-	else if (ch == DOOR)
-	{
-		door_pos.push_back({ x,y });
-		tile_dim = Floor::get_dimensions();
-		x = x + tile_dim.x;
-	}
+    }
+    else if (ch == DOOR)
+    {
+      if (first_line || last_line)
+      {
+        door_pairs.push_back(std::make_pair<vec2, Door::door_dir>({ x,y }, Door::HORIZONTAL));
+      }
+      else
+      {
+        door_pairs.push_back(std::make_pair<vec2, Door::door_dir>({ x,y }, Door::VERTICAL));
+      }
+
+      tile_dim = Floor::get_dimensions();
+      x = x + tile_dim.x;
+    }
     else if (ch == PUDDLE) 
     {
       puddle_pos.push_back({x, y});
@@ -128,7 +136,7 @@ void RoomParser::clearPositions()
   wall_pairs.clear();
   floor_pos.clear();
   puddle_pos.clear();
-  door_pos.clear();
+  door_pairs.clear();
 }
 
 bool RoomParser::populateRoomWalls(Room &room)
@@ -149,20 +157,31 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
 {
   std::string line;
   std::ifstream file(filename);
+  std::vector<std::string> lines;
 
   clearPositions();
 
+  while (std::getline(file, line))
+  {
+    lines.emplace_back(line);
+  }
+
   float y = 0.f;
   bool first_line = true;
-  bool last_line = !std::getline(file, line);
+  bool last_line = false;
   has_artifact = false;
   has_hero_spawn = false;
   has_janitor_spawn = false;
   has_boss_spawn = false;
 
-  while (!last_line) 
+  for (size_t i = 0; i < lines.size(); ++i)
   {
-    if (!parseLine(line, y, first_line)) 
+    if (i == (lines.size() - 1))
+    {
+      last_line = true;
+    }
+
+    if (!parseLine(lines[i], y, first_line, last_line)) 
     {
       fprintf(stderr, "Error parsing room file: %s.\n", filename);
       return false;
@@ -177,8 +196,6 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
     {
       y = y + 25.f;
     }
-
-    last_line = !std::getline(file, line);
 
     if (last_line)
     {
@@ -260,15 +277,15 @@ bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, cons
   return parseLines(lines, rooms, dungeon);
 }
 
-void transform_positions(vector<vec2>& positions, SubRenderable& rend)
+void transform_positions(vector<Door::door_pair>& positions, SubRenderable& rend)
 {
-  for (vec2& pos : positions)
+  for (Door::door_pair& pos : positions)
   {
-    pos = get_world_coords_from_room_coords(pos, rend.transform, identity_matrix);
+    pos.first = get_world_coords_from_room_coords(pos.first, rend.transform, identity_matrix);
   }
 }
 
-bool add_doors_to_dungeon(vector<vec2>& door_pos, Dungeon& dungeon, vec2 offset, int roomID, Room* room, Room* hallway)
+bool add_doors_to_dungeon(vector<Door::door_pair>& door_pos, Dungeon& dungeon, vec2 offset, int roomID, Room* room, Room* hallway)
 {
   std::vector<std::unique_ptr<Door>> doors;
 
@@ -281,10 +298,10 @@ bool add_doors_to_dungeon(vector<vec2>& door_pos, Dungeon& dungeon, vec2 offset,
 
   transform_positions(door_pos, rend);
 
-  for (vec2& pos : door_pos)
+  for (Door::door_pair& pair : door_pos)
   {
     doors.emplace_back(new Door);
-    if (!doors.back()->init({ pos.x, pos.y + 35.f }))
+    if (!doors.back()->init({ pair.first.x, pair.first.y + 35.f }, pair.second))
     {
       // TODO ERROR
       return false;

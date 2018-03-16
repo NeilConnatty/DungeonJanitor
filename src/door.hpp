@@ -12,12 +12,21 @@ class Door : public GameObject
 public:
   static Texture door_texture;
 
+  enum door_dir
+  {
+    VERTICAL = 0,
+    HORIZONTAL = 1
+  };
+
+  using door_pair = std::pair<vec2, door_dir>;
+
 public:
   Door();
   ~Door();
 
-  bool init() override { return init({ 0.f, 0.f }); }
-  bool init(vec2 pos);
+  bool init() override { return init({ 0.f,0.f }, VERTICAL); }
+  bool init(door_pair pair) { return init(pair.first, pair.second); }
+  bool init(vec2 pos, door_dir dir);
   void destroy() override;
 
 protected:
@@ -28,4 +37,5 @@ protected:
 
 private:
   std::array<Floor, 3> m_floors;
+  door_dir m_door_dir;
 };

@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "room.hpp"
+#include "door.hpp"
 #include "dungeon.hpp"
 
 using namespace std;
@@ -10,11 +11,11 @@ class RoomParser
 {
 public:
 	bool parseRoom(Room& room, const char* filename);
-  vector<vec2>& get_door_pos() { return door_pos; }
+  vector<Door::door_pair>& get_door_pos() { return door_pairs; }
 
 private:
 	void clearPositions();
-	bool parseLine(string& line, float y, bool first_line);
+	bool parseLine(string& line, float y, bool first_line, bool last_line);
 	bool populateRoomExceptWalls(Room &room);
   bool populateRoomWalls(Room &room);
 
@@ -32,8 +33,8 @@ private:
 	
 	vector<vec2> floor_pos;
 	vector<vec2> puddle_pos;
-	vector<vec2> door_pos;
-	vector<Room::wall_pair> wall_pairs;  
+	vector<Door::door_pair> door_pairs;
+	vector<Room::wall_pair> wall_pairs;
 };
 
 class DungeonParser
