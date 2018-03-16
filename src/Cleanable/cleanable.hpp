@@ -21,7 +21,7 @@ public:
 	bool	init();
 	bool	init(vec2 position);
 	void	destroy();
-	virtual Texture get_texture() = 0;
+	virtual Texture& get_texture() = 0;
 	virtual bool load_texture() = 0;
 
 private:

@@ -14,6 +14,6 @@ private:
 public:
 	Puddle();
 	~Puddle();
-	Texture get_texture() override;
+	Texture& get_texture() override;
 	bool load_texture() override;
 };

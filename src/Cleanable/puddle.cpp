@@ -8,7 +8,7 @@ Puddle::Puddle() {}
 
 Puddle::~Puddle() {}
 
-Texture Puddle::get_texture()
+Texture& Puddle::get_texture()
 {
 	return puddle_texture;
 }
