@@ -38,11 +38,6 @@ void Room::destroy()
     w.destroy();
   }
 
-  for (Puddle p : m_puddles)
-  {
-    p.destroy();
-  }
-
 }
 
 void Room::update_current(float ms) {}
@@ -128,20 +123,8 @@ bool Room::add_walls(std::vector<wall_pair> &walls)
   return true;
 }
 
-bool Room::add_cleanables(std::vector<vec2> &puddle_positions, vector<pair<Cleanable::types, vec2>>& cleanable_pos)
+bool Room::add_cleanables(vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 {
-	//!puddle_positions.empty()
-    if (false) {
-        for (vec2 &pos : puddle_positions)
-        {
-            m_puddles.emplace_back();
-            if (!m_puddles.back().init(pos))
-            {
-                return false;
-            }
-        }
-    }
-
 	if (!cleanable_pos.empty())
 	{
 		for (pair<Cleanable::types, vec2>& cleanable : cleanable_pos)

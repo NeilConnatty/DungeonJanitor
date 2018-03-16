@@ -32,7 +32,6 @@ private:
 	vec2 janitor_spawn_pos;
 	
 	vector<vec2> floor_pos;
-	vector<vec2> puddle_pos;
 	vector<pair<Cleanable::types, vec2>> cleanable_pos;
 	vector<vec2> door_pos;
 	vector<Room::wall_pair> wall_pairs;  

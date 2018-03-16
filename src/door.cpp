@@ -13,7 +13,7 @@ bool Door::init(vec2 pos)
   {
     if (!door_texture.load_from_file(textures_path("dungeon1/temp/door_temp.png")))
     {
-      fprintf(stderr, "Failed to load puddle texture\n");
+      fprintf(stderr, "Failed to load door texture\n");
       return false;
     }
   }
