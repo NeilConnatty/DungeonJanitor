@@ -128,7 +128,7 @@ bool Room::add_walls(std::vector<wall_pair> &walls)
   return true;
 }
 
-bool Room::add_cleanables(std::vector<vec2> &puddle_positions) 
+bool Room::add_cleanables(std::vector<vec2> &puddle_positions, vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 {
     if (!puddle_positions.empty()) {
         for (vec2 &pos : puddle_positions)

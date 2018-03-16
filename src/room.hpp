@@ -48,7 +48,7 @@ public:
     bool add_floor(vec2 floor);
     bool add_walls(vector<wall_pair>& walls);
     bool add_floors(vector<vec2>& positions);
-    bool add_cleanables(vector<vec2>& puddle_positions);
+    bool add_cleanables(vector<vec2>& puddle_positions, vector<pair<Cleanable::types, vec2>>& cleanable_pos);
     bool add_artifact(bool has_artifact, vec2 artifact_pos);
     bool add_hero_spawn_loc(bool has_hero_spawn, vec2 hero_spawn_pos);
     bool add_boss_spawn_loc(bool has_boss_spawn, vec2 boss_spawn_pos);

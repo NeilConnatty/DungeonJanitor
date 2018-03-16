@@ -9,7 +9,7 @@
 #define SPACE ' '
 #define WALL 'w'
 #define FLOOR 'f'
-#define PUDDLE 'p'
+#define PUDDLE_ON_GROUND 'p'
 #define ARTIFACT 'a'
 #define JANITOR 'j'
 #define HERO 'h'
@@ -69,10 +69,12 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
 		tile_dim = Floor::get_dimensions();
 		x = x + tile_dim.x;
 	}
-    else if (ch == PUDDLE) 
+    else if (ch == PUDDLE_ON_GROUND)
     {
-      puddle_pos.push_back({x, y});
-      floor_pos.push_back({x, y});
+	  vec2 pos = { x, y };
+	  puddle_pos.push_back(pos);
+	  cleanable_pos.push_back(make_pair(Cleanable::types::PUDDLE, pos));
+      floor_pos.push_back(pos);
       tile_dim = Floor::get_dimensions();
       x = x + tile_dim.x;
     }
@@ -128,6 +130,7 @@ void RoomParser::clearPositions()
   wall_pairs.clear();
   floor_pos.clear();
   puddle_pos.clear();
+  cleanable_pos.clear();
   door_pos.clear();
 }
 
@@ -138,7 +141,7 @@ bool RoomParser::populateRoomWalls(Room &room)
 
 bool RoomParser::populateRoomExceptWalls(Room &room) 
 {
-  return (room.add_floors(floor_pos) && room.add_cleanables(puddle_pos) &&
+  return (room.add_floors(floor_pos) && room.add_cleanables(puddle_pos, cleanable_pos) &&
           room.add_artifact(has_artifact, artifact_pos) &&
           room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
           room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&
