@@ -70,9 +70,9 @@ void Room::draw_children(const mat3 &projection,
     w.draw(projection, current_transform);
   }
 
-  for (Puddle p : m_puddles) 
+  for (unique_ptr<Cleanable>& c : m_cleanables)
   {
-    p.draw(projection, current_transform);
+    c->draw(projection, current_transform);
   }
 
   if (m_ArtifactHere)
@@ -141,8 +141,8 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions, vector<pair<Clean
             }
         }
     }
-	//!cleanable_pos.empty()
-	if (false)
+
+	if (!cleanable_pos.empty())
 	{
 		for (pair<Cleanable::types, vec2>& cleanable : cleanable_pos)
 		{
@@ -153,7 +153,7 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions, vector<pair<Clean
 				{
 					return false;
 				}
-				//m_cleanables.push_back(&p);
+				m_cleanables.emplace_back(p);
 			}
 		}
 	}
