@@ -503,6 +503,7 @@
     <ClCompile Include="..\src\boss.cpp" />
     <ClCompile Include="..\src\Cleanable\artifact.cpp" />
     <ClCompile Include="..\src\camera.cpp" />
+    <ClCompile Include="..\src\Cleanable\cleanable.cpp" />
     <ClCompile Include="..\src\door.cpp" />
     <ClCompile Include="..\src\dungeon.cpp" />
     <ClCompile Include="..\src\Cleanable\puddle.cpp" />
@@ -525,6 +526,7 @@
     <ClInclude Include="..\src\boss.hpp" />
     <ClInclude Include="..\src\Cleanable\artifact.hpp" />
     <ClInclude Include="..\src\camera.hpp" />
+    <ClInclude Include="..\src\Cleanable\cleanable.hpp" />
     <ClInclude Include="..\src\Cleanable\puddle.hpp" />
     <ClInclude Include="..\src\common.hpp" />
     <ClInclude Include="..\src\door.hpp" />

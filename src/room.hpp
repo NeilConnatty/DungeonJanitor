@@ -107,5 +107,6 @@ private:
     vector<Floor>		          m_floors;
     vector<Wall>		          m_walls;
     vector<Puddle>            m_puddles;
+	vector<Cleanable>			  m_cleanables;
 }; 
 

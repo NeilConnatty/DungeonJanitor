@@ -61,6 +61,9 @@
     <ClCompile Include="..\src\gameover.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Cleanable\cleanable.cpp">
+      <Filter>src\Cleanable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -119,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="..\src\gameover.hpp">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Cleanable\cleanable.hpp">
+      <Filter>headers\Cleanable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
