@@ -35,7 +35,7 @@
 
 void parseWallHelper(size_t &i, std::string &line, wall_edge &edge,
                      vec2 &tile_dim, std::vector<Room::wall_pair> &wall_pairs,
-                     bool first_line, float& x, float& y) 
+                     bool first_line, bool last_line, float& x, float& y) 
 {
   edge = NONE;
   if (first_line)
@@ -45,6 +45,10 @@ void parseWallHelper(size_t &i, std::string &line, wall_edge &edge,
   if (i == 0 || i == line.size() - 1)
   {
     edge = (wall_edge)(edge | VERTICAL);
+  }
+  if (last_line)
+  {
+    edge = (wall_edge)(edge | BOTTOM);
   }
   wall_pairs.push_back({ { x, y }, edge });
   tile_dim = Wall::get_dimensions(edge);
@@ -68,27 +72,27 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
     } 
     else if (ch == WALL) 
     {
-      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, last_line, x, y);
     }
     else if (ch == HALLWAY_R)
     {
       room_t = HALLWAY_ROOM;
-      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, last_line, x, y);
     }
     else if (ch == OFFICE_R)
     {
       room_t = OFFICE_ROOM;
-      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, last_line, x, y);
     }
     else if (ch == BATH_R)
     {
       room_t = BATH_ROOM;
-      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, last_line, x, y);
     }
     else if (ch == CLASS_R)
     {
       room_t = CLASS_ROOM;
-      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, x, y);
+      parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, last_line, x, y);
     }
     else if (ch == FLOOR) 
     {
@@ -229,15 +233,6 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
     else
     {
       y = y + 25.f;
-    }
-
-    if (last_line)
-    {
-      for (Room::wall_pair& pair : wall_pairs)
-      {
-        wall_edge& edge = std::get<wall_edge>(pair);
-        edge = (wall_edge)(edge | BOTTOM);
-      }
     }
 
     room.set_room_type(room_t);
