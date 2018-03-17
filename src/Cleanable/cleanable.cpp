@@ -13,6 +13,10 @@ bool Cleanable::init()
 
 bool Cleanable::init(vec2 position)
 {
+	// Setting initial scale values
+	m_scale.x = 1.5f;
+	m_scale.y = 1.5f;
+
 	if (!load_texture())
 	{
 		return false;
@@ -20,9 +24,7 @@ bool Cleanable::init(vec2 position)
 
 	m_position = position;
 	m_size = { static_cast<float>(get_texture().width), static_cast<float>(get_texture().height) };
-	// Setting initial scale values
-	m_scale.x = 1.5f;
-	m_scale.y = 1.5f;
+
 
 	// The position corresponds to the center of the texture
 	float wr = get_texture().width * 0.5f;

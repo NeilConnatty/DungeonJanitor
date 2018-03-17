@@ -64,6 +64,9 @@
     <ClCompile Include="..\src\Cleanable\cleanable.cpp">
       <Filter>src\Cleanable</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Cleanable\graffiti.cpp">
+      <Filter>headers\Cleanable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -124,6 +127,9 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Cleanable\cleanable.hpp">
+      <Filter>headers\Cleanable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Cleanable\graffiti.hpp">
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
   </ItemGroup>

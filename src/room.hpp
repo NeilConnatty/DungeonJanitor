@@ -7,6 +7,7 @@
 #include "door.hpp"
 //#include "janitor.hpp"
 #include "Cleanable/puddle.hpp"
+#include "Cleanable/graffiti.hpp"
 #include "Cleanable/artifact.hpp"
 #include "Cleanable/cleanable.hpp"
 

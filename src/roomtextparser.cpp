@@ -10,6 +10,7 @@
 #define WALL 'w'
 #define FLOOR 'f'
 #define PUDDLE_ON_GROUND 'p'
+#define GRAFFITI_ON_WALL 'g'
 #define ARTIFACT 'a'
 #define JANITOR 'j'
 #define HERO 'h'
@@ -77,6 +78,15 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line)
       tile_dim = Floor::get_dimensions();
       x = x + tile_dim.x;
     }
+	else if (ch == GRAFFITI_ON_WALL)
+	{
+		vec2 pos = { x, y };
+		cleanable_pos.push_back(make_pair(Cleanable::types::GRAFFITI, pos));
+		edge = TOP;
+		wall_pairs.push_back({ { x, y }, edge });
+		tile_dim = Wall::get_dimensions(edge);
+		x = x + tile_dim.x;
+	}
     else if (ch == ARTIFACT) // At most one per room
     {
         has_artifact = true;

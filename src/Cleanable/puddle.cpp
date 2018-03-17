@@ -17,7 +17,7 @@ bool Puddle::load_texture()
 {
 	if (!get_texture().is_valid())
 	{
-		if (!puddle_texture.load_from_file(textures_path("d1_cleanable_puddle-l.png")))
+		if (!puddle_texture.load_from_file(dungeon1_textures_path("d1_cleanable_puddle-l.png")))
 		{
 			fprintf(stderr, "Failed to load puddle texture\n");
 			return false;

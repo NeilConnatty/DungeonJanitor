@@ -138,6 +138,16 @@ bool Room::add_cleanables(vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 				}
 				m_cleanables.emplace_back(p);
 			}
+			else if (cleanable.first == Cleanable::types::GRAFFITI)
+			{
+				Graffiti* g = new Graffiti();
+				if (!g->init(cleanable.second))
+				{
+					return false;
+				}
+				m_cleanables.emplace_back(g);
+
+			}
 		}
 	}
   return true;
