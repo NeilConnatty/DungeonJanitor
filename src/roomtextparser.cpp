@@ -5,6 +5,13 @@
 #include <fstream>
 #include <string>
 
+#ifdef _MSC_VER
+#include <windows.h>
+#else
+#include <sys/types.h>
+#include <dirent.h>
+#endif
+
 // Characters
 #define SPACE ' '
 #define WALL 'w'
@@ -264,34 +271,39 @@ struct SubRenderable : public Renderable
 // this function design is pulled from http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
 void read_directory(const char* dirname, std::vector<std::string>& vec)
 {
-  /* this part of the code had to be reverted, as it had a dependency on
-  std::filesystem that wasn't building on mac. keeping it for hopefully
-  the future.
-
-  struct path_leaf_string
+#ifdef _MSC_VER
+  std::string pattern(dirname);
+  pattern.append("\\*");
+  WIN32_FIND_DATA data;
+  HANDLE hFind;
+  if ((hFind = FindFirstFile(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE) 
   {
-    std::string operator()(const std::experimental::filesystem::directory_entry& entry) const
+    do 
     {
-      return entry.path().relative_path().string();
-    }
-  };
-
-  std::experimental::filesystem::path p(dirname);
-  std::experimental::filesystem::directory_iterator start(p);
-  std::experimental::filesystem::directory_iterator end;
-  std::transform(start, end, std::back_inserter(vec), path_leaf_string());
-  */
+      std::string str(room_path());
+      str.append(data.cFileName);
+      vec.push_back(str.c_str());
+    } 
+    while (FindNextFile(hFind, &data) != 0);
+    FindClose(hFind);
+  }
+#else
+  DIR* dirp = opendir(dirname);
+  struct dirent * dp;
+  while ((dp = readdir(dirp)) != NULL) 
+  {
+    std::string str(room_path());
+    str.append(dp->d_name);
+    vec.push_back(str.c_str());
+  }
+  closedir(dirp);
+#endif // _MSC_VER
 }
 
 DungeonParser::DungeonParser() :
   m_room_files()
 {
-  //read_directory(room_path(""), m_room_files);
-
-  m_room_files.emplace_back(room_path("1.rm"));
-  m_room_files.emplace_back(room_path("2.rm"));
-  m_room_files.emplace_back(room_path("3.rm"));
-  m_room_files.emplace_back(room_path("4.rm"));
+  read_directory(room_path(""), m_room_files);
 }
 
 bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, const char* filename, Dungeon& dungeon)
@@ -391,30 +403,11 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
       {
         // do nothing! We let the offset increase
       }
-      else if (ch == ROOM)
-      {
-        rooms.emplace_back(new Room);
-        rooms.back()->init(offset*2.f, HALLWAY_ROOM);
-        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num_rooms].c_str()))
-        {
-          return false;
-        }
-        rooms.back()->setRoomID(num_rooms);
-
-        if (!add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway))
-        {
-          //error
-          return false;
-        }
-
-        ++num_rooms;
-        // TODO: change room type to be classroom, office, or bathroom
-      }
       else
       {
-        /* this part of the code had to be reverted, as it had a dependency on
-        std::filesystem that wasn't building on mac. keeping it for hopefully
-        the future.
+        // this part of the code had to be reverted, as it had a dependency on
+        //std::filesystem that wasn't building on mac. keeping it for hopefully
+        //the future.
 
         std::string str;
         size_t num;
@@ -436,7 +429,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
 
         rooms.emplace_back(new Room);
         rooms.back()->init(offset*2.f);
-        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num-1].c_str()))
+        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num+1].c_str()))
         {
           return false;
         }
@@ -450,13 +443,6 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
 
         ++num_rooms;
         // TODO: change room type to be classroom, office, or bathroom
-        */
-
-        fprintf(stderr,
-          "Error parsing room file. Invalid character %c at line %d, "
-          "column %d.\n",
-          ch, (int)(row + 1), (int)(column + 1));
-        return false;
       }
       
       offset.x += ROOM_X_OFFSET;      
