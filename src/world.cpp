@@ -135,8 +135,8 @@ bool World::init_creatures()
 	glfwGetFramebufferSize(m_window, &w, &h);
 	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
 	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
-  m_janitor.set_current_room(m_dungeon.janitor_start_room);
-  m_janitor.set_dungeon(&m_dungeon);
+	m_janitor.set_current_room(m_dungeon.janitor_start_room);
+	m_janitor.set_dungeon(&m_dungeon);
 	if (!m_janitor.init(janitor_position))
 	{
 		fprintf(stderr, "Failed to init Janitor.\n");
@@ -144,6 +144,19 @@ bool World::init_creatures()
 	}
 	m_janitor.set_scale({ 3.f, 3.f });
 
+	vec2 boss_position = get_world_coords_from_room_coords(m_dungeon.boss_room_position, m_dungeon.boss_start_room->transform, m_dungeon.transform);
+	if (!m_boss.init(boss_position))
+	{
+		fprintf(stderr, "Failed to init Boss. \n");
+		return false;
+	}
+	m_boss.set_scale({ 3.f , 3.f });
+
+	return true;
+}
+
+bool World::init_hero()
+{
 	vec2 hero_position = get_world_coords_from_room_coords(m_dungeon.hero_room_position, m_dungeon.hero_start_room->transform, m_dungeon.transform);
 	m_hero.setRoom(m_dungeon.hero_start_room);
 	m_hero.setDungeon(&m_dungeon);
@@ -155,16 +168,9 @@ bool World::init_creatures()
 	}
 	m_hero.set_scale({ 3.f, 3.f });
 	m_hero.setAllRooms(&m_dungeon.get_rooms());
-
-	vec2 boss_position = get_world_coords_from_room_coords(m_dungeon.boss_room_position, m_dungeon.boss_start_room->transform, m_dungeon.transform);
-	if (!m_boss.init(boss_position))
-	{
-		fprintf(stderr, "Failed to init Boss. \n");
-		return false;
-	}
-	m_boss.set_scale({ 3.f , 3.f });
-
+	m_dungeon.spawn_hero();
 	return true;
+
 }
 
 // Releases all the associated resources
@@ -193,11 +199,21 @@ bool World::update(float elapsed_ms)
   if (!game_is_over)
   {
 	  m_janitor.update(elapsed_ms);
-	  m_hero.update(elapsed_ms);
 	  m_boss.update(elapsed_ms);
 	  m_dungeon.update(elapsed_ms);
 
 	  m_janitor.check_movement();
+	  if (m_dungeon.hero_has_spawned())
+	  {
+		  m_hero.update(elapsed_ms);
+	  }
+	  else if (m_dungeon.should_spawn_hero())
+	  {
+		  if (!init_hero())
+		  {
+			  return false;
+		  }
+	  }
   }
   else 
   {

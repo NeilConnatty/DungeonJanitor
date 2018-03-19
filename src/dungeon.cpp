@@ -41,7 +41,9 @@ bool Dungeon::init()
       boss_room_position = room->get_boss_spawn_loc();
     }
   }
-  m_hero_timer = 180000.f;
+  m_hero_timer = 180000.f; // Three minutes in milliseconds
+  m_should_spawn_hero = false;
+  m_hero_has_spawned = false;
   return true;
 }
 
@@ -96,7 +98,15 @@ void Dungeon::activate_artifact()
 
 void Dungeon::update_current(float ms)
 {
-	m_hero_timer -= ms;
+	if (!m_hero_has_spawned)
+	{
+		m_hero_timer -= ms;
+
+		if (m_hero_timer < 0)
+		{
+			m_should_spawn_hero = true;
+		}
+	}
 
 }
 
@@ -173,4 +183,19 @@ string Dungeon::get_hero_timer()
 		seconds_str = "0" + seconds_str;
 	}
 	return  minutes_str + ":" + seconds_str;
+}
+
+bool Dungeon::should_spawn_hero()
+{
+	return m_should_spawn_hero;
+}
+
+bool Dungeon::hero_has_spawned()
+{
+	return m_hero_has_spawned;
+}
+
+void Dungeon::spawn_hero()
+{
+	m_hero_has_spawned = true;
 }
