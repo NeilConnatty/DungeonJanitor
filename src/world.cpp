@@ -218,6 +218,7 @@ void World::draw()
 
   // Updating window title with points
   std::stringstream title_ss;
+  title_ss << "Hero Arrival In: " << m_dungeon.get_hero_timer();
   glfwSetWindowTitle(m_window, title_ss.str().c_str());
 
   // Clearing backbuffer

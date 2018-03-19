@@ -41,7 +41,7 @@ bool Dungeon::init()
       boss_room_position = room->get_boss_spawn_loc();
     }
   }
-
+  m_hero_timer = 180000.f;
   return true;
 }
 
@@ -96,6 +96,8 @@ void Dungeon::activate_artifact()
 
 void Dungeon::update_current(float ms)
 {
+	m_hero_timer -= ms;
+
 }
 
 void Dungeon::update_children(float ms)
@@ -151,4 +153,13 @@ void Dungeon::add_adjacency(int roomID, Room::adjacent_room adj)
     m_adjacency_map.emplace(roomID, std::vector<Room::adjacent_room>());
     m_adjacency_map.at(roomID).push_back(adj);
   }
+}
+
+string Dungeon::get_hero_timer()
+{
+	double minutesRemainder = (m_hero_timer) / 60000;
+	int minutes = minutesRemainder;
+	double secondsRemainder = (minutesRemainder - minutes) * 60;
+	int seconds = secondsRemainder;
+	return to_string(minutes) + ":" + to_string(seconds);
 }
