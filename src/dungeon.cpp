@@ -161,5 +161,16 @@ string Dungeon::get_hero_timer()
 	int minutes = minutesRemainder;
 	double secondsRemainder = (minutesRemainder - minutes) * 60;
 	int seconds = secondsRemainder;
-	return to_string(minutes) + ":" + to_string(seconds);
+	string minutes_str = to_string(minutes);
+	string seconds_str = to_string(seconds);
+
+	if (minutes <= 0 && seconds < 0)
+	{
+		return "0:00";
+	}
+	if (seconds < 10)
+	{
+		seconds_str = "0" + seconds_str;
+	}
+	return  minutes_str + ":" + seconds_str;
 }
