@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
+#include "healthbar.hpp"
 
 #include <vector>
 #include <unordered_map>
@@ -49,5 +50,6 @@ private:
 	vector<std::unique_ptr<Room>> m_rooms;
 	vector<std::unique_ptr<Door>> m_doors;
 	unordered_map<int, vector<Room::adjacent_room>>     m_adjacency_map;
+	HealthBar m_healthBar;
 };
 

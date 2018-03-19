@@ -61,6 +61,9 @@
     <ClCompile Include="..\src\gameover.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\healthbar.cpp">
+      <Filter>src\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -120,6 +123,9 @@
     <ClInclude Include="..\src\gameover.hpp">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\healthbar.hpp">
+      <Filter>headers\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -151,6 +157,12 @@
     </Filter>
     <Filter Include="headers\Creatues">
       <UniqueIdentifier>{bc2e40af-2c4d-4aab-869a-f03d58f094fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\UI">
+      <UniqueIdentifier>{cd4c2f91-b894-4270-bdfd-59bf54dcbc6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers\UI">
+      <UniqueIdentifier>{803b344d-cd74-430a-845e-aab09a76f77e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

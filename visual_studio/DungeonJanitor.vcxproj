@@ -509,6 +509,7 @@
     <ClCompile Include="..\src\floor.cpp" />
     <ClCompile Include="..\src\gameobject.cpp" />
     <ClCompile Include="..\src\gameover.cpp" />
+    <ClCompile Include="..\src\healthbar.cpp" />
     <ClCompile Include="..\src\hero.cpp" />
     <ClCompile Include="..\src\janitor.cpp" />
     <ClCompile Include="..\src\main.cpp" />
@@ -532,6 +533,7 @@
     <ClInclude Include="..\src\floor.hpp" />
     <ClInclude Include="..\src\gameobject.hpp" />
     <ClInclude Include="..\src\gameover.hpp" />
+    <ClInclude Include="..\src\healthbar.hpp" />
     <ClInclude Include="..\src\hero.hpp" />
     <ClInclude Include="..\src\janitor.hpp" />
     <ClInclude Include="..\src\pathfinder.hpp" />
