@@ -214,6 +214,10 @@ bool World::update(float elapsed_ms)
 			  return false;
 		  }
 	  }
+	  if (m_hero.is_in_boss_room())
+	  {
+		  game_over();
+	  }
   }
   else 
   {
