@@ -42,6 +42,8 @@ bool Dungeon::init()
     }
   }
 
+  m_healthBar.init();
+
   return true;
 }
 

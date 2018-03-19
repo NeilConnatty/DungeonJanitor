@@ -11,7 +11,7 @@ using namespace std;
 
 class HealthBar : public GameObject
 {
-	float m_percent_filled;
+
 	static Texture m_health_texture, m_bar_texture;
 
 
@@ -30,5 +30,10 @@ public:
 	void update_current(float ms)override;
 	void update_children(float ms)override;
 	void set_percent_filled(float percent_filled) { m_percent_filled = percent_filled; }
+
+	bool validate_textures();
+
+private:
+	float m_percent_filled;
 
 };
