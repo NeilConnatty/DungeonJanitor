@@ -40,27 +40,27 @@ bool Wall::init(vec2 position, wall_edge edge)
 {
 	if (!bottom_vert_t.is_valid())
 	{
-		if (!bottom_vert_t.load_from_file(textures_path("dungeon1/temp/bottom_vert.png")))
+		if (!bottom_vert_t.load_from_file(textures_path("dungeon1/d1_walltile_cement-strip-1.png")))
 		{
 			fprintf(stderr, "Failed to load wall texture\n");
 			return false;
 		}
-    if (!bottom_t.load_from_file(textures_path("dungeon1/temp/topbot.png")))
+    if (!bottom_t.load_from_file(textures_path("dungeon1/d1_walltile_cement.png")))
     {
       fprintf(stderr, "Failed to load wall texture\n");
       return false;
     }
-    if (!top_t.load_from_file(textures_path("dungeon1/temp/topbot.png")))
+    if (!top_t.load_from_file(textures_path("dungeon1/d1_walltile_cement.png")))
     {
       fprintf(stderr, "Failed to load wall texture\n");
       return false;
     }
-    if (!vert_t.load_from_file(textures_path("dungeon1/temp/vert.png")))
+    if (!vert_t.load_from_file(textures_path("dungeon1/d1_walltile_cement-top-v-1.png")))
     {
       fprintf(stderr, "Failed to load wall texture\n");
       return false;
     }
-    if (!corner_t.load_from_file(textures_path("dungeon1/temp/top_vert.png")))
+    if (!corner_t.load_from_file(textures_path("dungeon1/d1_walltile_cement-vert.png")))
     {
       fprintf(stderr, "Failed to load wall texture\n");
       return false;

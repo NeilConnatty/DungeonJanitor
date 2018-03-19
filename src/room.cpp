@@ -9,7 +9,7 @@ Room::Room() {}
 Room::~Room() {}
 
 // Creates a room
-bool Room::init(vec2 position) 
+bool Room::init(vec2 position, room_type type) 
 {
   m_position = position;
   m_scale = {2.f, 2.f};
@@ -18,11 +18,12 @@ bool Room::init(vec2 position)
   m_has_janitor_spawn_loc = false;
   m_BossHere = false;
   m_ArtifactHere = false;
+  m_room_type = type;
 
   return true;
 }
 
-bool Room::init() { return init({0.f, 0.f}); }
+bool Room::init() { return init({0.f, 0.f}, HALLWAY_ROOM); }
 
 // Releases all associated resources
 void Room::destroy() 
@@ -94,7 +95,7 @@ bool Room::add_wall(wall_pair wall)
 bool Room::add_floor(vec2 floor) 
 {
   m_floors.emplace_back();
-  if (!m_floors.back().init(floor)) 
+  if (!m_floors.back().init(floor, m_room_type)) 
   {
     return false;
   }

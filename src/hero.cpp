@@ -21,7 +21,7 @@ bool Hero::init(vec2 position)
 {
 	if (!hero_texture.is_valid())
 	{
-		if (!hero_texture.load_from_file(textures_path("hero_placeholder.png")))
+		if (!hero_texture.load_from_file(textures_path("placeholders/hero_placeholder.png")))
 		{
 			fprintf(stderr, "Failed to load hero texture\n");
 			return false;

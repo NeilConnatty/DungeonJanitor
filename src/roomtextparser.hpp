@@ -35,6 +35,8 @@ private:
 	vector<vec2> puddle_pos;
 	vector<Door::door_pair> door_pairs;
 	vector<Room::wall_pair> wall_pairs;
+
+  room_type room_t;
 };
 
 class DungeonParser

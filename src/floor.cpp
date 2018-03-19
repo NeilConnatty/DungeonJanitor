@@ -2,7 +2,7 @@
 
 #include "floor.hpp"
 
-Texture Floor::floor_texture;
+Texture Floor::floor_textures[NUM_ROOM_TYPES];
 
 vec2 Floor::get_dimensions()
 {
@@ -15,25 +15,44 @@ Floor::~Floor() {}
 
 bool Floor::init()
 {
-	return init({ 0.f, 0.f });
+	return init({ 0.f, 0.f }, HALLWAY_ROOM);
 }
 
-bool Floor::init(vec2 position)
+bool Floor::init(vec2 position, room_type type)
 {
-	if (!floor_texture.is_valid())
+	if (!floor_textures[0].is_valid())
 	{
-		if (!floor_texture.load_from_file(textures_path("dungeon1/temp/temp_floor.png")))
+    if (!floor_textures[HALLWAY_ROOM].load_from_file(textures_path("dungeon1/d1_floortile_hall-l-1.png")))
 		{
 			fprintf(stderr, "Failed to load floor texture\n");
 			return false;
 		}
+
+    if (!floor_textures[BATH_ROOM].load_from_file(textures_path("dungeon1/d1_floortile_bathroom-1.png")))
+    {
+      fprintf(stderr, "Failed to load floor texture\n");
+      return false;
+    }
+
+    if (!floor_textures[CLASS_ROOM].load_from_file(textures_path("dungeon1/d1_floortile_class-1.png")))
+    {
+      fprintf(stderr, "Failed to load floor texture\n");
+      return false;
+    }
+
+    if (!floor_textures[OFFICE_ROOM].load_from_file(textures_path("dungeon1/d1_floortile_office-l-1.png")))
+    {
+      fprintf(stderr, "Failed to load floor texture\n");
+      return false;
+    }
 	}
 	
 	m_position = position;
+  m_room_type = type;
 
 	// The position corresponds to the center of the texture
-	float wr = floor_texture.width * 0.5f;
-	float hr = floor_texture.height * 0.5f;
+	float wr = floor_textures[m_room_type].width * 0.5f;
+	float hr = floor_textures[m_room_type].height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -121,7 +140,7 @@ void Floor::draw_current(const mat3& projection, const mat3& current_transform)
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, floor_texture.id);
+	glBindTexture(GL_TEXTURE_2D, floor_textures[m_room_type].id);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Setting uniform values to the currently bound program

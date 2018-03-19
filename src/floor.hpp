@@ -6,7 +6,7 @@
 class Floor : public GameObject
 {
 private:
-	static Texture floor_texture;
+	static Texture floor_textures[NUM_ROOM_TYPES];
 
 public:
   static vec2 get_dimensions();
@@ -15,7 +15,7 @@ public:
 	~Floor();
 
 	bool	init();
-	bool	init(vec2 position);
+	bool	init(vec2 position, room_type type);
 	void	destroy();
 	
 private:
@@ -23,4 +23,7 @@ private:
 	void update_children(float ms) override {}
 	void draw_current(const mat3& projection, const mat3& current_transform) override;
 	void draw_children(const mat3& projection, const mat3& current_transform) override;
+
+private:
+  room_type m_room_type;
 };
