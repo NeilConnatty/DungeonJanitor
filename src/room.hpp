@@ -54,23 +54,28 @@ public:
     vector<Wall>& get_walls();
     vector<Puddle>&  get_cleanables();
 
-    double getReward() const;
+    
     void setReward(double reward);
+	double getReward() const;
+
     bool has_hero_spawn_loc() const;
-    vec2 get_hero_spawn_loc() const;
     bool has_boss_spawn_loc() const;
-    vec2 get_boss_spawn_loc() const;
-    bool has_janitor_spawn_loc() const;
+	bool has_janitor_spawn_loc() const;
+	bool containsBoss() const;
+	bool containsUndiscoveredArtifact();
+
+	vec2 get_hero_spawn_loc() const;
+	vec2 get_boss_spawn_loc() const;
     vec2 get_janitor_spawn_loc() const;
-    bool containsBoss() const;
-    bool containsUndiscoveredArtifact();
+    
     void setBossInRoom(bool bossInRoom);
     void deactivate_artifact();
-	  Artifact* get_artifact();
+	Artifact* get_artifact();
 		
-    int get_num_cleanables();
-    float get_clean_percent();
-    void decrement_cleanables();
+	void increment_cleaned_cleanables(); // Dana -- needs to be plugged in
+	int get_number_total_cleanables();
+	int get_number_cleaned_cleanables();
+    
 
     void set_room_type(room_type type) { m_room_type = type; }
 
@@ -92,8 +97,8 @@ private:
     bool m_has_janitor_spawn_loc;
 
     int m_ID; // unique room id
-    int m_num_cleanables;
-    int m_total_cleanables;
+    int m_num_cleaned_cleanables; 
+    int m_total_cleanables; // Dana -- needs to be initialized
     double heroRewardValue;
 
     vec2 m_hero_spawn_loc;

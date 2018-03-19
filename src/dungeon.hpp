@@ -34,7 +34,9 @@ private:
 	void draw_children(const mat3 &projection,
                      const mat3 &current_transform) override;
 
-	void test_value_iteration(); // for testing Jay
+	float get_percent_dungeon_cleaned();
+
+	//void test_value_iteration(); // for testing Jay
 
 public:
 	Room* janitor_start_room;

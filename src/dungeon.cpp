@@ -128,6 +128,20 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
   }
 }
 
+float Dungeon::get_percent_dungeon_cleaned()
+{
+	float cleaned = 0;
+	float total = 0;
+
+	for (std::unique_ptr<Room>& room : m_rooms)
+	{
+		cleaned = cleaned + room->get_number_cleaned_cleanables();
+		total = total + room->get_number_total_cleanables();
+	}
+	
+	return cleaned/total;
+}
+
 bool Dungeon::add_doors(vector<std::unique_ptr<Door>>& doors)
 {
   for (std::unique_ptr<Door>& door : doors)
