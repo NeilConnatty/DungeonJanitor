@@ -13,14 +13,8 @@ void HealthBar::destroy()
 {
 	m_health.destroy();
 	m_bar.destroy();
-	
 }
 
-void HealthBar::draw_current(const mat3 & projection, const mat3 & current_transform)
-{
-	//draw_healthbar_helper(projection, current_transform, &m_health_texture);
-	//draw_healthbar_helper(projection, current_transform, &m_bar_texture);
-}
 
 void HealthBar::draw_children(const mat3 & projection, const mat3 & current_transform)
 {
@@ -36,60 +30,12 @@ void HealthBar::update_children(float ms)
 {
 	m_health.update(ms);
 	m_bar.update(ms);
-	//set_scale({ 1,1 });
-	//m_bar.set_scale({ 0.5,1 });
-	
-	//m_health.update_current(ms);
-	//m_bar.update_current(ms);
 }
 
 void HealthBar::set_percent_filled(float percent_filled)
 {
 	m_health.m_percent_filled = percent_filled;
 }
-
-void HealthBar::draw_healthbar_helper(const mat3& projection, const mat3& current_transform, Texture* texture)
-{
-	// Setting shaders
-	glUseProgram(effect.program);
-
-	// Enabling alpha channel for textures
-	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_DEPTH_TEST);
-
-	// Getting uniform locations for glUniform* calls
-	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
-	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
-	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-
-	// Setting vertices and indices
-	glBindVertexArray(mesh.vao);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-
-	// Input data location as in the vertex buffer
-	GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
-	GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
-	glEnableVertexAttribArray(in_position_loc);
-	glEnableVertexAttribArray(in_texcoord_loc);
-	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
-	glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
-
-	// Enabling and binding texture to slot 0
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture->id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	// Setting uniform values to the currently bound program
-	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
-	float color[] = { 1.f, 1.f, 1.f };
-	glUniform3fv(color_uloc, 1, color);
-	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
-
-	// Drawing!
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
-}
-
 
 bool HealthBar::Health::init()
 {
