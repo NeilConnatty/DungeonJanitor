@@ -428,7 +428,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
         }
 
         rooms.emplace_back(new Room);
-        rooms.back()->init(offset*2.f);
+        rooms.back()->init(offset*2.f, HALLWAY_ROOM);
 #ifdef _MSC_VER
         if (!roomParser.parseRoom(*rooms.back(), m_room_files[num+1].c_str()))
 #else
