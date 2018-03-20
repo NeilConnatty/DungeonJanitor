@@ -113,6 +113,7 @@ void Dungeon::update_children(float ms)
   }
 
   m_healthBar.set_percent_filled(get_percent_dungeon_cleaned());
+  m_healthBar.update(ms);
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)

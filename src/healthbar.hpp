@@ -14,10 +14,48 @@ class HealthBar : public GameObject
 
 	static Texture m_health_texture, m_bar_texture;
 
+private:
+	class Health : public GameObject
+	{
+	public:
+
+		// Creates all the associated render resources and default transform
+		bool init();
+
+		// Releases all associated resources
+		void destroy();
+
+		void draw_current(const mat3& projection, const mat3& current_transform)override;
+		void draw_children(const mat3& projection, const mat3& current_transform)override {};
+		void update_current(float ms)override;
+		void update_children(float ms)override {};
+
+		bool validate_textures();
+		float m_percent_filled;
+
+	};
+	class Bar : public GameObject
+	{
+	public:
+		// Creates all the associated render resources and default transform
+		bool init();
+
+		// Releases all associated resources
+		void destroy();
+
+		void draw_current(const mat3& projection, const mat3& current_transform)override;
+		void draw_children(const mat3& projection, const mat3& current_transform)override {};
+		void update_current(float ms)override;
+		void update_children(float ms)override {};
+
+		bool validate_textures();
+		
+		
+	};
 
 public:
-	HealthBar();
-	~HealthBar();
+	HealthBar() {};
+	~HealthBar() {};
 
 	// Creates all the associated render resources and default transform
 	bool init();
@@ -25,15 +63,19 @@ public:
 	// Releases all associated resources
 	void destroy();
 
+	static Texture* get_health_texture() { return &m_health_texture; }
+	static Texture* get_bar_texture() { return &m_bar_texture; }
+
 	void draw_current(const mat3& projection, const mat3& current_transform)override;
 	void draw_children(const mat3& projection, const mat3& current_transform)override;
 	void update_current(float ms)override;
 	void update_children(float ms)override;
-	void set_percent_filled(float percent_filled) { m_percent_filled = percent_filled; }
-
-	bool validate_textures();
+	void set_percent_filled(float percent_filled);
 
 private:
 	float m_percent_filled;
+	Health m_health;
+	Bar m_bar;
 
+	void draw_healthbar_helper(const mat3& projection, const mat3& current_transform, Texture* texture);	
 };
