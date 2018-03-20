@@ -65,7 +65,7 @@
       <Filter>src\Cleanable</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Cleanable\graffiti.cpp">
-      <Filter>headers\Cleanable</Filter>
+      <Filter>src\Cleanable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
