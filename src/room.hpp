@@ -43,7 +43,7 @@ public:
     ~Room();
 
     bool init();
-    bool init(vec2 position);
+    bool init(vec2 position, room_type type);
     void destroy();
 
     bool add_wall(wall_pair wall);
@@ -77,6 +77,8 @@ public:
     float get_clean_percent();
     void decrement_cleanables();
 	void clean(Janitor* janitor, mat3 dungeon_transform);
+
+    void set_room_type(room_type type) { m_room_type = type; }
     int getRoomID() const { return m_ID; };
     void setRoomID(int id);
 
@@ -104,6 +106,8 @@ private:
     vec2 m_janitor_spawn_loc;
     
     Artifact		m_artifact;
+
+    room_type m_room_type;
 
     vector<Floor>		          m_floors;
     vector<Wall>		          m_walls;

@@ -45,6 +45,15 @@ float det(mat3 m);
 
 vec2 get_world_coords_from_room_coords(vec2 room_coords, mat3 room_transform, mat3 dungeon_transform);
 
+#define NUM_ROOM_TYPES 3
+enum room_type
+{
+  HALLWAY_ROOM = 0,
+  BATH_ROOM = 1,
+  CLASS_ROOM = 2,
+  OFFICE_ROOM = 3
+};
+
 enum wall_edge
 {
   NONE      = 0b000,
