@@ -117,8 +117,13 @@ bool World::init(vec2 screen)
 		return false;
 	}
   
-	// Make camera follow janitor
-	m_camera.follow_object(&m_janitor);
+  int w, h;
+  glfwGetWindowSize(m_window, &w, &h);
+  if (!m_camera.init(w, h))
+  {
+    fprintf(stderr, "failed to init Camera. \n");
+    return false;
+  }
   
 	return true;
 }
@@ -131,9 +136,7 @@ bool World::init_creatures()
     return false;
   }
 
-	int w, h;
-	glfwGetFramebufferSize(m_window, &w, &h);
-	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
+	m_dungeon.draw(m_camera.get_projection(), m_camera.get_transform());
 	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
   m_janitor.set_current_room(m_dungeon.janitor_start_room);
   m_janitor.set_dungeon(&m_dungeon);
@@ -143,6 +146,7 @@ bool World::init_creatures()
 		return false;
 	}
 	m_janitor.set_scale({ 3.f, 3.f });
+  m_camera.follow_object(&m_janitor);
 
 	vec2 hero_position = get_world_coords_from_room_coords(m_dungeon.hero_room_position, m_dungeon.hero_start_room->transform, m_dungeon.transform);
 	m_hero.setRoom(m_dungeon.hero_start_room);
@@ -187,16 +191,13 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-  int w, h;
-  glfwGetFramebufferSize(m_window, &w, &h);
-  vec2 screen = {(float)w, (float)h};
   if (!game_is_over)
   {
 	  m_janitor.update(elapsed_ms);
 	  m_hero.update(elapsed_ms);
 	  m_boss.update(elapsed_ms);
 	  m_dungeon.update(elapsed_ms);
-
+    m_camera.update(elapsed_ms);
 	  m_janitor.check_movement();
   }
   else 
@@ -228,8 +229,8 @@ void World::draw()
   glClearDepth(1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  mat3 projection_2D = m_camera.get_projection(w, h);
-  mat3 transform = m_camera.get_transform(w, h);
+  mat3 projection_2D = m_camera.get_projection();
+  mat3 transform = m_camera.get_transform();
 
   // Drawing entities
   if (!game_is_over) 
@@ -238,6 +239,7 @@ void World::draw()
 	  m_janitor.draw(projection_2D, transform);
 	  m_hero.draw(projection_2D, transform);
 	  m_boss.draw(projection_2D, transform);
+    m_camera.draw(projection_2D, transform);
   }
   else
   {
@@ -319,8 +321,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
 	{
 		game_is_over = false;
-		int w, h;
-		glfwGetWindowSize(m_window, &w, &h);
 		//Destructor functions for game objects go below:
 		m_dungeon.destroy();
 		m_janitor.destroy();
