@@ -129,13 +129,21 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
     }
     else if (ch == DOOR)
     {
-      if (first_line || last_line)
+      if (first_line)
       {
-        door_pairs.push_back(std::make_pair<vec2, Door::door_dir>({ x,y }, Door::HORIZONTAL));
+        door_infos.push_back({ {x,y}, Door::VERTICAL, NORTH , false });
+      }
+      else if (last_line)
+      {
+        door_infos.push_back({ { x,y }, Door::VERTICAL, SOUTH, false });
+      }
+      else if (i == 0)
+      {
+        door_infos.push_back({ {x,y}, Door::HORIZONTAL, WEST, false });
       }
       else
       {
-        door_pairs.push_back(std::make_pair<vec2, Door::door_dir>({ x,y }, Door::VERTICAL));
+        door_infos.push_back({ { x,y }, Door::HORIZONTAL, EAST, false });
       }
 
       tile_dim = Floor::get_dimensions();
@@ -200,17 +208,13 @@ void RoomParser::clearPositions()
   wall_pairs.clear();
   floor_pos.clear();
   puddle_pos.clear();
-  door_pairs.clear();
+  door_infos.clear();
 }
 
-bool RoomParser::populateRoomWalls(Room &room)
-{
-  return room.add_walls(wall_pairs);
-}
-
-bool RoomParser::populateRoomExceptWalls(Room &room) 
+bool RoomParser::populateRoom(Room &room) 
 {
   return (room.add_floors(floor_pos) && room.add_cleanables(puddle_pos) &&
+          room.add_walls(wall_pairs) &&
           room.add_artifact(has_artifact, artifact_pos) &&
           room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
           room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&
@@ -246,7 +250,7 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
       last_line = true;
     }
 
-    if (!parseLine(lines[i], y, first_line, last_line)) 
+    if (!parseLine(lines[i], y, first_line, last_line))
     {
       fprintf(stderr, "Error parsing room file: %s.\n", filename);
       return false;
@@ -261,18 +265,11 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
     {
       y = y + 25.f;
     }
+  }
 
     room.set_room_type(room_t);
 
-    if (!populateRoomWalls(room))
-    {
-      fprintf(stderr, "Issue parsing room file: %s.\n", filename);
-      return false;
-    }
-    wall_pairs.clear();
-  }
-
-  if (!populateRoomExceptWalls(room))
+  if (!populateRoom(room))
   {
     fprintf(stderr, "Issue parsing room file: %s.\n", filename);
     return false;
@@ -341,11 +338,11 @@ bool DungeonParser::parseDungeon(std::vector<std::unique_ptr<Room>>& rooms, cons
   return parseLines(lines, rooms, dungeon);
 }
 
-void transform_positions(vector<Door::door_pair>& positions, SubRenderable& rend)
+void transform_positions(vector<door_info>& infos, SubRenderable& rend)
 {
-  for (Door::door_pair& pos : positions)
+  for (door_info& door : infos)
   {
-    pos.first = get_world_coords_from_room_coords(pos.first, rend.transform, identity_matrix);
+    door.pos = get_world_coords_from_room_coords(door.pos, rend.transform, identity_matrix);
   }
 }
 
@@ -353,33 +350,83 @@ bool add_doors_to_dungeon(
     std::unordered_map<room_id, Room *> &room_map,
     std::unordered_map<room_id, std::vector<door_info> &> &door_map,
     std::unordered_map<room_id, std::vector<room_pair>> &room_adjacency_map,
-    Dungeon &dungeon, vec2 offset, int num_rooms, Room *hallway) 
+    Dungeon &dungeon, int num_rooms, Room *hallway) 
 {
   std::vector<std::unique_ptr<Door>> doors;
 
-  // hack to add the door to dungeon
-  SubRenderable rend;
-  rend.transform_begin();
-  rend.transform_translate(offset*2.f);
-  rend.transform_scale({ 2.f, 2.f });
-  rend.transform_end();
-
-  transform_positions(door_pos, rend);
-
-  for (Door::door_pair& pair : door_pos)
+  for (std::pair<const room_id, Room*>& rm_pair : room_map)
   {
-    doors.emplace_back(new Door);
-    if (!doors.back()->init({ pair.first.x, pair.first.y + 35.f }, pair.second))
-    {
-      fprintf(stderr, "Error adding doors to dungeon.\n");
-      return false;
-    }
-    doors.back()->set_scale({ 2.f, 2.f });
-  }
+    // hack to add the door to dungeon
+    SubRenderable rend;
+    rend.transform_begin();
+    rend.transform_translate(rm_pair.second->get_pos());
+    rend.transform_scale({ 2.f, 2.f });
+    rend.transform_end();
 
-  Door* the_door = doors[0].get(); // for now there's only one door for each room, this will hopefully change in the future
-  dungeon.add_adjacency(roomID, { hallway, the_door }); // adjacency going from room -> hallway
-  dungeon.add_adjacency(-1, { room, the_door }); // adjacency going from hallway -> room (-1 is special id for hallway)
+    std::vector<room_pair>& adj_rooms = room_adjacency_map.at(rm_pair.first);
+    std::vector<door_info>& door_infos = door_map.at(rm_pair.first);
+
+    transform_positions(door_infos, rend);
+
+    for (door_info& door : door_infos)
+    {
+      Door* door_ptr;
+
+      bool has_adj_room = false;
+      bool dont_add_door = false;
+      for (room_pair& adj_room : adj_rooms)
+      {
+        if (adj_room.second == door.loc)
+        {
+          if (door.loc == SOUTH || door.loc == WEST)
+          {
+            dont_add_door = true;
+                        // in this case we don't want to add this door.
+                        // We'll let the room to the bottom/left do it for us.
+                        // This is arbitrary, but makes sure that doors don't
+                        // get added to the dungeon twice
+          }
+          else
+          {
+            door_ptr = new Door;
+            doors.emplace_back(door_ptr);
+            if (!doors.back()->init({ door.pos.x, door.pos.y + 35.f }, door.dir))
+            {
+              fprintf(stderr, "Error adding doors to dungeon.\n");
+              return false;
+            }
+            door_ptr->set_scale({ 2.f, 2.f });
+
+            Room* adj_room_ptr = room_map.at(adj_room.first);
+            dungeon.add_adjacency(rm_pair.first, { adj_room_ptr, door_ptr });
+            dungeon.add_adjacency(adj_room.first, { rm_pair.second, door_ptr });
+            has_adj_room = true;
+          }
+          break;
+        }
+      }
+
+      if (dont_add_door)
+      {
+        continue; // we can continue on the the next door
+      }
+
+      if (!has_adj_room)
+      {
+        door_ptr = new Door;
+        doors.emplace_back(door_ptr);
+        if (!doors.back()->init({ door.pos.x, door.pos.y + 35.f }, door.dir))
+        {
+          fprintf(stderr, "Error adding doors to dungeon.\n");
+          return false;
+        }
+        door_ptr->set_scale({ 2.f, 2.f });
+
+        dungeon.add_adjacency(rm_pair.first, { hallway, door_ptr }); // adjacency going from room -> hallway
+        dungeon.add_adjacency(-1, { rm_pair.second, door_ptr }); // adjacency going from hallway -> room (-1 is special id for hallway)
+      }
+    }
+  }
 
   if (!dungeon.add_doors(doors))
   {
@@ -535,7 +582,8 @@ bool DungeonParser::buildRooms(std::vector<std::string> &lines,
     offset.y += ROOM_Y_OFFSET;
   } // for (; row < lines.size(); ++row)
 
-  if (!add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, &hallway))
+  if (!add_doors_to_dungeon(room_map, door_map, room_adjacency_map, dungeon,
+                            num_rooms, &hallway)) 
   {
     // error
     return false;
