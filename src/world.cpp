@@ -124,6 +124,9 @@ bool World::init(vec2 screen)
     fprintf(stderr, "failed to init Camera. \n");
     return false;
   }
+
+  // Attach health bar to dungeon
+  m_dungeon.setHealthBar(m_camera.getHealthBar());
   
 	return true;
 }

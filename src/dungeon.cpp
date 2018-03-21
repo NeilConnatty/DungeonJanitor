@@ -42,8 +42,6 @@ bool Dungeon::init()
     }
   }
 
-  m_healthBar.init();
-
   return true;
 }
 
@@ -58,6 +56,7 @@ void Dungeon::destroy()
 	{
 		door->destroy();
 	}
+	m_healthBar = NULL;
 }
 
 vector<unique_ptr<Room>>& Dungeon::get_rooms()
@@ -112,8 +111,7 @@ void Dungeon::update_children(float ms)
     door->update(ms);
   }
 
-  m_healthBar.set_percent_filled(get_percent_dungeon_cleaned());
-  m_healthBar.update(ms);
+  m_healthBar->set_percent_filled(get_percent_dungeon_cleaned());
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
@@ -132,8 +130,6 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
   {
     door->draw(projection, current_transform);
   }
-  
-  m_healthBar.draw(projection, current_transform);
 }
 
 float Dungeon::get_percent_dungeon_cleaned()

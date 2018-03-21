@@ -2,6 +2,9 @@
 
 #include "healthbar.hpp"
 
+#define X_POSITION 600 // Should these be based off of the window size?
+#define Y_POSITION 35
+
 Texture HealthBar::m_health_texture; Texture HealthBar::m_bar_texture;
 
 bool HealthBar::init()
@@ -85,6 +88,8 @@ bool HealthBar::Health::init()
 	// Setting initial scale values
 	m_scale.x = 1.f;
 	m_scale.y = 1.f;
+
+	m_position = { X_POSITION, Y_POSITION };
 
 	return true;
 }
@@ -207,6 +212,8 @@ bool HealthBar::Bar::init()
 	// Setting initial scale values
 	m_scale.x = 1.f;
 	m_scale.y = 1.f;
+
+	m_position = { X_POSITION, Y_POSITION };
 
 	return true;
 }
