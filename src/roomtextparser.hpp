@@ -21,8 +21,7 @@ public:
 private:
 	void clearPositions();
 	bool parseLine(string& line, float y, bool first_line, bool last_line);
-	bool populateRoomExceptWalls(Room &room);
-  bool populateRoomWalls(Room &room);
+	bool populateRoom(Room &room);
 
 private:
 
