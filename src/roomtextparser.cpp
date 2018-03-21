@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -297,6 +298,7 @@ void read_directory(const char* dirname, std::vector<std::string>& vec)
     vec.push_back(str.c_str());
   }
   closedir(dirp);
+  std::sort(vec.begin(), vec.end());
 #endif // _MSC_VER
 }
 
@@ -429,11 +431,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
 
         rooms.emplace_back(new Room);
         rooms.back()->init(offset*2.f, HALLWAY_ROOM);
-#ifdef _MSC_VER
         if (!roomParser.parseRoom(*rooms.back(), m_room_files[num+1].c_str()))
-#else
-        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num-1].c_str()))
-#endif // _MSC_VER
         {
           return false;
         }
