@@ -20,6 +20,9 @@ bool Room::init(vec2 position, room_type type)
   m_ArtifactHere = false;
   m_room_type = type;
   m_num_cleaned_cleanables = 0;
+  m_total_cleanables = 0;
+  m_num_activated_artifacts = 0;
+  m_total_artifacts = 0;
 
   return true;
 }
@@ -139,6 +142,8 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
             {
                 return false;
             }
+			
+			m_total_cleanables++;
         }
     }
   return true;
@@ -156,7 +161,12 @@ bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
             return false;
         }
         m_artifact.set_scale({ 0.5f, 0.5f });
+
+		m_total_artifacts++;
     }
+
+	
+
     return true;
 }
 
@@ -183,21 +193,9 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 	return true;
 }
 
-void Room::increment_cleaned_cleanables() { m_num_cleaned_cleanables++; }
-
 std::vector<Wall> &Room::get_walls() { return m_walls; }
 
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
-
-int Room::get_number_total_cleanables()
-{
-	return m_total_cleanables;
-}
-
-int Room::get_number_cleaned_cleanables()
-{
-	return m_num_cleaned_cleanables;
-}
 
 double Room::getReward() const 
 {

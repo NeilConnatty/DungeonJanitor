@@ -72,9 +72,12 @@ public:
     void deactivate_artifact();
 	Artifact* get_artifact();
 		
-	void increment_cleaned_cleanables(); // Dana -- needs to be plugged in
-	int get_number_total_cleanables();
-	int get_number_cleaned_cleanables();
+	void increment_cleaned_cleanables() { m_num_cleaned_cleanables++; } // Dana -- needs to be better plugged in (currently plugged into World)
+	void increment_activated_artifacts() { m_num_activated_artifacts++; } // Dana -- ditto (currently plugged into Dungeon)
+	int get_number_total_cleanables() { return m_total_cleanables; }
+	int get_number_cleaned_cleanables() { return m_num_cleaned_cleanables; }
+	int get_number_total_artifacts() { return m_total_artifacts; }
+	int get_number_activated_artifacts() { return m_num_activated_artifacts; }
     
 
     void set_room_type(room_type type) { m_room_type = type; }
@@ -98,7 +101,9 @@ private:
 
     int m_ID; // unique room id
     int m_num_cleaned_cleanables; 
-    int m_total_cleanables; // Dana -- needs to be initialized
+    int m_total_cleanables;
+	int m_num_activated_artifacts;
+	int m_total_artifacts;
     double heroRewardValue;
 
     vec2 m_hero_spawn_loc;
