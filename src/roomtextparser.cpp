@@ -41,6 +41,25 @@
 #define FLOOR_X_OFFSET 35.f
 #define FLOOR_Y_OFFSET 25.f
 
+enum location
+{
+  NORTH,
+  EAST,
+  SOUTH,
+  WEST
+};
+
+struct door_info
+{
+  vec2 pos;
+  Door::door_dir dir;
+  location loc;
+  bool added;
+};
+
+using room_id = int;
+using room_pair = std::pair<room_id, location>;
+
 void parseWallHelper(size_t &i, std::string &line, wall_edge &edge,
                      vec2 &tile_dim, std::vector<Room::wall_pair> &wall_pairs,
                      bool first_line, bool last_line, float& x, float& y) 
@@ -330,7 +349,11 @@ void transform_positions(vector<Door::door_pair>& positions, SubRenderable& rend
   }
 }
 
-bool add_doors_to_dungeon(vector<Door::door_pair>& door_pos, Dungeon& dungeon, vec2 offset, int roomID, Room* room, Room* hallway)
+bool add_doors_to_dungeon(
+    std::unordered_map<room_id, Room *> &room_map,
+    std::unordered_map<room_id, std::vector<door_info> &> &door_map,
+    std::unordered_map<room_id, std::vector<room_pair>> &room_adjacency_map,
+    Dungeon &dungeon, vec2 offset, int num_rooms, Room *hallway) 
 {
   std::vector<std::unique_ptr<Door>> doors;
 
@@ -367,22 +390,60 @@ bool add_doors_to_dungeon(vector<Door::door_pair>& door_pos, Dungeon& dungeon, v
   return true;
 }
 
-bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms, Dungeon& dungeon)
+bool roomAbove(std::vector<std::string>& lines, size_t row, size_t column)
 {
-  size_t row, column;
-  int num_rooms = 0;
-  vec2 offset = { 0.f,0.f };
-  RoomParser roomParser;
+  return row != 0 && lines[row - 1][column] != HALLWAY && lines[row - 1][column] != EMPTY && lines[row - 1][column] != SPACE;
+}
 
-  rooms.clear();
-  rooms.emplace_back(new Room);
-  Room* hallway = rooms.back().get();
-  hallway->setRoomID(-1);
-  if (!hallway->init())
+bool roomBelow(std::vector<std::string>& lines, size_t row, size_t column)
+{
+  return row < (lines.size() - 1) && lines[row + 1][column] != HALLWAY && lines[row + 1][column] != EMPTY && lines[row + 1][column] != SPACE;
+}
+
+bool roomLeft(std::vector<std::string>& lines, size_t row, size_t column)
+{
+  return column != 0 && lines[row][column - 1] != HALLWAY && lines[row][column - 1] != EMPTY && lines[row][column - 1] != SPACE;
+}
+
+bool roomRight(std::vector<std::string>& lines, size_t row, size_t column)
+{
+  return column < (lines[row].size() - 1) && lines[row][column + 1] != HALLWAY && lines[row][column + 1] != EMPTY && lines[row][column + 1] != SPACE;
+}
+
+bool DungeonParser::addAdjacency(
+    std::unordered_map<room_id, std::vector<room_pair>> &room_adjacency_map,
+    char &adj_ch, room_id id, location loc) 
+{
+  std::string adj_str;
+  room_id adj_num;
+  adj_str += adj_ch; // make sure it's null terminated for atoi
+  adj_num = std::atoi(adj_str.c_str());
+
+  if (!validRoomID(adj_num))
   {
-    fprintf(stderr, "Failed to init hallway room");
+    fprintf(stderr, "Error parsing room file. Invalid character %c. \n ",
+            adj_ch);
     return false;
   }
+
+  auto search = room_adjacency_map.find(id);
+  search->second.emplace_back(adj_num, loc);
+  return true;
+}
+
+
+bool DungeonParser::buildRooms(std::vector<std::string> &lines,
+                               std::vector<std::unique_ptr<Room>> &rooms,
+                               Dungeon &dungeon, Room &hallway) 
+{
+  size_t row, column;
+  room_id num_rooms = 0;
+  vec2 offset = { 0.f,0.f };
+
+  RoomParser roomParser;
+  std::unordered_map<room_id, Room*> room_map;
+  std::unordered_map<room_id, std::vector<door_info>&> door_map;
+  std::unordered_map<room_id, std::vector<room_pair>> room_adjacency_map;
 
   for (row = 0; row < lines.size(); ++row)
   {
@@ -394,12 +455,7 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
 
       if (ch == HALLWAY)
       {
-        bool topRow = (row == 0) || (lines[row-1][column] == EMPTY) || (lines[row - 1][column] == SPACE);
-        bool bottomRow = (row == lines.size() - 1) || (lines[row + 1][column] == EMPTY) || (lines[row + 1][column] == SPACE);
-        bool startColumn = (column == 0) || (line[column - 1] == EMPTY) || (line[column - 1] == SPACE);
-        bool endColumn = (column == line.size() - 1) || (line[column + 1] == EMPTY) || (line[column + 1] == SPACE);
-        
-        addHallwayHelper(*hallway, offset, topRow, bottomRow, startColumn, endColumn);
+        // do nothing! We let the offset increase
       }
       else if (ch == EMPTY || ch == SPACE)
       {
@@ -407,20 +463,16 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
       }
       else
       {
-        // this part of the code had to be reverted, as it had a dependency on
-        //std::filesystem that wasn't building on mac. keeping it for hopefully
-        //the future.
-
         std::string str;
-        size_t num;
+        room_id num;
 
         // convert the ch to a number, which we will use to index into the array
-        // of room text files
+        // of room text files. We will also set this to be the room's ID
         str += ch; // need to do it this way to ensure it's null terminated for
                    // passing into std::atoi
         num = std::atoi(str.c_str());
 
-        if (num > m_room_files.size() || num == 0) // check that the character passed in is valid
+        if (!validRoomID(num)) // check that the character passed in is valid
         {
           fprintf(stderr,
             "Error parsing room file. Invalid character %c at line %d, "
@@ -431,28 +483,142 @@ bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std:
 
         rooms.emplace_back(new Room);
         rooms.back()->init(offset*2.f, HALLWAY_ROOM);
-        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num+1].c_str()))
+        if (!roomParser.parseRoom(*rooms.back(), m_room_files[num + 1].c_str()))
         {
           return false;
         }
-        rooms.back()->setRoomID(num_rooms);
+        rooms.back()->setRoomID(num);
 
-        if (!add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, rooms.back().get(), hallway))
+        room_map.emplace(num, rooms.back().get());
+        door_map.emplace(num, roomParser.get_door_info());
+        room_adjacency_map.emplace(num, std::vector<room_pair>()); // initialize with empty vector
+
+        // check for room adjacencies
+        if (roomAbove(lines, row, column)) 
         {
-          // error
-          return false;
+          char& adj_ch = lines[row - 1][column];
+          if (!addAdjacency(room_adjacency_map, adj_ch, num, NORTH))
+          {
+            return false;
+          }
+        }
+        if (roomBelow(lines, row, column))
+        {
+          char& adj_ch = lines[row + 1][column];
+          if (!addAdjacency(room_adjacency_map, adj_ch, num, SOUTH))
+          {
+            return false;
+          }
+        }
+        if (roomLeft(lines, row, column))
+        {
+          char& adj_ch = lines[row][column - 1];
+          if (!addAdjacency(room_adjacency_map, adj_ch, num, WEST))
+          {
+            return false;
+          }
+        }
+        if (roomRight(lines, row, column))
+        {
+          char& adj_ch = lines[row][column - 1];
+          if (!addAdjacency(room_adjacency_map, adj_ch, num, EAST))
+          {
+            return false;
+          }
         }
 
         ++num_rooms;
-        // TODO: change room type to be classroom, office, or bathroom
       }
-      
-      offset.x += ROOM_X_OFFSET;      
+
+      offset.x += ROOM_X_OFFSET;
+    } // for (; column < line.size(); ++column)
+    offset.y += ROOM_Y_OFFSET;
+  } // for (; row < lines.size(); ++row)
+
+  if (!add_doors_to_dungeon(roomParser.get_door_pos(), dungeon, offset, num_rooms, &hallway))
+  {
+    // error
+    return false;
+  }
+
+  return true;
+}
+
+bool DungeonParser::buildHallway(std::vector<std::string> &lines,
+                                 std::vector<std::unique_ptr<Room>> &rooms,
+                                 Dungeon &dungeon, Room &hallway) 
+{
+  size_t row, column;
+  vec2 offset = { 0.f,0.f };
+
+  for (row = 0; row < lines.size(); ++row)
+  {
+    std::string& line = lines[row];
+    offset.x = 0.f;
+    for (column = 0; column < line.size(); ++column)
+    {
+      char& ch = line[column];
+
+      if (ch == HALLWAY)
+      {
+        bool topRow = (row == 0) || (lines[row - 1][column] == EMPTY) || (lines[row - 1][column] == SPACE);
+        bool bottomRow = (row == lines.size() - 1) || (lines[row + 1][column] == EMPTY) || (lines[row + 1][column] == SPACE);
+        bool startColumn = (column == 0) || (line[column - 1] == EMPTY) || (line[column - 1] == SPACE);
+        bool endColumn = (column == line.size() - 1) || (line[column + 1] == EMPTY) || (line[column + 1] == SPACE);
+
+        if (!addHallwayHelper(hallway, offset, topRow, bottomRow, startColumn, endColumn))
+        {
+          fprintf(stderr, "error building elements of hallway. \n");
+          return false;
+        }
+      }
+      else if (ch == EMPTY || ch == SPACE)
+      {
+        // do nothing! We let the offset increase
+      }
+      else
+      {
+        // do nothing! We let the offset increase
+      }
+
+      offset.x += ROOM_X_OFFSET;
     } // for (; column < line.size(); ++column)
     offset.y += ROOM_Y_OFFSET;
   } // for (; row < lines.size(); ++row)
 
   return true;
+}
+
+bool DungeonParser::parseLines(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms, Dungeon& dungeon)
+{
+  rooms.clear();
+  rooms.emplace_back(new Room);
+  Room* hallway = rooms.back().get();
+  hallway->setRoomID(-1);
+  if (!hallway->init())
+  {
+    fprintf(stderr, "Failed to init hallway room. \n");
+    return false;
+  }
+
+  if (!buildHallway(lines, rooms, dungeon, *hallway))
+  {
+    fprintf(stderr, "Failed to build hallway in parser. \n");
+    return false;
+  }
+  
+  if (!buildRooms(lines, rooms, dungeon, *hallway))
+  {
+    fprintf(stderr, "Failed to build rooms in parser. \n");
+    return false;
+  }
+
+  return true;
+}
+
+bool DungeonParser::validRoomID(int id)
+{
+  return (id > 0 && id <= m_room_files.size());
 }
 
 bool DungeonParser::addLeftTopHallway(Room& hallway, vec2 offset)
