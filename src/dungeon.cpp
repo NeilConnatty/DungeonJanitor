@@ -43,7 +43,9 @@ bool Dungeon::init()
       boss_room_position = room->get_boss_spawn_loc();
     }
   }
-
+  m_hero_timer = 180000.f; // Three minutes in milliseconds
+  m_should_spawn_hero = false;
+  m_hero_has_spawned = false;
   return true;
 }
 
@@ -100,6 +102,16 @@ void Dungeon::activate_artifact()
 
 void Dungeon::update_current(float ms)
 {
+	if (!m_hero_has_spawned)
+	{
+		m_hero_timer -= ms;
+
+		if (m_hero_timer < 0)
+		{
+			m_should_spawn_hero = true;
+		}
+	}
+
 }
 
 void Dungeon::update_children(float ms)
@@ -176,4 +188,39 @@ void Dungeon::add_adjacency(int roomID, Room::adjacent_room adj)
     m_adjacency_map.emplace(roomID, std::vector<Room::adjacent_room>());
     m_adjacency_map.at(roomID).push_back(adj);
   }
+}
+
+string Dungeon::get_hero_timer()
+{
+	double minutesRemainder = (m_hero_timer) / 60000;
+	int minutes = minutesRemainder;
+	double secondsRemainder = (minutesRemainder - minutes) * 60;
+	int seconds = secondsRemainder;
+	string minutes_str = to_string(minutes);
+	string seconds_str = to_string(seconds);
+
+	if (minutes <= 0 && seconds < 0)
+	{
+		return "0:00";
+	}
+	if (seconds < 10)
+	{
+		seconds_str = "0" + seconds_str;
+	}
+	return  minutes_str + ":" + seconds_str;
+}
+
+bool Dungeon::should_spawn_hero()
+{
+	return m_should_spawn_hero;
+}
+
+bool Dungeon::hero_has_spawned()
+{
+	return m_hero_has_spawned;
+}
+
+void Dungeon::spawn_hero()
+{
+	m_hero_has_spawned = true;
 }
