@@ -27,6 +27,7 @@ public:
   void update(float ms);
   void draw(const mat3 &projection, const mat3 &parent_transform) override;
   bool collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform);
+  bool collides_with_projected(GameObject& object, vec2 projected_position, mat3 room_transform, mat3 dungeon_transform); // check collisions for projected position of game object
 
 protected:
   virtual void update_current(float ms) = 0;

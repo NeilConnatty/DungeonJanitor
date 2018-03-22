@@ -182,6 +182,7 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 	return true;
 }
 
+
 //int Room::get_num_cleanables() { return m_num_cleanables; }
 //float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
 //void Room::decrement_cleanables() { m_num_cleanables--; }

@@ -40,6 +40,8 @@ bool Dungeon::init()
       boss_start_room = room.get();
       boss_room_position = room->get_boss_spawn_loc();
     }
+
+	room->setDungeonTransform(identity_matrix);
   }
 
   return true;
