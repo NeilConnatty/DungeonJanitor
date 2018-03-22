@@ -124,6 +124,9 @@ bool World::init(vec2 screen)
     fprintf(stderr, "failed to init Camera. \n");
     return false;
   }
+
+  // Attach health bar to dungeon
+  m_dungeon.setHealthBar(m_camera.getHealthBar());
   
 	return true;
 }
@@ -302,12 +305,16 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
       }
     }
     
-    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) 
+	{
       std::vector<Puddle> &cleanables = m_janitor.get_current_room()->get_cleanables();
-      for (Puddle &p : cleanables) {
+      for (Puddle &p : cleanables) 
+	  {
         if (p.is_enabled() &&
-          m_janitor.collides_with(p, m_janitor.get_current_room()->transform, m_dungeon.transform)) {
+          m_janitor.collides_with(p, m_janitor.get_current_room()->transform, m_dungeon.transform)) 
+		{
           p.toggle_enable();
+		  m_janitor.get_current_room()->increment_cleaned_cleanables();
         }
       }
     }

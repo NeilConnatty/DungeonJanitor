@@ -5,6 +5,8 @@
 #include "ValueIteration.hpp" // testing
 #include <iostream>
 
+#define ARTIFACT_VALUE 5
+
 Dungeon::Dungeon() : 
     GameObject()
 {
@@ -58,6 +60,7 @@ void Dungeon::destroy()
 	{
 		door->destroy();
 	}
+	m_healthBar = NULL;
 }
 
 vector<unique_ptr<Room>>& Dungeon::get_rooms()
@@ -92,6 +95,7 @@ void Dungeon::activate_artifact()
 		if (room_ptr->containsUndiscoveredArtifact())
 		{
 			room_ptr->get_artifact()->set_active(true);
+			room_ptr->increment_activated_artifacts();
 		}
 	}
 }
@@ -111,10 +115,13 @@ void Dungeon::update_children(float ms)
   {
     door->update(ms);
   }
+
+  m_healthBar->set_percent_filled(get_percent_dungeon_cleaned());
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
 {
+
 }
 
 void Dungeon::draw_children(const mat3& projection, const mat3& current_transform)
@@ -128,6 +135,24 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
   {
     door->draw(projection, current_transform);
   }
+}
+
+float Dungeon::get_percent_dungeon_cleaned()
+{
+	float cleaned_cleanables = 0;
+	float total_cleanables = 0;
+	float activated_artifacts = 0;
+	float total_artifacts = 0;
+
+	for (std::unique_ptr<Room>& room : m_rooms)
+	{
+		cleaned_cleanables = cleaned_cleanables + room->get_number_cleaned_cleanables();
+		total_cleanables = total_cleanables + room->get_number_total_cleanables();
+		activated_artifacts = activated_artifacts + room->get_number_activated_artifacts();
+		total_artifacts = total_artifacts + room->get_number_total_artifacts();
+	}
+	
+	return (cleaned_cleanables + activated_artifacts * ARTIFACT_VALUE) / (total_cleanables + total_artifacts * ARTIFACT_VALUE);
 }
 
 bool Dungeon::add_doors(vector<std::unique_ptr<Door>>& doors)

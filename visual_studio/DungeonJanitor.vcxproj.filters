@@ -19,9 +19,6 @@
     <ClCompile Include="..\src\Cleanable\artifact.cpp">
       <Filter>src\Cleanable</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\camera.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\door.cpp">
       <Filter>src\Dungeon</Filter>
     </ClCompile>
@@ -61,6 +58,12 @@
     <ClCompile Include="..\src\gameover.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\healthbar.cpp">
+      <Filter>src\Camera/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\camera.cpp">
+      <Filter>src\Camera/UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -96,9 +99,6 @@
     <ClInclude Include="..\src\Cleanable\artifact.hpp">
       <Filter>headers\Cleanable</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\camera.hpp">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\ValueIteration.hpp">
       <Filter>headers\AI</Filter>
     </ClInclude>
@@ -119,6 +119,12 @@
     </ClInclude>
     <ClInclude Include="..\src\gameover.hpp">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\healthbar.hpp">
+      <Filter>headers\Camera/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\camera.hpp">
+      <Filter>headers\Camera/UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +157,12 @@
     </Filter>
     <Filter Include="headers\Creatues">
       <UniqueIdentifier>{bc2e40af-2c4d-4aab-869a-f03d58f094fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Camera/UI">
+      <UniqueIdentifier>{cd4c2f91-b894-4270-bdfd-59bf54dcbc6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers\Camera/UI">
+      <UniqueIdentifier>{803b344d-cd74-430a-845e-aab09a76f77e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
