@@ -77,32 +77,27 @@ bool Wall::init(vec2 position, wall_edge edge)
     m_position.x = position.x - 12.5f;
     m_position.y = position.y + 17.5f;
     m_texture = &bottom_vert_t;
-	m_size = { static_cast<float>(bottom_vert_t.width), static_cast<float>(bottom_vert_t.height) };
   }
   else if ((edge & (VERTICAL | TOP)) == (VERTICAL | TOP))
   {
     m_texture = &corner_t;
     m_position.y = position.y + 17.5f;
     m_position.x = position.x - 12.5f;
-	m_size = { static_cast<float>(corner_t.width), static_cast<float>(corner_t.height) };
   }
   else if ((edge & VERTICAL) == VERTICAL)
   {
     m_position.x = position.x - 12.5f;
     m_texture = &vert_t;
-	m_size = { static_cast<float>(vert_t.width), static_cast<float>(vert_t.height) };
   }
   else if ((edge & BOTTOM) == BOTTOM)
   {
     m_position.y = position.y + 17.5f;
     m_texture = &bottom_t;
-	m_size = { static_cast<float>(bottom_t.width), static_cast<float>(bottom_t.height) };
   }
   else if ((edge & TOP) == TOP)
   {
     m_position.y = position.y + 17.5f;
     m_texture = &top_t;
-	m_size = { static_cast<float>(top_t.width), static_cast<float>(top_t.height) };
   }
 
   if (!m_texture)
@@ -110,6 +105,8 @@ bool Wall::init(vec2 position, wall_edge edge)
     fprintf(stderr, "Failed to set m_texture\n");
     return false;
   }
+
+  m_size = { static_cast<float>(m_texture->width), static_cast<float>(m_texture->height) };
   
   set_vertices_top_bottom(vertices, numVertices, indices, numIndices);
 
