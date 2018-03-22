@@ -26,6 +26,7 @@
 #define HALLWAY 'h'
 #define EMPTY 'e'
 #define ROOM 'r'
+#define NULLCH '\0'
 
 // Room types
 #define HALLWAY_R 'l'
@@ -446,22 +447,22 @@ bool add_doors_to_dungeon(
 
 bool roomAbove(std::vector<std::string>& lines, size_t row, size_t column)
 {
-  return row != 0 && lines[row - 1][column] != HALLWAY && lines[row - 1][column] != EMPTY && lines[row - 1][column] != SPACE;
+  return row != 0 && lines[row - 1][column] != HALLWAY && lines[row - 1][column] != EMPTY && lines[row - 1][column] != SPACE && lines[row - 1][column] != NULLCH;
 }
 
 bool roomBelow(std::vector<std::string>& lines, size_t row, size_t column)
 {
-  return row < (lines.size() - 1) && lines[row + 1][column] != HALLWAY && lines[row + 1][column] != EMPTY && lines[row + 1][column] != SPACE;
+  return row < (lines.size() - 1) && lines[row + 1][column] != HALLWAY && lines[row + 1][column] != EMPTY && lines[row + 1][column] != SPACE && lines[row + 1][column] != NULLCH;
 }
 
 bool roomLeft(std::vector<std::string>& lines, size_t row, size_t column)
 {
-  return column != 0 && lines[row][column - 1] != HALLWAY && lines[row][column - 1] != EMPTY && lines[row][column - 1] != SPACE;
+  return column != 0 && lines[row][column - 1] != HALLWAY && lines[row][column - 1] != EMPTY && lines[row][column - 1] != SPACE && lines[row][column - 1] != NULLCH;
 }
 
 bool roomRight(std::vector<std::string>& lines, size_t row, size_t column)
 {
-  return column < (lines[row].size() - 1) && lines[row][column + 1] != HALLWAY && lines[row][column + 1] != EMPTY && lines[row][column + 1] != SPACE;
+  return column < (lines[row].size() - 1) && lines[row][column + 1] != HALLWAY && lines[row][column + 1] != EMPTY && lines[row][column + 1] != SPACE && lines[row][column + 1] != NULLCH;
 }
 
 bool DungeonParser::addAdjacency(
@@ -529,7 +530,7 @@ bool DungeonParser::buildRooms(std::vector<std::string> &lines,
         if (!validRoomID(num)) // check that the character passed in is valid
         {
           fprintf(stderr,
-            "Error parsing room file. Invalid character %c at line %d, "
+            "Error parsing dungeon file. Invalid character %c at line %d, "
             "column %d.\n",
             ch, (int)(row + 1), (int)(column + 1));
           return false;
