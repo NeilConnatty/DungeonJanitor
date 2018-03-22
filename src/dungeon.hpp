@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 #include "room.hpp"
+#include "healthbar.hpp"
 
 #include <vector>
 #include <unordered_map>
@@ -21,10 +22,14 @@ public:
 	void destroy();
 	void clean();
 	void activate_artifact();
+	
 	vector<unique_ptr<Room>>& get_rooms();
 	bool add_doors(vector<std::unique_ptr<Door>>& doors);
+	
 	void add_adjacency(int roomID, Room::adjacent_room adj);
 	vector<Room::adjacent_room>& get_adjacent_rooms(int roomID) { return m_adjacency_map.at(roomID); }
+
+	void setHealthBar(HealthBar* health_bar) { m_healthBar = health_bar; }
 
 private:
 	void update_current(float ms) override;
@@ -34,7 +39,9 @@ private:
 	void draw_children(const mat3 &projection,
                      const mat3 &current_transform) override;
 
-	void test_value_iteration(); // for testing Jay
+	float get_percent_dungeon_cleaned();
+
+	//void test_value_iteration(); // for testing Jay
 
 public:
 	Room* janitor_start_room;
@@ -47,5 +54,6 @@ private:
 	vector<std::unique_ptr<Room>> m_rooms;
 	vector<std::unique_ptr<Door>> m_doors;
 	unordered_map<int, vector<Room::adjacent_room>>     m_adjacency_map;
+	HealthBar* m_healthBar;
 };
 
