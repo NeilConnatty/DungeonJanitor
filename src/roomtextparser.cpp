@@ -54,7 +54,14 @@ struct door_info
   vec2 pos;
   Door::door_dir dir;
   location loc;
-  bool added;
+};
+
+struct room_info
+{
+  Room* ptr;
+  vec2  pos;
+
+  room_info(Room* tptr, vec2 tpos) : ptr(tptr), pos(tpos) {}
 };
 
 using room_id = int;
@@ -131,19 +138,19 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
     {
       if (first_line)
       {
-        door_infos.push_back({ {x,y}, Door::VERTICAL, NORTH , false });
+        door_infos.push_back({ {x,y}, Door::VERTICAL, NORTH });
       }
       else if (last_line)
       {
-        door_infos.push_back({ { x,y }, Door::VERTICAL, SOUTH, false });
+        door_infos.push_back({ { x,y }, Door::VERTICAL, SOUTH });
       }
       else if (i == 0)
       {
-        door_infos.push_back({ {x,y}, Door::HORIZONTAL, WEST, false });
+        door_infos.push_back({ {x,y}, Door::HORIZONTAL, WEST });
       }
       else
       {
-        door_infos.push_back({ { x,y }, Door::HORIZONTAL, EAST, false });
+        door_infos.push_back({ { x,y }, Door::HORIZONTAL, EAST });
       }
 
       tile_dim = Floor::get_dimensions();
@@ -347,19 +354,19 @@ void transform_positions(vector<door_info>& infos, SubRenderable& rend)
 }
 
 bool add_doors_to_dungeon(
-    std::unordered_map<room_id, Room *> &room_map,
-    std::unordered_map<room_id, std::vector<door_info> &> &door_map,
+    std::unordered_map<room_id, room_info> &room_map,
+    std::unordered_map<room_id, std::vector<door_info>> &door_map,
     std::unordered_map<room_id, std::vector<room_pair>> &room_adjacency_map,
     Dungeon &dungeon, int num_rooms, Room *hallway) 
 {
   std::vector<std::unique_ptr<Door>> doors;
 
-  for (std::pair<const room_id, Room*>& rm_pair : room_map)
+  for (std::pair<const room_id, room_info>& rm_pair : room_map)
   {
     // hack to add the door to dungeon
     SubRenderable rend;
     rend.transform_begin();
-    rend.transform_translate(rm_pair.second->get_pos());
+    rend.transform_translate(rm_pair.second.pos);
     rend.transform_scale({ 2.f, 2.f });
     rend.transform_end();
 
@@ -397,9 +404,9 @@ bool add_doors_to_dungeon(
             }
             door_ptr->set_scale({ 2.f, 2.f });
 
-            Room* adj_room_ptr = room_map.at(adj_room.first);
+            Room* adj_room_ptr = room_map.at(adj_room.first).ptr;
             dungeon.add_adjacency(rm_pair.first, { adj_room_ptr, door_ptr });
-            dungeon.add_adjacency(adj_room.first, { rm_pair.second, door_ptr });
+            dungeon.add_adjacency(adj_room.first, { rm_pair.second.ptr, door_ptr });
             has_adj_room = true;
           }
           break;
@@ -420,10 +427,10 @@ bool add_doors_to_dungeon(
           fprintf(stderr, "Error adding doors to dungeon.\n");
           return false;
         }
-        door_ptr->set_scale({ 2.f, 2.f });
+        door_ptr->set_scale({ 2.f,2.f });
 
         dungeon.add_adjacency(rm_pair.first, { hallway, door_ptr }); // adjacency going from room -> hallway
-        dungeon.add_adjacency(-1, { rm_pair.second, door_ptr }); // adjacency going from hallway -> room (-1 is special id for hallway)
+        dungeon.add_adjacency(-1, { rm_pair.second.ptr, door_ptr }); // adjacency going from hallway -> room (-1 is special id for hallway)
       }
     }
   }
@@ -488,8 +495,8 @@ bool DungeonParser::buildRooms(std::vector<std::string> &lines,
   vec2 offset = { 0.f,0.f };
 
   RoomParser roomParser;
-  std::unordered_map<room_id, Room*> room_map;
-  std::unordered_map<room_id, std::vector<door_info>&> door_map;
+  std::unordered_map<room_id, room_info> room_map;
+  std::unordered_map<room_id, std::vector<door_info>> door_map;
   std::unordered_map<room_id, std::vector<room_pair>> room_adjacency_map;
 
   for (row = 0; row < lines.size(); ++row)
@@ -528,15 +535,16 @@ bool DungeonParser::buildRooms(std::vector<std::string> &lines,
           return false;
         }
 
+        vec2 room_pos = offset * 2.f;
         rooms.emplace_back(new Room);
-        rooms.back()->init(offset*2.f, HALLWAY_ROOM);
+        rooms.back()->init(room_pos, HALLWAY_ROOM);
         if (!roomParser.parseRoom(*rooms.back(), m_room_files[num + 1].c_str()))
         {
           return false;
         }
         rooms.back()->setRoomID(num);
 
-        room_map.emplace(num, rooms.back().get());
+        room_map.emplace(num, room_info(rooms.back().get(), room_pos));
         door_map.emplace(num, roomParser.get_door_info());
         room_adjacency_map.emplace(num, std::vector<room_pair>()); // initialize with empty vector
 
