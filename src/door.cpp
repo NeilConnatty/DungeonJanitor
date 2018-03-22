@@ -79,6 +79,8 @@ void Door::destroy()
   glDeleteShader(effect.program);
 }
 
+Door::door_dir Door::get_dir() { return m_door_dir; };
+
 void Door::update_current(float ms) {};
 void Door::update_children(float ms) {}
 void Door::draw_current(const mat3& projection, const mat3& current_transform) {}

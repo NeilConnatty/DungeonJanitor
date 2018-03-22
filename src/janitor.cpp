@@ -272,7 +272,7 @@ void Janitor::check_collisions()
   bool door_collision_this_frame = false;
   for (Room::adjacent_room& adjacent : m_dungeon->get_adjacent_rooms(m_currentRoom->getRoomID()))
   {
-    if (collides_with(*adjacent.door, m_dungeon->transform, identity_matrix)) // door is in dungeon coords 
+    if (collides_with_door(*adjacent.door, m_dungeon->transform, identity_matrix)) // door is in dungeon coords
     {
       if (!m_door_collision_last_frame)
       {
@@ -578,17 +578,34 @@ void Janitor::pick_movement_tex(const int FRAME_TIMING) {
 		}
 		case left:
 		{
-			if (m_animation_time < FRAME_TIMING)	
+			if (m_animation_time < FRAME_TIMING)
 				m_curr_tex = &left1;
-			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)
 				m_curr_tex = &left2;
-			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)
 				m_curr_tex = &left3;
-			else if (m_animation_time >= 3 * FRAME_TIMING) 
+			else if (m_animation_time >= 3 * FRAME_TIMING)
 				m_curr_tex = &left4;
 		}
 	}
 }
+
+bool Janitor::collides_with_door(Door& door, mat3 room_transform, mat3 dungeon_transform) {
+	float doorX = get_world_coords_from_room_coords(door.get_pos(), room_transform, dungeon_transform).x;
+	float doorY = get_world_coords_from_room_coords(door.get_pos(), room_transform, dungeon_transform).y;
+
+	if (door.get_dir() == Door::VERTICAL){
+		if (abs(m_position.x - doorX) <= 0.9f) {
+    	return true;
+    }
+	} else if (door.get_dir() == Door::HORIZONTAL){
+		if (abs(m_position.y - doorY) <= 0.9f){
+	    return true;
+		}
+	}
+  return false;
+}
+
 //Loads and validates texture files via hardcoded path names
 bool Janitor::validate_textures()
 {
