@@ -104,18 +104,16 @@ bool GameObject::collides_with(GameObject& object, mat3 room_transform, mat3 dun
 bool GameObject::collides_with_projected(GameObject & object, vec2 projected_position, mat3 room_transform, mat3 dungeon_transform)
 {
 	float jLeftEdge = projected_position.x;
-	float jRightEdge = jLeftEdge + m_size.x * 20;
+	float jRightEdge = jLeftEdge + m_size.x;
 	float jTopEdge = projected_position.y;
-	float jBottomEdge = jTopEdge + m_size.y * 20;
+	float jBottomEdge = jTopEdge + m_size.y;
 
-	//float objX_test = object.m_position.x;
-	//float objY_test = object.m_position.y;
 
 	float objX = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).x;
 	float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;
 
 	float oLeftEdge = objX;
-	float oRightEdge = objX + object.get_size().x;
+	float oRightEdge = objX + object.get_size().x ;
 	float oTopEdge = objY;
 	float oBottomEdge = objY + object.get_size().y;
 
