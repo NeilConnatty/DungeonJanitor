@@ -2,14 +2,14 @@
 
 #include "healthbar.hpp"
 
-#define X_POSITION 600 // Should these be based off of the window size?
-#define Y_POSITION 35
+#define X_POSITION_FACTOR 2
+#define Y_POSITION_FACTOR 35
 
 Texture HealthBar::m_health_texture; Texture HealthBar::m_bar_texture;
 
-bool HealthBar::init()
+bool HealthBar::init(vec2 window_size)
 {
-	return (m_health.init() && m_bar.init());
+	return (m_health.init(window_size) && m_bar.init(window_size));
 }
 
 void HealthBar::destroy()
@@ -40,7 +40,7 @@ void HealthBar::set_percent_filled(float percent_filled)
 	m_health.m_percent_filled = percent_filled;
 }
 
-bool HealthBar::Health::init()
+bool HealthBar::Health::init(vec2 window_size)
 {
 	if (!validate_textures()) { return false; }
 
@@ -89,7 +89,7 @@ bool HealthBar::Health::init()
 	m_scale.x = 1.f;
 	m_scale.y = 1.f;
 
-	m_position = { X_POSITION, Y_POSITION };
+	m_position = { window_size.x / X_POSITION_FACTOR, window_size.x / Y_POSITION_FACTOR };
 
 	return true;
 }
@@ -165,7 +165,7 @@ bool HealthBar::Health::validate_textures()
 }
 
 
-bool HealthBar::Bar::init()
+bool HealthBar::Bar::init(vec2 window_size)
 {
 	if (!validate_textures()) { return false; }
 
@@ -213,7 +213,7 @@ bool HealthBar::Bar::init()
 	m_scale.x = 1.f;
 	m_scale.y = 1.f;
 
-	m_position = { X_POSITION, Y_POSITION };
+	m_position = { window_size.x / X_POSITION_FACTOR, window_size.x / Y_POSITION_FACTOR };
 
 	return true;
 }

@@ -20,7 +20,8 @@ private:
 	public:
 
 		// Creates all the associated render resources and default transform
-		bool init();
+		bool init() { return false; }
+		bool init(vec2 window_size);
 
 		// Releases all associated resources
 		void destroy();
@@ -38,7 +39,8 @@ private:
 	{
 	public:
 		// Creates all the associated render resources and default transform
-		bool init();
+		bool init() { return false; }
+		bool init(vec2 window_size);
 
 		// Releases all associated resources
 		void destroy();
@@ -58,7 +60,8 @@ public:
 	~HealthBar() {};
 
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init() { return false; }
+	bool init(vec2 window_size);
 
 	// Releases all associated resources
 	void destroy();

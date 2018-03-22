@@ -16,7 +16,7 @@ bool Camera::init(int w, int h)
 {
 	m_window_width = w; 
 	m_window_height = h; 
-	m_healthBar.init(); 
+	m_healthBar.init({ (float)w, (float)h });
 	return true;
 }
 
