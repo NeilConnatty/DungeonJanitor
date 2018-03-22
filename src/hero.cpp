@@ -73,6 +73,7 @@ bool Hero::init(vec2 position)
 	// Setting initial scale values
 	m_scale.x = 1.f;
 	m_scale.y = 1.f;
+	m_size = { static_cast<float>(hero_texture.width), static_cast<float>(hero_texture.height) };
 
 	return true;
 }
@@ -138,7 +139,7 @@ void Hero::update_path()
       vec2 next_door_pos = get_next_door_position();
 			set_destination(next_door_pos, Hero::destinations::DOOR);
 			vector<vec2> path_to_door;
-			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, 
+			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f,
 				*this, *m_currentRoom, path_to_door);
 			m_path = path_to_door;
 			m_current_destination = m_path.back();

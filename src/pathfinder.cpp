@@ -49,10 +49,10 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 				if ((*found_node)->getFValue() > successor_node->getFValue())
 				{
 					//Jay Should not get here. Previous node should always have more efficient path.
-          printf("Jay: Error - found more efficient node during A*");
-          assert(false);
-          openNodes.erase(found_node);
-        }
+					printf("Jay: Error - found more efficient node during A*");
+					assert(false);
+					openNodes.erase(found_node);
+				}
 				else
 				{
 					// discard successor_node and continue for loop
