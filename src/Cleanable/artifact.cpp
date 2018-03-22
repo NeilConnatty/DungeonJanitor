@@ -34,6 +34,7 @@ bool Artifact::init(vec2 position)
 		}
 	}
 	m_position = position;
+	m_size = {static_cast<float>(activated_artifact_texture.width), static_cast<float>(activated_artifact_texture.height)};
 
 	// The position corresponds to the center of the texture
 	float wr = activated_artifact_texture.width * 0.5f;
