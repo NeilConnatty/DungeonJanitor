@@ -244,6 +244,10 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 	}
 }
 
+//int Room::get_num_cleanables() { return m_num_cleanables; }
+//float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
+//void Room::decrement_cleanables() { m_num_cleanables--; }
+
 vector<Wall> &Room::get_walls() { return m_walls; }
 
 vector<unique_ptr<Cleanable>> &Room::get_cleanables() { return m_cleanables; }

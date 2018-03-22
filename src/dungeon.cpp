@@ -43,6 +43,8 @@ bool Dungeon::init()
       boss_start_room = room.get();
       boss_room_position = room->get_boss_spawn_loc();
     }
+
+	room->setDungeonTransform(identity_matrix);
   }
   m_emitters.emplace_back();
   vec2 velocity = {10.0f, 1.0f};

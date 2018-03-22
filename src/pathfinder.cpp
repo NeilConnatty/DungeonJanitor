@@ -3,7 +3,8 @@
 #include <assert.h>
 #include "pathfinder.hpp"
 
-void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination, float x_speed, float y_speed, vector<vec2>& path)
+void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination, float x_speed, float y_speed, 
+	GameObject& moving_object, Room& room, vector<vec2>& path)
 {
 	PathNode startNode = PathNode(position.x, position.y);
 	PathNode endNode = PathNode(destination.x, destination.y);
@@ -27,7 +28,7 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 
 
 		// if collision -> close node and continue
-		if (collisionDetected(*node_current))
+		if (collisionDetected(moving_object, room, *node_current))
 		{
 			closedNodes.push_back(make_unique<PathNode>(*node_current));
 			continue;
@@ -86,10 +87,17 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
   getPathFromGoalNode(endNode, path);
 }
 
-bool Pathfinder::collisionDetected(PathNode& node)
+bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNode& node)
 {
+	// To be updated when room has list of collidable objects
+	for (Wall& wall : room.get_walls())
+	{
+		if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, room.transform, room.getDungeonTransform()))
+		{
+			return true;
+		}
+	}
 
-	//stub
 	return false;
 }
 

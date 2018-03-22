@@ -88,6 +88,8 @@ public:
     void set_room_type(room_type type) { m_room_type = type; }
     int getRoomID() const { return m_ID; };
     void setRoomID(int id);
+	void setDungeonTransform(mat3 transform) { m_dungeon_transform = transform; }
+	mat3 getDungeonTransform() { return m_dungeon_transform; }
 
 private:
     void update_current(float ms) override;
@@ -113,6 +115,8 @@ private:
     vec2 m_hero_spawn_loc;
     vec2 m_boss_spawn_loc;
     vec2 m_janitor_spawn_loc;
+
+	mat3 m_dungeon_transform;
     
     Artifact		m_artifact;
 
