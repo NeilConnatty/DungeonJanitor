@@ -107,7 +107,6 @@ bool Wall::init(vec2 position, wall_edge edge)
   } else {
     m_size = {static_cast<float>(m_texture->width), static_cast<float>(m_texture->height)};
   }
-
   set_vertices_top_bottom(vertices, numVertices, indices, numIndices);
 
 	// Clearing errors
