@@ -2,16 +2,22 @@
 
 #include "door.hpp"
 
-Texture Door::door_texture;
+Texture Door::door_textures[NUM_DOOR_TYPES];;
 
 Door::Door() : GameObject() {}
 Door::~Door() {}
 
 bool Door::init(vec2 pos, door_dir dir)
 {
-  if (!door_texture.is_valid())
+  if (!door_textures[0].is_valid())
   {
-    if (!door_texture.load_from_file(textures_path("dungeon1/door_temp.png")))
+    if (!door_textures[VERT_DOOR].load_from_file(textures_path("dungeon1/d1_doortile_brown-open-l_1.png")))
+    {
+      fprintf(stderr, "Failed to load door texture\n");
+      return false;
+    }
+
+    if (!door_textures[HORZ_DOOR].load_from_file(textures_path("dungeon1/d1_doortile_brown-open-1.png")))
     {
       fprintf(stderr, "Failed to load door texture\n");
       return false;
@@ -19,12 +25,16 @@ bool Door::init(vec2 pos, door_dir dir)
   }
 
   m_position = pos;
-  m_size = {static_cast<float>(door_texture.width), static_cast<float>(door_texture.height)};
   m_door_dir = dir;
+  if (dir == Door::VERTICAL){
+    m_size = {static_cast<float>(door_textures[VERT_DOOR].width), static_cast<float>(door_textures[VERT_DOOR].height)};
+  } else {
+    m_size = {static_cast<float>(door_textures[HORZ_DOOR].width), static_cast<float>(door_textures[HORZ_DOOR].height)};
+  }
 
   // The position corresponds to the center of the texture
-  float wr = door_texture.width * 0.5f;
-  float hr = door_texture.height * 0.5f;
+  float wr = door_textures[m_door_dir].width * 0.5f;
+  float hr = door_textures[m_door_dir].height * 0.5f;
 
   TexturedVertex vertices[4];
   vertices[0].position = { -wr, +hr, -0.02f };
@@ -114,7 +124,7 @@ void Door::draw_children(const mat3& projection, const mat3& current_transform)
 
   // Enabling and binding texture to slot 0
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, door_texture.id);
+  glBindTexture(GL_TEXTURE_2D, door_textures[m_door_dir].id);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   // Setting uniform values to the currently bound program

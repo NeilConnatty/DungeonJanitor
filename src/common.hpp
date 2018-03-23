@@ -53,6 +53,13 @@ enum room_type
   OFFICE_ROOM = 3
 };
 
+#define NUM_DOOR_TYPES 1
+enum door_type
+{
+  VERT_DOOR = 0,
+  HORZ_DOOR = 1,
+};
+
 enum wall_edge
 {
   NONE      = 0b000,
