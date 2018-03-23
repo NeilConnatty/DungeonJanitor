@@ -2,6 +2,8 @@
 // Must go on walls that face the camera
 #include "graffiti.hpp"
 
+Texture Graffiti::graffiti_textures[NUM_GRAFFITI_TEXTURES];
+
 Graffiti::Graffiti() {}
 
 Graffiti::~Graffiti() {}
@@ -19,7 +21,7 @@ bool Graffiti::init(vec2 pos)
 
 Texture& Graffiti::get_texture()
 {
-	return graffiti_textures[0];
+	return graffiti_textures[m_texture_index];
 }
 
 bool Graffiti::load_texture()

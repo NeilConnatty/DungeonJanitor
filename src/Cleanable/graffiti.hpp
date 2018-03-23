@@ -16,7 +16,7 @@ class Graffiti : public Cleanable
 {
 
 private:
-	Texture graffiti_textures[NUM_GRAFFITI_TEXTURES];
+	static Texture graffiti_textures[NUM_GRAFFITI_TEXTURES];
 	int m_texture_index;
 
 public:
