@@ -10,7 +10,7 @@
 class Door : public GameObject
 {
 public:
-  static Texture door_textures[1];
+  static Texture door_textures[2];
 
   enum door_dir
   {
