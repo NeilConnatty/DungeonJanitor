@@ -55,3 +55,8 @@ bool Graffiti::load_texture()
 	m_scale.y = 1.f;
 	return true;
 }
+
+void Graffiti::clean()
+{
+	m_enabled = false;
+}

@@ -201,7 +201,7 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 	for (unique_ptr<Cleanable>& c : get_cleanables()) {
 		if (c->is_enabled() &&
 			janitor->collides_with(*c, this->transform, dungeon_transform)) {
-			c.get()->toggle_enable();
+			c.get()->clean();
 		}
 	}
 
