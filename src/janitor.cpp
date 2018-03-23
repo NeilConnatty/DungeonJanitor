@@ -591,15 +591,14 @@ void Janitor::pick_movement_tex(const int FRAME_TIMING) {
 }
 
 bool Janitor::collides_with_door(Door& door, mat3 room_transform, mat3 dungeon_transform) {
-	float doorX = get_world_coords_from_room_coords(door.get_pos(), room_transform, dungeon_transform).x;
-	float doorY = get_world_coords_from_room_coords(door.get_pos(), room_transform, dungeon_transform).y;
-
 	if (door.get_dir() == Door::VERTICAL){
-		if (abs(m_position.x - doorX) <= 0.9f) {
+		float doorX = get_world_coords_from_room_coords(door.get_pos(), room_transform, dungeon_transform).x;
+		if (abs(m_position.x - doorX+door.get_size().y) <= 0.9f && collides_with(door, room_transform, dungeon_transform)) {
     	return true;
     }
 	} else if (door.get_dir() == Door::HORIZONTAL){
-		if (abs(m_position.y - doorY) <= 0.9f){
+		float doorY = get_world_coords_from_room_coords(door.get_pos(), room_transform, dungeon_transform).y;
+		if (abs(m_position.y - doorY+door.get_size().x) <= 0.9f && collides_with(door, room_transform, dungeon_transform)){
 	    return true;
 		}
 	}
