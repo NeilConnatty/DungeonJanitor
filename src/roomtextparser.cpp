@@ -105,6 +105,10 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
     {
       continue;
     } 
+    else if (ch == EMPTY)
+    {
+      x += 10.f;
+    }
     else if (ch == WALL) 
     {
       parseWallHelper(i, line, edge, tile_dim, wall_pairs, first_line, last_line, x, y);
