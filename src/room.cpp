@@ -211,7 +211,7 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 			janitor->collides_with(*c, this->transform, dungeon_transform)) {
 			if (c.get()->clean())
 			{
-				m_num_cleanables--;
+				decrement_cleanables();
 			}
 		}
 	}
