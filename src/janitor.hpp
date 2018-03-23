@@ -21,6 +21,7 @@ public:
 	bool init(vec2 position);
 // Releases all associated resources
 	void destroy();
+  bool collides_with_door(Door& door, mat3 room_transform, mat3 dungeon_transform);
 
 	void key_up(bool move);
 	void key_down(bool move);

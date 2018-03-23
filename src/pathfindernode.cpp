@@ -1,6 +1,6 @@
 // pathfindernode.cpp
 
-#include "pathfindernode.hpp";
+#include "pathfindernode.hpp"
 #include <memory>
 
 #define CLOSE_ENOUGH 0.001f; // Subject to change

@@ -17,7 +17,7 @@ bool Boss::init(vec2 position)
 {
 	if (!boss_texture.is_valid())
 	{
-		if (!boss_texture.load_from_file(textures_path("boss_placeholder.png")))
+		if (!boss_texture.load_from_file(textures_path("placeholders/boss_placeholder.png")))
 		{
 			fprintf(stderr, "Failed to load boss texture\n");
 			return false;

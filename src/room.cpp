@@ -9,7 +9,7 @@ Room::Room() {}
 Room::~Room() {}
 
 // Creates a room
-bool Room::init(vec2 position) 
+bool Room::init(vec2 position, room_type type) 
 {
   m_position = position;
   m_scale = {2.f, 2.f};
@@ -18,11 +18,16 @@ bool Room::init(vec2 position)
   m_has_janitor_spawn_loc = false;
   m_BossHere = false;
   m_ArtifactHere = false;
+  m_room_type = type;
+  m_num_cleaned_cleanables = 0;
+  m_total_cleanables = 0;
+  m_num_activated_artifacts = 0;
+  m_total_artifacts = 0;
 
   return true;
 }
 
-bool Room::init() { return init({0.f, 0.f}); }
+bool Room::init() { return init({0.f, 0.f}, HALLWAY_ROOM); }
 
 // Releases all associated resources
 void Room::destroy() 
@@ -94,7 +99,7 @@ bool Room::add_wall(wall_pair wall)
 bool Room::add_floor(vec2 floor) 
 {
   m_floors.emplace_back();
-  if (!m_floors.back().init(floor)) 
+  if (!m_floors.back().init(floor, m_room_type)) 
   {
     return false;
   }
@@ -137,6 +142,8 @@ bool Room::add_cleanables(std::vector<vec2> &puddle_positions)
             {
                 return false;
             }
+			
+			m_total_cleanables++;
         }
     }
   return true;
@@ -154,7 +161,12 @@ bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
             return false;
         }
         m_artifact.set_scale({ 0.5f, 0.5f });
+
+		m_total_artifacts++;
     }
+
+	
+
     return true;
 }
 
@@ -181,16 +193,9 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 	return true;
 }
 
-//int Room::get_num_cleanables() { return m_num_cleanables; }
-//float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
-//void Room::decrement_cleanables() { m_num_cleanables--; }
-
 std::vector<Wall> &Room::get_walls() { return m_walls; }
 
 std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
-int Room::get_num_cleanables() { return m_num_cleanables; }
-float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
-void Room::decrement_cleanables() { m_num_cleanables--; }
 
 double Room::getReward() const 
 {

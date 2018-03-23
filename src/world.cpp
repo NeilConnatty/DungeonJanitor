@@ -117,8 +117,16 @@ bool World::init(vec2 screen)
 		return false;
 	}
   
-	// Make camera follow janitor
-	m_camera.follow_object(&m_janitor);
+  int w, h;
+  glfwGetWindowSize(m_window, &w, &h);
+  if (!m_camera.init(w, h))
+  {
+    fprintf(stderr, "failed to init Camera. \n");
+    return false;
+  }
+
+  // Attach health bar to dungeon
+  m_dungeon.setHealthBar(m_camera.getHealthBar());
   
 	return true;
 }
@@ -131,19 +139,31 @@ bool World::init_creatures()
     return false;
   }
 
-	int w, h;
-	glfwGetFramebufferSize(m_window, &w, &h);
-	m_dungeon.draw(m_camera.get_projection(w, h), m_camera.get_transform(w, h));
+	m_dungeon.draw(m_camera.get_projection(), m_camera.get_transform());
 	vec2 janitor_position = get_world_coords_from_room_coords(m_dungeon.janitor_room_position, m_dungeon.janitor_start_room->transform, m_dungeon.transform);
-  m_janitor.set_current_room(m_dungeon.janitor_start_room);
-  m_janitor.set_dungeon(&m_dungeon);
+	m_janitor.set_current_room(m_dungeon.janitor_start_room);
+	m_janitor.set_dungeon(&m_dungeon);
 	if (!m_janitor.init(janitor_position))
 	{
 		fprintf(stderr, "Failed to init Janitor.\n");
 		return false;
 	}
 	m_janitor.set_scale({ 3.f, 3.f });
+  m_camera.follow_object(&m_janitor);
 
+	vec2 boss_position = get_world_coords_from_room_coords(m_dungeon.boss_room_position, m_dungeon.boss_start_room->transform, m_dungeon.transform);
+	if (!m_boss.init(boss_position))
+	{
+		fprintf(stderr, "Failed to init Boss. \n");
+		return false;
+	}
+	m_boss.set_scale({ 3.f , 3.f });
+
+	return true;
+}
+
+bool World::init_hero()
+{
 	vec2 hero_position = get_world_coords_from_room_coords(m_dungeon.hero_room_position, m_dungeon.hero_start_room->transform, m_dungeon.transform);
 	m_hero.setRoom(m_dungeon.hero_start_room);
 	m_hero.setDungeon(&m_dungeon);
@@ -155,16 +175,9 @@ bool World::init_creatures()
 	}
 	m_hero.set_scale({ 3.f, 3.f });
 	m_hero.setAllRooms(&m_dungeon.get_rooms());
-
-	vec2 boss_position = get_world_coords_from_room_coords(m_dungeon.boss_room_position, m_dungeon.boss_start_room->transform, m_dungeon.transform);
-	if (!m_boss.init(boss_position))
-	{
-		fprintf(stderr, "Failed to init Boss. \n");
-		return false;
-	}
-	m_boss.set_scale({ 3.f , 3.f });
-
+	m_dungeon.spawn_hero();
 	return true;
+
 }
 
 // Releases all the associated resources
@@ -187,17 +200,28 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-  int w, h;
-  glfwGetFramebufferSize(m_window, &w, &h);
-  vec2 screen = {(float)w, (float)h};
   if (!game_is_over)
   {
 	  m_janitor.update(elapsed_ms);
-	  m_hero.update(elapsed_ms);
 	  m_boss.update(elapsed_ms);
 	  m_dungeon.update(elapsed_ms);
-
+    m_camera.update(elapsed_ms);
 	  m_janitor.check_movement();
+	  if (m_dungeon.hero_has_spawned())
+	  {
+		  m_hero.update(elapsed_ms);
+	  }
+	  else if (m_dungeon.should_spawn_hero())
+	  {
+		  if (!init_hero())
+		  {
+			  return false;
+		  }
+	  }
+	  if (m_hero.is_in_boss_room())
+	  {
+		  game_over();
+	  }
   }
   else 
   {
@@ -218,6 +242,7 @@ void World::draw()
 
   // Updating window title with points
   std::stringstream title_ss;
+  title_ss << "Hero Arrival In: " << m_dungeon.get_hero_timer();
   glfwSetWindowTitle(m_window, title_ss.str().c_str());
 
   // Clearing backbuffer
@@ -228,8 +253,8 @@ void World::draw()
   glClearDepth(1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  mat3 projection_2D = m_camera.get_projection(w, h);
-  mat3 transform = m_camera.get_transform(w, h);
+  mat3 projection_2D = m_camera.get_projection();
+  mat3 transform = m_camera.get_transform();
 
   // Drawing entities
   if (!game_is_over) 
@@ -238,6 +263,7 @@ void World::draw()
 	  m_janitor.draw(projection_2D, transform);
 	  m_hero.draw(projection_2D, transform);
 	  m_boss.draw(projection_2D, transform);
+    m_camera.draw(projection_2D, transform);
   }
   else
   {
@@ -300,12 +326,16 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
       }
     }
     
-    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) 
+	{
       std::vector<Puddle> &cleanables = m_janitor.get_current_room()->get_cleanables();
-      for (Puddle &p : cleanables) {
+      for (Puddle &p : cleanables) 
+	  {
         if (p.is_enabled() &&
-          m_janitor.collides_with(p, m_janitor.get_current_room()->transform, m_dungeon.transform)) {
+          m_janitor.collides_with(p, m_janitor.get_current_room()->transform, m_dungeon.transform)) 
+		{
           p.toggle_enable();
+		  m_janitor.get_current_room()->increment_cleaned_cleanables();
         }
       }
     }
@@ -319,8 +349,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
 	{
 		game_is_over = false;
-		int w, h;
-		glfwGetWindowSize(m_window, &w, &h);
 		//Destructor functions for game objects go below:
 		m_dungeon.destroy();
 		m_janitor.destroy();

@@ -38,7 +38,7 @@ public:
     ~Room();
 
     bool init();
-    bool init(vec2 position);
+    bool init(vec2 position, room_type type);
     void destroy();
 
     bool add_wall(wall_pair wall);
@@ -54,23 +54,33 @@ public:
     vector<Wall>& get_walls();
     vector<Puddle>&  get_cleanables();
 
-    double getReward() const;
+    
     void setReward(double reward);
+	double getReward() const;
+
     bool has_hero_spawn_loc() const;
-    vec2 get_hero_spawn_loc() const;
     bool has_boss_spawn_loc() const;
-    vec2 get_boss_spawn_loc() const;
-    bool has_janitor_spawn_loc() const;
+	bool has_janitor_spawn_loc() const;
+	bool containsBoss() const;
+	bool containsUndiscoveredArtifact();
+
+	vec2 get_hero_spawn_loc() const;
+	vec2 get_boss_spawn_loc() const;
     vec2 get_janitor_spawn_loc() const;
-    bool containsBoss() const;
-    bool containsUndiscoveredArtifact();
+    
     void setBossInRoom(bool bossInRoom);
     void deactivate_artifact();
-	  Artifact* get_artifact();
+	Artifact* get_artifact();
 		
-    int get_num_cleanables();
-    float get_clean_percent();
-    void decrement_cleanables();
+	void increment_cleaned_cleanables() { m_num_cleaned_cleanables++; } // Dana -- needs to be better plugged in (currently plugged into World)
+	void increment_activated_artifacts() { m_num_activated_artifacts++; } // Dana -- ditto (currently plugged into Dungeon)
+	int get_number_total_cleanables() { return m_total_cleanables; }
+	int get_number_cleaned_cleanables() { return m_num_cleaned_cleanables; }
+	int get_number_total_artifacts() { return m_total_artifacts; }
+	int get_number_activated_artifacts() { return m_num_activated_artifacts; }
+    
+
+    void set_room_type(room_type type) { m_room_type = type; }
 
     int getRoomID() const { return m_ID; };
     void setRoomID(int id);
@@ -90,8 +100,10 @@ private:
     bool m_has_janitor_spawn_loc;
 
     int m_ID; // unique room id
-    int m_num_cleanables;
+    int m_num_cleaned_cleanables; 
     int m_total_cleanables;
+	int m_num_activated_artifacts;
+	int m_total_artifacts;
     double heroRewardValue;
 
     vec2 m_hero_spawn_loc;
@@ -99,6 +111,8 @@ private:
     vec2 m_janitor_spawn_loc;
     
     Artifact		m_artifact;
+
+    room_type m_room_type;
 
     vector<Floor>		          m_floors;
     vector<Wall>		          m_walls;

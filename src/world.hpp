@@ -29,6 +29,7 @@ public:
 	bool init(vec2 screen);
 
 	bool init_creatures();
+	bool init_hero();
 
 	// Releases all associated resources
 	void destroy();

@@ -7,18 +7,20 @@ Texture Door::door_texture;
 Door::Door() : GameObject() {}
 Door::~Door() {}
 
-bool Door::init(vec2 pos)
+bool Door::init(vec2 pos, door_dir dir)
 {
   if (!door_texture.is_valid())
   {
-    if (!door_texture.load_from_file(textures_path("dungeon1/temp/door_temp.png")))
+    if (!door_texture.load_from_file(textures_path("dungeon1/door_temp.png")))
     {
-      fprintf(stderr, "Failed to load puddle texture\n");
+      fprintf(stderr, "Failed to load door texture\n");
       return false;
     }
   }
 
   m_position = pos;
+  m_size = {static_cast<float>(door_texture.width), static_cast<float>(door_texture.height)};
+  m_door_dir = dir;
 
   // The position corresponds to the center of the texture
   float wr = door_texture.width * 0.5f;
@@ -76,6 +78,8 @@ void Door::destroy()
   glDeleteShader(effect.fragment);
   glDeleteShader(effect.program);
 }
+
+Door::door_dir Door::get_dir() { return m_door_dir; };
 
 void Door::update_current(float ms) {};
 void Door::update_children(float ms) {}

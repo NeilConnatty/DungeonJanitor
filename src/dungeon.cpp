@@ -5,6 +5,8 @@
 #include "ValueIteration.hpp" // testing
 #include <iostream>
 
+#define ARTIFACT_VALUE 5
+
 Dungeon::Dungeon() : 
     GameObject()
 {
@@ -41,7 +43,9 @@ bool Dungeon::init()
       boss_room_position = room->get_boss_spawn_loc();
     }
   }
-
+  m_hero_timer = 180000.f; // Three minutes in milliseconds
+  m_should_spawn_hero = false;
+  m_hero_has_spawned = false;
   return true;
 }
 
@@ -56,6 +60,7 @@ void Dungeon::destroy()
 	{
 		door->destroy();
 	}
+	m_healthBar = NULL;
 }
 
 vector<unique_ptr<Room>>& Dungeon::get_rooms()
@@ -90,12 +95,23 @@ void Dungeon::activate_artifact()
 		if (room_ptr->containsUndiscoveredArtifact())
 		{
 			room_ptr->get_artifact()->set_active(true);
+			room_ptr->increment_activated_artifacts();
 		}
 	}
 }
 
 void Dungeon::update_current(float ms)
 {
+	if (!m_hero_has_spawned)
+	{
+		m_hero_timer -= ms;
+
+		if (m_hero_timer < 0)
+		{
+			m_should_spawn_hero = true;
+		}
+	}
+
 }
 
 void Dungeon::update_children(float ms)
@@ -109,10 +125,13 @@ void Dungeon::update_children(float ms)
   {
     door->update(ms);
   }
+
+  m_healthBar->set_percent_filled(get_percent_dungeon_cleaned());
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
 {
+
 }
 
 void Dungeon::draw_children(const mat3& projection, const mat3& current_transform)
@@ -126,6 +145,24 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
   {
     door->draw(projection, current_transform);
   }
+}
+
+float Dungeon::get_percent_dungeon_cleaned()
+{
+	float cleaned_cleanables = 0;
+	float total_cleanables = 0;
+	float activated_artifacts = 0;
+	float total_artifacts = 0;
+
+	for (std::unique_ptr<Room>& room : m_rooms)
+	{
+		cleaned_cleanables = cleaned_cleanables + room->get_number_cleaned_cleanables();
+		total_cleanables = total_cleanables + room->get_number_total_cleanables();
+		activated_artifacts = activated_artifacts + room->get_number_activated_artifacts();
+		total_artifacts = total_artifacts + room->get_number_total_artifacts();
+	}
+	
+	return (cleaned_cleanables + activated_artifacts * ARTIFACT_VALUE) / (total_cleanables + total_artifacts * ARTIFACT_VALUE);
 }
 
 bool Dungeon::add_doors(vector<std::unique_ptr<Door>>& doors)
@@ -151,4 +188,39 @@ void Dungeon::add_adjacency(int roomID, Room::adjacent_room adj)
     m_adjacency_map.emplace(roomID, std::vector<Room::adjacent_room>());
     m_adjacency_map.at(roomID).push_back(adj);
   }
+}
+
+string Dungeon::get_hero_timer()
+{
+	double minutesRemainder = (m_hero_timer) / 60000;
+	int minutes = minutesRemainder;
+	double secondsRemainder = (minutesRemainder - minutes) * 60;
+	int seconds = secondsRemainder;
+	string minutes_str = to_string(minutes);
+	string seconds_str = to_string(seconds);
+
+	if (minutes <= 0 && seconds < 0)
+	{
+		return "0:00";
+	}
+	if (seconds < 10)
+	{
+		seconds_str = "0" + seconds_str;
+	}
+	return  minutes_str + ":" + seconds_str;
+}
+
+bool Dungeon::should_spawn_hero()
+{
+	return m_should_spawn_hero;
+}
+
+bool Dungeon::hero_has_spawned()
+{
+	return m_hero_has_spawned;
+}
+
+void Dungeon::spawn_hero()
+{
+	m_hero_has_spawned = true;
 }

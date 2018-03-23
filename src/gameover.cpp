@@ -75,6 +75,7 @@ bool GameOver::init() {
 		return false;
 
 	m_animation_time = 0;
+	m_curr_tex = &gameover1;
 	return true;
 }
 void GameOver::draw_current(const mat3& projection, const mat3& current_transform) {
