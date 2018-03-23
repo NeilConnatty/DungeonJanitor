@@ -16,5 +16,5 @@ public:
 	~Puddle();
 	Texture& get_texture() override;
 	bool load_texture() override;
-	void clean() override;
+	bool clean() override;
 };

@@ -44,7 +44,15 @@ bool Garbage::load_texture()
 	return true;
 }
 
-void Garbage::clean()
+bool Garbage::clean()
 {
-	m_is_empty = true;
+	if (!m_is_empty)
+	{
+		m_is_empty = true;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

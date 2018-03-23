@@ -56,7 +56,8 @@ bool Graffiti::load_texture()
 	return true;
 }
 
-void Graffiti::clean()
+bool Graffiti::clean()
 {
 	m_enabled = false;
+	return true;
 }

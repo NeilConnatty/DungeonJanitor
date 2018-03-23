@@ -26,7 +26,8 @@ bool Puddle::load_texture()
 	return true;
 }
 
-void Puddle::clean()
+bool Puddle::clean()
 {
 	m_enabled = false;
+	return true;
 }

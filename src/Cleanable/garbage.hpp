@@ -19,5 +19,5 @@ public:
 	bool init(vec2 pos);
 	Texture& get_texture() override;
 	bool load_texture() override;
-	void clean() override;
+	bool clean() override;
 };

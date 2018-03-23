@@ -24,7 +24,7 @@ public:
 	void	destroy();
 	virtual Texture& get_texture() = 0;
 	virtual bool load_texture() = 0;
-	virtual void clean() = 0;
+	virtual bool clean() = 0;
 
 private:
 	void update_current(float ms) override {};

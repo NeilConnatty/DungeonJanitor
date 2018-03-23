@@ -20,6 +20,8 @@ bool Room::init(vec2 position, room_type type)
   m_BossHere = false;
   m_ArtifactHere = false;
   m_room_type = type;
+  m_num_cleanables = 0;
+  m_total_cleanables = 0;
 
   return true;
 }
@@ -130,6 +132,8 @@ bool Room::add_cleanables(vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 	{
 		for (pair<Cleanable::types, vec2>& cleanable : cleanable_pos)
 		{
+			m_total_cleanables++;
+			m_num_cleanables++;
 			if (cleanable.first == Cleanable::types::PUDDLE)
 			{
 				Puddle* p = new Puddle();
@@ -200,16 +204,15 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 	return true;
 }
 
-//int Room::get_num_cleanables() { return m_num_cleanables; }
-//float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
-//void Room::decrement_cleanables() { m_num_cleanables--; }
-
 void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 {
 	for (unique_ptr<Cleanable>& c : get_cleanables()) {
 		if (c->is_enabled() &&
 			janitor->collides_with(*c, this->transform, dungeon_transform)) {
-			c.get()->clean();
+			if (c.get()->clean())
+			{
+				m_num_cleanables--;
+			}
 		}
 	}
 
