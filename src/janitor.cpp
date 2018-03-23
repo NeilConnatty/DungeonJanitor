@@ -152,7 +152,7 @@ void Janitor::update_current(float ms)
 	else m_time_pressed_down = 0;
 	if (!m_key_up && !m_key_down)
 	{
-		if ((m_vel.y > 0 && m_vel.y < 20.f) || m_vel.y < 0 && m_vel.y > -20.f) {
+		if ((m_vel.y > 0 && m_vel.y < 20.f) || (m_vel.y < 0 && m_vel.y > -20.f)) {
 			m_vel.y = 0;
 			m_accel.y = 0;
 		}
@@ -179,7 +179,7 @@ void Janitor::update_current(float ms)
 	else m_time_pressed_right = 0;
 	if (!m_key_left && !m_key_right)
 	{
-		if ((m_vel.x > 0 && m_vel.x < 20.f) || m_vel.x < 0 && m_vel.x > -20.f) {
+		if ((m_vel.x > 0 && m_vel.x < 20.f) || (m_vel.x < 0 && m_vel.x > -20.f)) {
 			m_vel.x = 0;
 			m_accel.x = 0;
 		}
@@ -272,10 +272,12 @@ void Janitor::check_collisions()
   bool door_collision_this_frame = false;
   for (Room::adjacent_room& adjacent : m_dungeon->get_adjacent_rooms(m_currentRoom->getRoomID()))
   {
-    if (collides_with(*adjacent.door, m_dungeon->transform, identity_matrix)) // door is in dungeon coords 
+    if (collides_with_door(*adjacent.door, m_dungeon->transform, identity_matrix)) // door is in dungeon coords
     {
+
       if (!m_door_collision_last_frame)
       {
+      	// printf("change room: %i\n", m_currentRoom->getRoomID());
         set_current_room(adjacent.room);
       }
       door_collision_this_frame = true;
@@ -365,62 +367,64 @@ void Janitor::check_movement()
   float jTopEdge = m_position.y;
   float jBottomEdge = m_position.y+m_size.y;
   float wLeftEdge, wRightEdge, wTopEdge, wBottomEdge;
-  float wLeftEdge2, wRightEdge2, wTopEdge2, wBottomEdge2;
+  vec2 wall;
 
-  vec2 wall, wall2;
+  can_move_up = true;
+  can_move_down = true;
+  can_move_left = true;
+  can_move_right = true;
 
-	can_move_up = true;
-	can_move_down = true;
-	can_move_left = true;
-	can_move_right = true;
+  for (std::unique_ptr<Room>& room : m_dungeon->get_rooms()) {
+  	std::vector<Wall>& walls = room->get_walls();
+  	for (Wall& w : walls) {
+  		wall = get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon->transform);
+  		wLeftEdge = wall.x;
+  		wRightEdge = wall.x + w.get_size().x;
+  		wTopEdge = wall.y;
+  		wBottomEdge = wall.y + w.get_size().y;
 
-	if (m_currentRoom->getRoomID() == -1) {
-  	for (std::unique_ptr<Room>& room : m_dungeon->get_rooms()) {
-			std::vector<Wall>& walls = room->get_walls();
-			for (Wall& w : walls) {
-				wall = get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon->transform);
-				wLeftEdge = wall.x;
-				wRightEdge = wall.x + w.get_size().x;
-				wTopEdge = wall.y;
-				wBottomEdge = wall.y + w.get_size().y;
+				// Check thin walls
+  		if (w.get_size().x < m_size.x){
+  			if ((wLeftEdge - jRightEdge <= w.get_size().x+10.f && wLeftEdge > jRightEdge)
+  				|| (jRightEdge-wLeftEdge <= w.get_size().x+10.f && jRightEdge > wLeftEdge)){
+  				if (jTopEdge - wBottomEdge <= 5.f && jTopEdge >= wBottomEdge){
+  					can_move_up = false;
+  				} else if (wTopEdge - jBottomEdge <= 70.f && jBottomEdge <= wTopEdge){
+  					can_move_down = false;
+  				}
+  			}
 
-				if (jTopEdge - wBottomEdge <= 60.f && jTopEdge - wBottomEdge >= 0.f && abs (jLeftEdge-wLeftEdge) <= 45.f){
-					can_move_up = false;
-				}
-				if (wTopEdge - jBottomEdge <= 60.f && wTopEdge - jBottomEdge >= 0.f && abs (jLeftEdge-wLeftEdge) <= 40.f){
-					can_move_down = false;
-				}
-				if (jLeftEdge - wRightEdge <= 25.f && jLeftEdge - wRightEdge >= 0.f && abs (jTopEdge - wTopEdge) <= 35.f){
-					can_move_left = false;
-				}
-				if (wLeftEdge - jRightEdge <= 35.f && wLeftEdge - jRightEdge >= 0.f && abs (jTopEdge - wTopEdge) <= 35.f){
-					can_move_right = false;
-				}
-			}
-		}
-	} else {
-		std::vector<Wall>& walls = m_currentRoom->get_walls();
-		for (Wall& w : walls) {
-			wall2 = get_world_coords_from_room_coords(w.get_pos(), m_currentRoom->transform, m_dungeon->transform);
-			wLeftEdge2 = wall2.x;
-			wRightEdge2 = wall2.x + w.get_size().x;
-			wTopEdge2 = wall2.y;
-			wBottomEdge2 = wall2.y + w.get_size().y;
+  			if ((wTopEdge - jBottomEdge <= w.get_size().y +6.f && wTopEdge > jBottomEdge)
+  				|| (jBottomEdge-wTopEdge <= w.get_size().y+6.f && jBottomEdge > wTopEdge)){
+  				if (jLeftEdge - wRightEdge <= m_size.x && jLeftEdge >= wRightEdge){
+  					can_move_left = false;
+  				} else if (wLeftEdge - jRightEdge <= m_size.x && wLeftEdge - jRightEdge >= 0.f){
+  					can_move_right = false;
+  				}
+  			}
+  		} else {
+					// Check regular walls
+  			if ((abs(wLeftEdge - jRightEdge) <= w.get_size().x+7.f && wLeftEdge > jRightEdge)
+  				|| (abs(jRightEdge - wLeftEdge) <= w.get_size().x+7.f && jRightEdge > wLeftEdge)
+  				|| (abs(jLeftEdge-wRightEdge) <= m_size.x+7.f && jLeftEdge> wRightEdge)){
+  				if (jTopEdge - wBottomEdge <= 5.f && jTopEdge >= wBottomEdge){
+  					can_move_up = false;
+  				} else if (wTopEdge - jBottomEdge <= 70.f && jBottomEdge <= wTopEdge){
+  					can_move_down = false;
+  				}
+  			}
 
-			if (jTopEdge - wBottomEdge2 <= 60.f && jTopEdge - wBottomEdge2 >= 0.f && abs (jLeftEdge-wLeftEdge2) <= 45.f){
-				can_move_up = false;
-			}
-			if (wTopEdge2 - jBottomEdge <= 60.f && wTopEdge2 - jBottomEdge >= 0.f && abs (jLeftEdge-wLeftEdge2) <= 40.f){
-				can_move_down = false;
-			}
-			if (jLeftEdge - wRightEdge2 <= 25.f && jLeftEdge - wRightEdge2 >= 0.f && abs (jTopEdge - wTopEdge2) <= 35.f){
-				can_move_left = false;
-			}
-			if (wLeftEdge2 - jRightEdge <= 35.f && wLeftEdge2 - jRightEdge >= 0.f && abs (jTopEdge - wTopEdge2) <= 35.f){
-				can_move_right = false;
-			}
-		}
-	}
+  			if ((wTopEdge - jBottomEdge <= w.get_size().y +6.f && wTopEdge > jBottomEdge)
+  				|| (jBottomEdge-wTopEdge <= w.get_size().y+6.f && jBottomEdge > wTopEdge)){
+  				if (jLeftEdge - wRightEdge <= m_size.x && jLeftEdge >= wRightEdge){
+  					can_move_left = false;
+  				} else if (wLeftEdge - jRightEdge <= m_size.x && wLeftEdge - jRightEdge >= 0.f){
+  					can_move_right = false;
+  				}
+  			}
+  		}
+  	}
+  }
 }
 
 void Janitor::key_up(bool move) {
@@ -578,17 +582,33 @@ void Janitor::pick_movement_tex(const int FRAME_TIMING) {
 		}
 		case left:
 		{
-			if (m_animation_time < FRAME_TIMING)	
+			if (m_animation_time < FRAME_TIMING)
 				m_curr_tex = &left1;
-			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)	
+			else if (m_animation_time >= FRAME_TIMING && m_animation_time < 2 * FRAME_TIMING)
 				m_curr_tex = &left2;
-			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)	
+			else if (m_animation_time >= 2 * FRAME_TIMING && m_animation_time < 3 * FRAME_TIMING)
 				m_curr_tex = &left3;
-			else if (m_animation_time >= 3 * FRAME_TIMING) 
+			else if (m_animation_time >= 3 * FRAME_TIMING)
 				m_curr_tex = &left4;
 		}
 	}
 }
+
+bool Janitor::collides_with_door(Door& door, mat3 room_transform, mat3 dungeon_transform) {
+	if (door.get_dir() == Door::VERTICAL){
+		float doorX = get_world_coords_from_room_coords(door.get_pos(), room_transform, dungeon_transform).x;
+		if (abs(m_position.x - doorX) <= 0.9f) {
+    	return true;
+    }
+	} else if (door.get_dir() == Door::HORIZONTAL){
+		float doorY = get_world_coords_from_room_coords(door.get_pos(), room_transform, dungeon_transform).y;
+		if (abs(m_position.y - doorY) <= 0.9f){
+	    return true;
+		}
+	}
+  return false;
+}
+
 //Loads and validates texture files via hardcoded path names
 bool Janitor::validate_textures()
 {
