@@ -483,7 +483,7 @@ bool DungeonParser::addAdjacency(
 
   if (!validRoomID(adj_num))
   {
-    fprintf(stderr, "Error parsing room file. Invalid character %c. \n ",
+    fprintf(stderr, "Error parsing dungeon file. Invalid character %c. \n ",
             adj_ch);
     return false;
   }
@@ -583,7 +583,7 @@ bool DungeonParser::buildRooms(std::vector<std::string> &lines,
         }
         if (roomRight(lines, row, column))
         {
-          char& adj_ch = lines[row][column - 1];
+          char& adj_ch = lines[row][column + 1];
           if (!addAdjacency(room_adjacency_map, adj_ch, num, EAST))
           {
             return false;
