@@ -104,8 +104,9 @@ bool Wall::init(vec2 position, wall_edge edge)
   {
     fprintf(stderr, "Failed to set m_texture\n");
     return false;
+  } else {
+    m_size = {static_cast<float>(m_texture->width), static_cast<float>(m_texture->height)};
   }
-  
   set_vertices_top_bottom(vertices, numVertices, indices, numIndices);
 
 	// Clearing errors
