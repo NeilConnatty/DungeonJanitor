@@ -22,20 +22,20 @@ bool Janitor::init(vec2 position)
 {
 	if (!validate_textures()) return false;
 	//scale of the texture and resulting mesh
-	float wr = janitor_sheet.width/4 * 0.5f;
-	float hr = janitor_sheet.height/8 * 0.5f;
-	animation_frame_w = 1 / 4;
-	animation_frame_h = 1 / 8;
+	float wr = janitor_sheet.width/4.f * 0.5f;
+	float hr = janitor_sheet.height/8.f * 0.5f;
+	animation_frame_w = 1 / 4.0f;
+	animation_frame_h = 1 / 8.0f;
 	//texcoords are in the range [0..1]
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
-	vertices[0].texcoord = { 0.f, 0.f };
+	vertices[0].texcoord = { 0.f, animation_frame_h };
 	vertices[1].position = { +wr, +hr, -0.02f };
-	vertices[1].texcoord = { animation_frame_w, 0 };
+	vertices[1].texcoord = { animation_frame_w, animation_frame_h };
 	vertices[2].position = { +wr, -hr, -0.02f };
-	vertices[2].texcoord = { animation_frame_w, animation_frame_h };
+	vertices[2].texcoord = { animation_frame_w, 0.f };
 	vertices[3].position = { -wr, -hr, -0.02f };
-	vertices[3].texcoord = { 0.f, animation_frame_h };
+	vertices[3].texcoord = { 0.f,  0.f};
 
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
@@ -64,8 +64,8 @@ bool Janitor::init(vec2 position)
 	//Initialize member variables
 	m_position = position;
 	m_size = {static_cast<float>(janitor_sheet.width/4), static_cast<float>(janitor_sheet.height/8)};
-	animation_dir = down;
-	frame = 1;
+	animation_dir = right;
+	frame = 0;
 	m_time_elapsed = 0;
 	m_time_pressed_up = 0;
 	m_time_pressed_down = 0;
@@ -116,9 +116,11 @@ void Janitor::update_current(float ms)
 	float time_factor = ms / 1000;
 
 	m_time_elapsed += ms;
-	if (m_time_elapsed > MS_PER_FRAME)
-		frame = (frame + 1) % NUM_FRAMES;
-
+	if(m_key_up || m_key_down || m_key_right || m_key_left)
+		if (m_time_elapsed > MS_PER_FRAME) {
+			m_time_elapsed = 0;
+			frame = (frame + 1) % NUM_FRAMES;
+		}
 	check_collisions();
 	//UP
 	if (m_key_up)
@@ -453,7 +455,7 @@ void Janitor::key_right(bool move) {
 }
 
 //Helper function for draw_current
-//sets *m_curr_tex = &some_tex where some_tex is based on timing and key(s) pressed
+//Picks direction of animation based on m_vel
 void Janitor::pick_movement_tex() {
 	
 	//if velocity is 0, return, leaving the current animation frame as is

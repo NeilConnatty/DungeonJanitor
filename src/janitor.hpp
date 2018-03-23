@@ -27,7 +27,7 @@ public:
 	void key_left(bool move);
 	void key_right(bool move);
 	enum DIRECTION {
-		right, up_right, up, up_left, left, down_left, down, down_right
+		right, up_right, up, up_left, down_left, down, left, down_right
 	};
 	bool validate_textures();
 	void pick_movement_tex();
@@ -73,5 +73,5 @@ private:
 	int const NUM_FRAMES = 4;
 	float animation_frame_w;
 	float animation_frame_h;
-	float const MS_PER_FRAME = (1 / 12.5)*1000;
+	float const MS_PER_FRAME = (1/12.5)*1000;
 };
