@@ -26,7 +26,7 @@ bool Graffiti::load_texture()
 {
 	if (!graffiti_textures[0].is_valid())
 	{
-		if (!graffiti_textures[0].load_from_file(dungeon1_textures_path("dungeon1/d1_cleanable_graffiti-1.png")))
+		if (!graffiti_textures[0].load_from_file(textures_path("dungeon1/d1_cleanable_graffiti-1.png")))
 		{
 			fprintf(stderr, "Failed to load graffiti1 texture\n");
 			return false;
@@ -36,7 +36,7 @@ bool Graffiti::load_texture()
 			fprintf(stderr, "Failed to load graffiti2 texture\n");
 			return false;
 		}
-		if (!graffiti_textures[2].load_from_file(dungeon1_textures_path("dungeon1/d1_cleanable_graffiti-3.png")))
+		if (!graffiti_textures[2].load_from_file(textures_path("dungeon1/d1_cleanable_graffiti-3.png")))
 		{
 			fprintf(stderr, "Failed to load graffiti3 texture\n");
 			return false;
