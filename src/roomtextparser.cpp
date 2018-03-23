@@ -161,7 +161,7 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
       tile_dim = Floor::get_dimensions();
       if (i == 0)
       {
-        x = x + tile_dim.x - 25.f;
+        x = x + tile_dim.x - FLOOR_Y_OFFSET;
       }
       else
       {
