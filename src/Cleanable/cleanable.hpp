@@ -12,7 +12,8 @@ public:
 	enum types
 	{
 		PUDDLE = 0,
-		GRAFFITI = 1
+		GRAFFITI = 1,
+		GARBAGE = 2
 	};
 public:
 	Cleanable();

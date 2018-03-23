@@ -10,6 +10,7 @@
 #include "Cleanable/graffiti.hpp"
 #include "Cleanable/artifact.hpp"
 #include "Cleanable/cleanable.hpp"
+#include "Cleanable/garbage.hpp"
 
 #include <vector>
 #include <array>

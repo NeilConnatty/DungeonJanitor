@@ -147,7 +147,15 @@ bool Room::add_cleanables(vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 					return false;
 				}
 				m_cleanables.emplace_back(g);
-
+			}
+			else if (cleanable.first == Cleanable::types::GARBAGE)
+			{
+				Garbage* g = new Garbage();
+				if (!g->init(cleanable.second))
+				{
+					return false;
+				}
+				m_cleanables.emplace_back(g);
 			}
 		}
 	}

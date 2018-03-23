@@ -19,6 +19,7 @@
 #define HALLWAY 'h'
 #define EMPTY 'e'
 #define ROOM 'r'
+#define GARBAGE_CAN 'i'
 
 // Room types
 #define HALLWAY_R 'l'
@@ -123,6 +124,14 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
       tile_dim = Floor::get_dimensions();
       x = x + tile_dim.x;
     }
+	else if (ch == GARBAGE_CAN)
+	{
+		vec2 pos = { x, y };
+		cleanable_pos.push_back(make_pair(Cleanable::types::GARBAGE, pos));
+		floor_pos.push_back(pos);
+		tile_dim = Floor::get_dimensions();
+		x = x + tile_dim.x;
+	}
 	else if (ch == GRAFFITI_ON_WALL)
 	{
 		vec2 pos = { x, y };

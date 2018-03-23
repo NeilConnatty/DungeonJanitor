@@ -504,6 +504,7 @@
     <ClCompile Include="..\src\Cleanable\artifact.cpp" />
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\Cleanable\cleanable.cpp" />
+    <ClCompile Include="..\src\Cleanable\garbage.cpp" />
     <ClCompile Include="..\src\Cleanable\graffiti.cpp" />
     <ClCompile Include="..\src\door.cpp" />
     <ClCompile Include="..\src\dungeon.cpp" />
@@ -528,6 +529,7 @@
     <ClInclude Include="..\src\Cleanable\artifact.hpp" />
     <ClInclude Include="..\src\camera.hpp" />
     <ClInclude Include="..\src\Cleanable\cleanable.hpp" />
+    <ClInclude Include="..\src\Cleanable\garbage.hpp" />
     <ClInclude Include="..\src\Cleanable\graffiti.hpp" />
     <ClInclude Include="..\src\Cleanable\puddle.hpp" />
     <ClInclude Include="..\src\common.hpp" />
