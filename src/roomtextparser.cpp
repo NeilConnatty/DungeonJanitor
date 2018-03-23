@@ -147,7 +147,7 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
       }
       else if (i == 0)
       {
-        door_infos.push_back({ {x,y}, Door::HORIZONTAL, WEST });
+        door_infos.push_back({ {x-25.f,y}, Door::HORIZONTAL, WEST });
       }
       else
       {
@@ -155,7 +155,14 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
       }
 
       tile_dim = Floor::get_dimensions();
-      x = x + tile_dim.x;
+      if (i == 0)
+      {
+        x = x + tile_dim.x - 25.f;
+      }
+      else
+      {
+        x = x + tile_dim.x;
+      }
     }
     else if (ch == PUDDLE) 
     {
