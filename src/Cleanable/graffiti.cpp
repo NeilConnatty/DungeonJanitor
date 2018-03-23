@@ -2,8 +2,6 @@
 // Must go on walls that face the camera
 #include "graffiti.hpp"
 
-Texture Graffiti::graffiti_texture;
-
 Graffiti::Graffiti() {}
 
 Graffiti::~Graffiti() {}
@@ -11,46 +9,40 @@ Graffiti::~Graffiti() {}
 bool Graffiti::init(vec2 pos)
 {
 	pos.y = pos.y + 30;
+	default_random_engine rng;
+	uniform_int_distribution<int> dist;
+	rng = default_random_engine(random_device()());
+	dist = uniform_int_distribution<int>(0, NUM_GRAFFITI_TEXTURES - 1);
+	m_texture_index = dist(rng);
 	return Cleanable::init(pos);
 }
 
 Texture& Graffiti::get_texture()
 {
-	return graffiti_texture;
+	return graffiti_textures[0];
 }
 
 bool Graffiti::load_texture()
 {
-	if (!get_texture().is_valid())
+	if (!graffiti_textures[0].is_valid())
 	{
-		srand(time(0));
-		int random = rand() % 3 + 1;
-		if (random == 1)
+		if (!graffiti_textures[0].load_from_file(dungeon1_textures_path("dungeon1/d1_cleanable_graffiti-1.png")))
 		{
-			if (!graffiti_texture.load_from_file(dungeon1_textures_path("d1_cleanable_graffiti-1.png")))
-			{
-				fprintf(stderr, "Failed to load graffiti1 texture\n");
-				return false;
-			}
+			fprintf(stderr, "Failed to load graffiti1 texture\n");
+			return false;
 		}
-		else if (random == 2)
+		if (!graffiti_textures[1].load_from_file(textures_path("dungeon1/d1_cleanable_graffiti-2.png")))
 		{
-			if (!graffiti_texture.load_from_file(dungeon1_textures_path("d1_cleanable_graffiti-2.png")))
-			{
-				fprintf(stderr, "Failed to load graffiti2 texture\n");
-				return false;
-			}
+			fprintf(stderr, "Failed to load graffiti2 texture\n");
+			return false;
 		}
-		else
+		if (!graffiti_textures[2].load_from_file(dungeon1_textures_path("dungeon1/d1_cleanable_graffiti-3.png")))
 		{
-			if (!graffiti_texture.load_from_file(dungeon1_textures_path("d1_cleanable_graffiti-3.png")))
-			{
-				fprintf(stderr, "Failed to load graffiti3 texture\n");
-				return false;
-			}
+			fprintf(stderr, "Failed to load graffiti3 texture\n");
+			return false;
 		}
 	}
-	m_size = { static_cast<float>(graffiti_texture.width), static_cast<float>(graffiti_texture.height) };
+	m_size = { static_cast<float>(graffiti_textures[0].width), static_cast<float>(graffiti_textures[0].height) };
 	m_scale.x = 1.f;
 	m_scale.y = 1.f;
 	return true;
