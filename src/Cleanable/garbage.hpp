@@ -4,14 +4,19 @@
 #include "cleanable.hpp"
 
 #include <vector>
+#include <random>
+using namespace std;
+
+#define NUM_GARBAGE_TEXTURES 2
 
 class Garbage : public Cleanable
 {
 
 private:
-	static Texture garbage_texture_full;
-	static Texture garbage_texture_empty;
+	static Texture garbage_texture_blue[NUM_GARBAGE_TEXTURES];
+	static Texture garbage_texture_green[NUM_GARBAGE_TEXTURES];
 	bool m_is_empty;
+	int m_texture_index;
 
 public:
 	Garbage();
