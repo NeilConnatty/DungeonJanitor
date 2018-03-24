@@ -330,15 +330,19 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     }
     
     if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) 
-	{
-      std::vector<Puddle> &cleanables = m_janitor.get_current_room()->get_cleanables();
-      for (Puddle &p : cleanables) 
 	  {
-        if (p.is_enabled() &&
-          m_janitor.collides_with(p, m_janitor.get_current_room()->transform, m_dungeon.transform)) 
-		{
-          p.toggle_enable();
-		  m_janitor.get_current_room()->increment_cleaned_cleanables();
+      std::vector<unique_ptr<Room>>& rooms = m_dungeon.get_rooms();
+      for (unique_ptr<Room>& room : rooms)
+      {
+        std::vector<Puddle> &cleanables = room->get_cleanables();
+        for (Puddle &p : cleanables)
+        {
+          if (p.is_enabled() && m_janitor.collides_with(p, room->transform,
+                                                        m_dungeon.transform)) 
+          {
+            p.toggle_enable();
+            room->increment_cleaned_cleanables();
+          }
         }
       }
     }
