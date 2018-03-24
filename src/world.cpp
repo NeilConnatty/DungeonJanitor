@@ -261,9 +261,12 @@ void World::draw()
   {
 	  m_dungeon.draw(projection_2D, transform);
 	  m_janitor.draw(projection_2D, transform);
-	  m_hero.draw(projection_2D, transform);
 	  m_boss.draw(projection_2D, transform);
     m_camera.draw(projection_2D, transform);
+    if (m_dungeon.hero_has_spawned())
+    {
+      m_hero.draw(projection_2D, transform);
+    }
   }
   else
   {
