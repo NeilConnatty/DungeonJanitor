@@ -107,7 +107,7 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
     } 
     else if (ch == EMPTY)
     {
-      x += 10.f;
+      x += WALL_X_OFFSET;
     }
     else if (ch == WALL) 
     {
@@ -151,7 +151,7 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
       }
       else if (i == 0)
       {
-        door_infos.push_back({ {x-25.f,y}, Door::HORIZONTAL, WEST });
+        door_infos.push_back({ {x-FLOOR_Y_OFFSET,y}, Door::HORIZONTAL, WEST });
       }
       else
       {
