@@ -6,6 +6,7 @@
 #include <iostream>
 
 #define ARTIFACT_VALUE 5
+#define HERO_TIME_TO_SPAWN 60000.f
 
 Dungeon::Dungeon() : 
     GameObject()
@@ -43,7 +44,7 @@ bool Dungeon::init()
       boss_room_position = room->get_boss_spawn_loc();
     }
   }
-  m_hero_timer = 180000.f; // Three minutes in milliseconds
+  m_hero_timer = HERO_TIME_TO_SPAWN; // Three minutes in milliseconds
   m_should_spawn_hero = false;
   m_hero_has_spawned = false;
   return true;
