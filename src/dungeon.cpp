@@ -69,38 +69,6 @@ vector<unique_ptr<Room>>& Dungeon::get_rooms()
 	return m_rooms;
 }
 
-void Dungeon::clean()
-{
-	for (std::unique_ptr<Room>& room : m_rooms)
-	{
-		std::vector<Puddle>& cleanables = room->get_cleanables();
-		for (Puddle& p : cleanables)
-		{
-			if (p.is_enabled())
-			{
-				// Collision stuff goes here
-				if (true)
-				{
-					p.toggle_enable();
-				}
-			}
-		}
-	}
-}
-
-void Dungeon::activate_artifact()
-{
-	for (std::unique_ptr<Room>& room : m_rooms)
-	{
-		Room* room_ptr = room.get();
-		if (room_ptr->containsUndiscoveredArtifact())
-		{
-			room_ptr->get_artifact()->set_active(true);
-			room_ptr->increment_activated_artifacts();
-		}
-	}
-}
-
 void Dungeon::update_current(float ms)
 {
 	if (!m_hero_has_spawned)

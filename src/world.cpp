@@ -329,28 +329,13 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
       }
     }
     
-    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) 
-	  {
-      std::vector<unique_ptr<Room>>& rooms = m_dungeon.get_rooms();
-      for (unique_ptr<Room>& room : rooms)
-      {
-        std::vector<Puddle> &cleanables = room->get_cleanables();
-        for (Puddle &p : cleanables)
-        {
-          if (p.is_enabled() && m_janitor.collides_with(p, room->transform,
-                                                        m_dungeon.transform)) 
-          {
-            p.toggle_enable();
-            room->increment_cleaned_cleanables();
-          }
-        }
-      }
+    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+		for (unique_ptr<Room>& r : m_dungeon.get_rooms())
+		{
+			Room* room = r.get();
+			r->clean(&m_janitor, m_dungeon.transform);
+		}
     }
-
-    // temporary keybind, probably will bind it to space once we have collisions
-    if (action == GLFW_PRESS && key == GLFW_KEY_A) {
-      m_dungeon.activate_artifact();
-	}
 
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)

@@ -17,7 +17,9 @@
 #define SPACE ' '
 #define WALL 'w'
 #define FLOOR 'f'
-#define PUDDLE 'p'
+#define PUDDLE_ON_GROUND 'p'
+#define GRAFFITI_ON_WALL 'g'
+#define GARBAGE_CAN 'i'
 #define ARTIFACT 'a'
 #define JANITOR 'j'
 #define HERO 'h'
@@ -168,13 +170,31 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
         x = x + tile_dim.x;
       }
     }
-    else if (ch == PUDDLE) 
+    else if (ch == PUDDLE_ON_GROUND)
     {
-      puddle_pos.push_back({x, y});
-      floor_pos.push_back({x, y});
-      tile_dim = Floor::get_dimensions();
-      x = x + tile_dim.x;
+		vec2 pos = { x, y };
+		cleanable_pos.push_back(make_pair(Cleanable::types::PUDDLE, pos));
+		floor_pos.push_back(pos);
+		tile_dim = Floor::get_dimensions();
+		x = x + tile_dim.x;
     }
+	else if (ch == GARBAGE_CAN)
+	{
+		vec2 pos = { x, y };
+		cleanable_pos.push_back(make_pair(Cleanable::types::GARBAGE, pos));
+		floor_pos.push_back(pos);
+		tile_dim = Floor::get_dimensions();
+		x = x + tile_dim.x;
+	}
+	else if (ch == GRAFFITI_ON_WALL)
+	{
+		vec2 pos = { x, y };
+		cleanable_pos.push_back(make_pair(Cleanable::types::GRAFFITI, pos));
+		edge = TOP;
+		wall_pairs.push_back({ { x, y }, edge });
+		tile_dim = Wall::get_dimensions(edge);
+		x = x + tile_dim.x;
+	}
     else if (ch == ARTIFACT) // At most one per room
     {
         has_artifact = true;
@@ -226,14 +246,15 @@ void RoomParser::clearPositions()
 {
   wall_pairs.clear();
   floor_pos.clear();
-  puddle_pos.clear();
+  cleanable_pos.clear();
   door_infos.clear();
 }
 
 bool RoomParser::populateRoom(Room &room) 
 {
-  return (room.add_floors(floor_pos) && room.add_cleanables(puddle_pos) &&
+  return (room.add_floors(floor_pos) && 
           room.add_walls(wall_pairs) &&
+		  room.add_cleanables(cleanable_pos) &&
           room.add_artifact(has_artifact, artifact_pos) &&
           room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
           room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&

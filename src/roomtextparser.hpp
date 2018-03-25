@@ -4,6 +4,7 @@
 #include "room.hpp"
 #include "door.hpp"
 #include "dungeon.hpp"
+#include "Cleanable/cleanable.hpp"
 
 using namespace std;
 
@@ -34,9 +35,9 @@ private:
 	vec2 boss_spawn_pos;
 	vec2 hero_spawn_pos;
 	vec2 janitor_spawn_pos;
+	vector<pair<Cleanable::types, vec2>> cleanable_pos;
 	
 	vector<vec2> floor_pos;
-	vector<vec2> puddle_pos;
 	vector<door_info> door_infos;
 	vector<Room::wall_pair> wall_pairs;
 
