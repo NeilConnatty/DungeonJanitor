@@ -20,7 +20,6 @@ bool Room::init(vec2 position, room_type type)
   m_BossHere = false;
   m_ArtifactHere = false;
   m_room_type = type;
-  m_total_cleanables = 0;
   m_num_cleaned_cleanables = 0;
   m_total_cleanables = 0;
   m_num_activated_artifacts = 0;
@@ -42,6 +41,16 @@ void Room::destroy()
   for (Wall w : m_walls) 
   {
     w.destroy();
+  }
+  
+  for (unique_ptr<Cleanable>& c : m_cleanables)
+  {
+	  c->destroy();
+  }
+
+  if (m_ArtifactHere)
+  {
+	  m_artifact.destroy();
   }
 
 }

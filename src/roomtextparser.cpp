@@ -19,6 +19,7 @@
 #define FLOOR 'f'
 #define PUDDLE_ON_GROUND 'p'
 #define GRAFFITI_ON_WALL 'g'
+#define GARBAGE_CAN 'i'
 #define ARTIFACT 'a'
 #define JANITOR 'j'
 #define HERO 'h'
@@ -27,7 +28,6 @@
 #define HALLWAY 'h'
 #define EMPTY 'e'
 #define ROOM 'r'
-#define GARBAGE_CAN 'i'
 #define NULLCH '\0'
 
 // Room types
