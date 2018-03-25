@@ -205,7 +205,7 @@ bool World::update(float elapsed_ms)
 	  m_janitor.update(elapsed_ms);
 	  m_boss.update(elapsed_ms);
 	  m_dungeon.update(elapsed_ms);
-    m_camera.update(elapsed_ms);
+	  m_camera.update(elapsed_ms);
 	  m_janitor.check_movement();
 	  if (m_dungeon.hero_has_spawned())
 	  {
@@ -222,9 +222,11 @@ bool World::update(float elapsed_ms)
 	  {
 		  game_over();
 	  }
+
   }
   else 
   {
+	  m_camera.update(elapsed_ms);
 	  m_game_over_screen.update(elapsed_ms);
   }
   return true;
@@ -263,14 +265,11 @@ void World::draw()
 	  m_janitor.draw(projection_2D, transform);
 	  m_hero.draw(projection_2D, transform);
 	  m_boss.draw(projection_2D, transform);
-    m_camera.draw(projection_2D, transform);
+	  m_camera.draw(projection_2D, transform);
   }
   else
   {
 	  m_game_over_screen.draw(projection_2D, transform);
-	  if (!m_camera.get_m_follow()) {
-		  m_camera.follow_object(&m_game_over_screen);
-	  }
   }
   // Presenting
   glfwSwapBuffers(m_window);
@@ -285,8 +284,8 @@ bool World::is_over()const
 void World::game_over() 
 {
 	game_is_over = true;
-	m_game_over_screen.init();
-	m_camera.stop_following();
+	m_game_over_screen.init(m_janitor.get_pos());
+	m_camera.follow_object(&m_game_over_screen);
 }
 
 // On key callback

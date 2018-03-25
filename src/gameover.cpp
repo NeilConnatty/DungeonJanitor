@@ -16,7 +16,10 @@ void GameOver::destroy() {
 	glDeleteShader(effect.program);
 }
 
-bool GameOver::init() {
+bool GameOver::init() { return false; }
+
+//Always call this with m_janitor.get_pos() as the input
+bool GameOver::init(vec2 pos) {
 	
 	if (!gameover1.is_valid())
 	{
@@ -76,6 +79,7 @@ bool GameOver::init() {
 
 	m_animation_time = 0;
 	m_curr_tex = &gameover1;
+	m_position = pos;
 	return true;
 }
 void GameOver::draw_current(const mat3& projection, const mat3& current_transform) {
