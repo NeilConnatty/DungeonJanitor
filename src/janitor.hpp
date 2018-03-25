@@ -11,14 +11,7 @@ class Dungeon;
 
 class Janitor : public GameObject
 {
-	static Texture up1, up2, up3, up4,
-		up_right1, up_right2, up_right3, up_right4,
-		up_left1, up_left2, up_left3, up_left4,
-		down1, down2, down3, down4,
-		down_right1, down_right2, down_right3, down_right4,
-		down_left1, down_left2, down_left3, down_left4,
-		left1, left2, left3, left4, 
-		right1, right2, right3, right4;
+	static Texture janitor_sheet;
 public:
 	Janitor();
 	~Janitor();
@@ -28,16 +21,17 @@ public:
 	bool init(vec2 position);
 // Releases all associated resources
 	void destroy();
+  bool collides_with_door(Door& door, mat3 room_transform, mat3 dungeon_transform);
 
 	void key_up(bool move);
 	void key_down(bool move);
 	void key_left(bool move);
 	void key_right(bool move);
 	enum DIRECTION {
-		up, up_right, up_left, down, down_right, down_left, left, right
+		right, up_right, up, up_left, down_left, down, left, down_right
 	};
 	bool validate_textures();
-	void pick_movement_tex(const int FRAME_TIMING);
+	void pick_movement_tex();
 	void set_accel(vec2 newAccel);
 	void set_vel(vec2 newVel);
 
@@ -60,9 +54,8 @@ private:
 	vec2 m_accel;
 	vec2 m_vel;
 
-	//Potentially make this a vector of pointers later.
-	Texture* m_curr_tex;
-	float m_animation_time;
+	DIRECTION animation_dir;
+	float m_time_elapsed;
 	float m_time_pressed_up;
 	float m_time_pressed_down;
 	float m_time_pressed_left;
@@ -76,4 +69,10 @@ private:
  	bool can_move_left;
  	bool can_move_right;
 	bool m_door_collision_last_frame;
+
+	int frame;
+	int const NUM_FRAMES = 4;
+	float animation_frame_w;
+	float animation_frame_h;
+	float const MS_PER_FRAME = (1/12.5)*1000;
 };

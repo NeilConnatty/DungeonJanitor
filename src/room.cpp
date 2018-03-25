@@ -20,8 +20,11 @@ bool Room::init(vec2 position, room_type type)
   m_BossHere = false;
   m_ArtifactHere = false;
   m_room_type = type;
-  m_num_cleanables = 0;
   m_total_cleanables = 0;
+  m_num_cleaned_cleanables = 0;
+  m_total_cleanables = 0;
+  m_num_activated_artifacts = 0;
+  m_total_artifacts = 0;
 
   return true;
 }
@@ -133,7 +136,6 @@ bool Room::add_cleanables(vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 		for (pair<Cleanable::types, vec2>& cleanable : cleanable_pos)
 		{
 			m_total_cleanables++;
-			m_num_cleanables++;
 			if (cleanable.first == Cleanable::types::PUDDLE)
 			{
 				Puddle* p = new Puddle();
@@ -177,7 +179,12 @@ bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
         {
             return false;
         }
+        m_artifact.set_scale({ 0.5f, 0.5f });
+		m_total_artifacts++;
     }
+
+	
+
     return true;
 }
 
@@ -211,7 +218,7 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 			janitor->collides_with(*c, this->transform, dungeon_transform)) {
 			if (c.get()->clean())
 			{
-				decrement_cleanables();
+				//decrement_cleanables();
 			}
 		}
 	}
@@ -228,9 +235,6 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 vector<Wall> &Room::get_walls() { return m_walls; }
 
 vector<unique_ptr<Cleanable>> &Room::get_cleanables() { return m_cleanables; }
-int Room::get_num_cleanables() { return m_num_cleanables; }
-float Room::get_clean_percent() { return (float)m_num_cleanables / (float)m_total_cleanables; }
-void Room::decrement_cleanables() { m_num_cleanables--; }
 
 double Room::getReward() const 
 {
