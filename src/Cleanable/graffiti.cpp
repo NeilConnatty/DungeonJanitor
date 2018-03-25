@@ -10,7 +10,7 @@ Graffiti::~Graffiti() {}
 
 bool Graffiti::init(vec2 pos)
 {
-	pos.y = pos.y + 30;
+	pos.y = pos.y + 32;
 	default_random_engine rng;
 	uniform_int_distribution<int> dist;
 	rng = default_random_engine(random_device()());

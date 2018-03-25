@@ -218,7 +218,7 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 			janitor->collides_with(*c, this->transform, dungeon_transform)) {
 			if (c.get()->clean())
 			{
-				//decrement_cleanables();
+				increment_cleaned_cleanables();
 			}
 		}
 	}
@@ -228,6 +228,7 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 		if (janitor->collides_with(*get_artifact(), this->transform, dungeon_transform))
 		{
 			get_artifact()->set_active(true);
+			increment_activated_artifacts();
 		}
 	}
 }
