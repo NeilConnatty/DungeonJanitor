@@ -48,22 +48,22 @@ bool Garbage::load_texture()
 {
 	if (!garbage_texture_blue[0].is_valid())
 	{
-		if (!garbage_texture_blue[0].load_from_file(dungeon1_textures_path("d1_floorobject_garbagecan-blue-full-1.png")))
+		if (!garbage_texture_blue[0].load_from_file(textures_path("dungeon1/d1_floorobject_garbagecan-blue-full-1.png")))
 		{
 			fprintf(stderr, "Failed to load full blue garbagecan texture\n");
 			return false;
 		}
-		if (!garbage_texture_blue[1].load_from_file(dungeon1_textures_path("d1_floorobject_garbagecan-blue-empty-1.png")))
+		if (!garbage_texture_blue[1].load_from_file(textures_path("dungeon1/d1_floorobject_garbagecan-blue-empty-1.png")))
 		{
 			fprintf(stderr, "Failed to load empty blue garbagecan texture\n");
 			return false;
 		}
-		if (!garbage_texture_green[0].load_from_file(dungeon1_textures_path("d1_floorobject_garbagecan-green-full-1.png")))
+		if (!garbage_texture_green[0].load_from_file(textures_path("dungeon1/d1_floorobject_garbagecan-green-full-1.png")))
 		{
 			fprintf(stderr, "Failed to load full green garbagecan texture\n");
 			return false;
 		}
-		if (!garbage_texture_green[1].load_from_file(dungeon1_textures_path("d1_floorobject_garbagecan-green-empty-1.png")))
+		if (!garbage_texture_green[1].load_from_file(textures_path("dungeon1/d1_floorobject_garbagecan-green-empty-1.png")))
 		{
 			fprintf(stderr, "Failed to load empty green garbagecan texture\n");
 			return false;
