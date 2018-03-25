@@ -226,8 +226,11 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 	{
 		if (janitor->collides_with(*get_artifact(), this->transform, dungeon_transform))
 		{
-			get_artifact()->set_active(true);
-			increment_activated_artifacts();
+			if (!get_artifact()->is_activated())
+			{
+				get_artifact()->set_active(true);
+				increment_activated_artifacts();
+			}
 		}
 	}
 }
