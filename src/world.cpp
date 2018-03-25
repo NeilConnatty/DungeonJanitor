@@ -330,8 +330,11 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
     }
     
     if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
-      Room* janitors_current_room = m_janitor.get_current_room();
-	  janitors_current_room->clean(&m_janitor, m_dungeon.transform);
+		for (unique_ptr<Room>& r : m_dungeon.get_rooms())
+		{
+			Room* room = r.get();
+			r->clean(&m_janitor, m_dungeon.transform);
+		}
     }
 
 	// Resetting game

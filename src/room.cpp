@@ -179,7 +179,6 @@ bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
         {
             return false;
         }
-        m_artifact.set_scale({ 0.5f, 0.5f });
 		m_total_artifacts++;
     }
 

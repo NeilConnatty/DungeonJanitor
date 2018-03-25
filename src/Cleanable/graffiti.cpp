@@ -44,7 +44,7 @@ bool Graffiti::load_texture()
 			return false;
 		}
 	}
-	m_size = { static_cast<float>(graffiti_textures[0].width), static_cast<float>(graffiti_textures[0].height) };
+	m_size = { static_cast<float>(graffiti_textures[m_texture_index].width), static_cast<float>(graffiti_textures[m_texture_index].height) };
 	m_scale.x = 1.f;
 	m_scale.y = 1.f;
 	return true;
