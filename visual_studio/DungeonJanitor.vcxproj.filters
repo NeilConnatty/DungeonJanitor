@@ -73,6 +73,9 @@
     <ClCompile Include="..\src\healthbar.cpp">
       <Filter>src\Camera/UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\emitter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -143,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="..\src\healthbar.hpp">
       <Filter>headers\Camera/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\emitter.hpp">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
