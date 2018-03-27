@@ -46,8 +46,8 @@ protected:
 
 		void update(float ms)
 		{
-			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, p_position.z + p_velocity.z * ms};
-			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_position = {p_position.x + p_velocity.x * ms, 0.0f, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - p_life/ms};
 			p_life = p_life - ms;
 		}
     };
