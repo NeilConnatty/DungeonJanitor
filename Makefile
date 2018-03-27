@@ -12,7 +12,7 @@ else
 endif
 
 BIN=main
-OBJ=$(BIN).o common.o world.o camera.o dungeon.o floor.o gameobject.o janitor.o door.o room.o roomtextparser.o wall.o hero.o boss.o $(CURDIR)/src/Cleanable/puddle.o $(CURDIR)/src/Cleanable/graffiti.o $(CURDIR)/src/Cleanable/garbage.o $(CURDIR)/src/Cleanable/cleanable.o ValueIteration.o $(CURDIR)/src/Cleanable/artifact.o pathfinder.o pathfindernode.o gameover.o healthbar.o
+OBJ=$(BIN).o common.o world.o camera.o dungeon.o floor.o gameobject.o janitor.o door.o room.o roomtextparser.o wall.o hero.o boss.o emitter.o $(CURDIR)/src/Cleanable/puddle.o $(CURDIR)/src/Cleanable/graffiti.o $(CURDIR)/src/Cleanable/garbage.o $(CURDIR)/src/Cleanable/cleanable.o ValueIteration.o $(CURDIR)/src/Cleanable/artifact.o pathfinder.o pathfindernode.o gameover.o healthbar.o
 
 default: build
 

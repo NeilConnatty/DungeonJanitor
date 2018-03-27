@@ -4,6 +4,7 @@
 #include "gameobject.hpp"
 #include "room.hpp"
 #include "healthbar.hpp"
+#include "emitter.hpp"
 
 #include <vector>
 #include <unordered_map>
@@ -61,5 +62,6 @@ private:
 	bool m_should_spawn_hero;
 	bool m_hero_has_spawned;
 	HealthBar* m_healthBar;
+	vector<Emitter> m_emitters;
 };
 
