@@ -8,8 +8,15 @@
 
 using namespace std;
 
+enum location
+{
+  NORTH,
+  EAST,
+  SOUTH,
+  WEST
+};
+
 struct door_info;
-enum location;
 using room_id = int;
 using room_pair = std::pair<room_id, location>;
 
