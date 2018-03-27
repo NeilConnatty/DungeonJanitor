@@ -4,20 +4,25 @@
 #include "room.hpp"
 #include "door.hpp"
 #include "dungeon.hpp"
+#include "Cleanable/cleanable.hpp"
 
 using namespace std;
+
+struct door_info;
+enum location;
+using room_id = int;
+using room_pair = std::pair<room_id, location>;
 
 class RoomParser
 {
 public:
 	bool parseRoom(Room& room, const char* filename);
-  vector<Door::door_pair>& get_door_pos() { return door_pairs; }
+  vector<door_info>& get_door_info() { return door_infos; }
 
 private:
 	void clearPositions();
 	bool parseLine(string& line, float y, bool first_line, bool last_line);
-	bool populateRoomExceptWalls(Room &room);
-  bool populateRoomWalls(Room &room);
+	bool populateRoom(Room &room);
 
 private:
 
@@ -30,10 +35,10 @@ private:
 	vec2 boss_spawn_pos;
 	vec2 hero_spawn_pos;
 	vec2 janitor_spawn_pos;
+	vector<pair<Cleanable::types, vec2>> cleanable_pos;
 	
 	vector<vec2> floor_pos;
-	vector<vec2> puddle_pos;
-	vector<Door::door_pair> door_pairs;
+	vector<door_info> door_infos;
 	vector<Room::wall_pair> wall_pairs;
 
   room_type room_t;
@@ -76,6 +81,11 @@ private:
   bool addHallwayHelper(Room &hallway, vec2 offset,
                         bool topRow, bool bottomRow, bool startColumn,
                         bool endColumn);
+  bool buildRooms(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms, Dungeon& dungeon, Room& hallway);
+  bool buildHallway(std::vector<std::string>& lines, std::vector<std::unique_ptr<Room>>& rooms, Dungeon& dungeon, Room& hallway);
+  bool validRoomID(int room_id);
+  bool addAdjacency(std::unordered_map<room_id, std::vector<room_pair>>& room_adjacency_map, char& adj_ch, room_id id, location loc);
+
 
 private:
   std::vector<std::string> m_room_files;

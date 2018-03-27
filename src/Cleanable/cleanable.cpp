@@ -1,47 +1,34 @@
-#include "gameover.hpp"
-#include <algorithm>
-Texture GameOver::gameover1;
-Texture GameOver::gameover2;
+// cleanable.cpp
 
-GameOver::GameOver() {}
-GameOver::~GameOver() {}
+#include "cleanable.hpp"
 
-void GameOver::destroy() {
-	glDeleteBuffers(1, &mesh.vbo);
-	glDeleteBuffers(1, &mesh.ibo);
-	glDeleteBuffers(1, &mesh.vao);
+Cleanable::Cleanable() {}
 
-	glDeleteShader(effect.vertex);
-	glDeleteShader(effect.fragment);
-	glDeleteShader(effect.program);
+Cleanable::~Cleanable() {}
+
+bool Cleanable::init()
+{
+	return init({ 0.f, 0.f });
 }
 
-bool GameOver::init() { return false; }
+bool Cleanable::init(vec2 position)
+{
+	// Setting initial scale values
+	m_scale.x = 1.5f;
+	m_scale.y = 1.5f;
 
-//Always call this with m_janitor.get_pos() as the input
-bool GameOver::init(vec2 pos) {
-	
-	if (!gameover1.is_valid())
+	if (!load_texture())
 	{
-		if (!gameover1.load_from_file(textures_path("/ui/ui_scene_gameover_1.png")))
-		{
-			fprintf(stderr, "Failed to load gameover texture1\n");
-			return false;
-		}
+		return false;
 	}
-	if (!gameover2.is_valid())
-	{
-		if (!gameover2.load_from_file(textures_path("/ui/ui_scene_gameover_2.png")))
-		{
-			fprintf(stderr, "Failed to load gameover texture2\n");
-			return false;
-		}
-	}
-	
-	//scale of the texture and resulting mesh
-	//all the player textures are the same size so it's fine to pick one arbitrarily
-	float wr = gameover1.width * 0.5f;
-	float hr = gameover1.height * 0.5f;
+
+	m_position = position;
+	m_size = { static_cast<float>(get_texture().width), static_cast<float>(get_texture().height) };
+
+
+	// The position corresponds to the center of the texture
+	float wr = get_texture().width * 0.5f;
+	float hr = get_texture().height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -56,6 +43,7 @@ bool GameOver::init(vec2 pos) {
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
 
+	// Clearing errors
 	gl_flush_errors();
 
 	// Vertex Buffer creation
@@ -77,12 +65,22 @@ bool GameOver::init(vec2 pos) {
 	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
-	m_animation_time = 0;
-	m_curr_tex = &gameover1;
-	m_position = pos;
 	return true;
 }
-void GameOver::draw_current(const mat3& projection, const mat3& current_transform) {
+
+void Cleanable::destroy()
+{
+	glDeleteBuffers(1, &mesh.vbo);
+	glDeleteBuffers(1, &mesh.ibo);
+	glDeleteBuffers(1, &mesh.vao);
+
+	glDeleteShader(effect.vertex);
+	glDeleteShader(effect.fragment);
+	glDeleteShader(effect.program);
+}
+
+void Cleanable::draw_current(const mat3& projection, const mat3& current_transform)
+{
 	// Setting shaders
 	glUseProgram(effect.program);
 
@@ -103,18 +101,15 @@ void GameOver::draw_current(const mat3& projection, const mat3& current_transfor
 	// Input data location as in the vertex buffer
 	GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
 	GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
-
-
 	glEnableVertexAttribArray(in_position_loc);
 	glEnableVertexAttribArray(in_texcoord_loc);
-
 	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
 	glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	//dereferencing a null pointer ic ic.
-	glBindTexture(GL_TEXTURE_2D, m_curr_tex->id);
+	glBindTexture(GL_TEXTURE_2D, get_texture().id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
@@ -125,18 +120,3 @@ void GameOver::draw_current(const mat3& projection, const mat3& current_transfor
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
-void GameOver::draw_children(const mat3& projection, const mat3& current_transform) {
-
-}
-void GameOver::update_current(float ms) {
-	const int NUM_FRAMES = 2;
-	const int FRAME_TIMING = 1000; //1000ms per frame
-	m_animation_time += ms;
-	m_animation_time = (int)m_animation_time % (NUM_FRAMES*FRAME_TIMING);
-	if (m_animation_time < FRAME_TIMING) m_curr_tex = &gameover1;
-	else m_curr_tex = &gameover2;
-	if (m_animation_time > NUM_FRAMES*FRAME_TIMING) m_animation_time = 0;
-}
-void GameOver::update_children(float ms) {//stub
-}
-

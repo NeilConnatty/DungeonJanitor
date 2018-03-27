@@ -21,9 +21,7 @@ public:
   
 	bool init();
 	void destroy();
-	void clean();
-	void activate_artifact();
-	
+
 	vector<unique_ptr<Room>>& get_rooms();
 	bool add_doors(vector<std::unique_ptr<Door>>& doors);
 	

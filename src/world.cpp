@@ -205,7 +205,7 @@ bool World::update(float elapsed_ms)
 	  m_janitor.update(elapsed_ms);
 	  m_boss.update(elapsed_ms);
 	  m_dungeon.update(elapsed_ms);
-    m_camera.update(elapsed_ms);
+	  m_camera.update(elapsed_ms);
 	  m_janitor.check_movement();
 	  if (m_dungeon.hero_has_spawned())
 	  {
@@ -222,9 +222,11 @@ bool World::update(float elapsed_ms)
 	  {
 		  game_over();
 	  }
+
   }
   else 
   {
+	  m_camera.update(elapsed_ms);
 	  m_game_over_screen.update(elapsed_ms);
   }
   return true;
@@ -261,16 +263,16 @@ void World::draw()
   {
 	  m_dungeon.draw(projection_2D, transform);
 	  m_janitor.draw(projection_2D, transform);
-	  m_hero.draw(projection_2D, transform);
 	  m_boss.draw(projection_2D, transform);
     m_camera.draw(projection_2D, transform);
+    if (m_dungeon.hero_has_spawned())
+    {
+      m_hero.draw(projection_2D, transform);
+    }
   }
   else
   {
 	  m_game_over_screen.draw(projection_2D, transform);
-	  if (!m_camera.get_m_follow()) {
-		  m_camera.follow_object(&m_game_over_screen);
-	  }
   }
   // Presenting
   glfwSwapBuffers(m_window);
@@ -285,8 +287,8 @@ bool World::is_over()const
 void World::game_over() 
 {
 	game_is_over = true;
-	m_game_over_screen.init();
-	m_camera.stop_following();
+	m_game_over_screen.init(m_janitor.get_pos());
+	m_camera.follow_object(&m_game_over_screen);
 }
 
 // On key callback
@@ -326,24 +328,13 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
       }
     }
     
-    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) 
-	{
-      std::vector<Puddle> &cleanables = m_janitor.get_current_room()->get_cleanables();
-      for (Puddle &p : cleanables) 
-	  {
-        if (p.is_enabled() &&
-          m_janitor.collides_with(p, m_janitor.get_current_room()->transform, m_dungeon.transform)) 
+    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+		for (unique_ptr<Room>& r : m_dungeon.get_rooms())
 		{
-          p.toggle_enable();
-		  m_janitor.get_current_room()->increment_cleaned_cleanables();
-        }
-      }
+			Room* room = r.get();
+			r->clean(&m_janitor, m_dungeon.transform);
+		}
     }
-
-    // temporary keybind, probably will bind it to space once we have collisions
-    if (action == GLFW_PRESS && key == GLFW_KEY_A) {
-      m_dungeon.activate_artifact();
-	}
 
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
