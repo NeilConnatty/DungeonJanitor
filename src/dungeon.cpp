@@ -44,6 +44,10 @@ bool Dungeon::init()
       boss_room_position = room->get_boss_spawn_loc();
     }
   }
+  m_emitters.emplace_back();
+  vec2 velocity = {1.0f, 1.0f};
+  vec4 color = {1.0f, 0.0f, 0.0f, 1.0f};
+  m_emitters.back().init(janitor_room_position, velocity, color, 100.0f, 30);
   m_hero_timer = HERO_TIME_TO_SPAWN; // Three minutes in milliseconds
   m_should_spawn_hero = false;
   m_hero_has_spawned = false;
@@ -60,6 +64,10 @@ void Dungeon::destroy()
 	for (std::unique_ptr<Door>& door : m_doors)
 	{
 		door->destroy();
+	}
+	for (int i = 0; i < m_emitters.size(); ++i)
+	{
+		m_emitters[i].destroy();
 	}
 	m_healthBar = NULL;
 }
@@ -80,7 +88,6 @@ void Dungeon::update_current(float ms)
 			m_should_spawn_hero = true;
 		}
 	}
-
 }
 
 void Dungeon::update_children(float ms)
@@ -94,6 +101,10 @@ void Dungeon::update_children(float ms)
   {
     door->update(ms);
   }
+  	for (int i = 0; i < m_emitters.size(); ++i)
+	{
+		m_emitters[i].update(ms);
+	}
 
   m_healthBar->set_percent_filled(get_percent_dungeon_cleaned());
 }
@@ -114,6 +125,10 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
   {
     door->draw(projection, current_transform);
   }
+    	for (int i = 0; i < m_emitters.size(); ++i)
+	{
+		m_emitters[i].draw(projection, current_transform);
+	}
 }
 
 float Dungeon::get_percent_dungeon_cleaned()
