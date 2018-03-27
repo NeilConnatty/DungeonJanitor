@@ -11,13 +11,13 @@ bool Door::init(vec2 pos, door_dir dir)
 {
   if (!door_textures[0].is_valid())
   {
-    if (!door_textures[VERT_DOOR].load_from_file(textures_path("dungeon1/d1_doortile_brown-open-l_1.png")))
+    if (!door_textures[VERT_DOOR].load_from_file(textures_path("dungeon1/d1_doortile_brown-open-1.png")))
     {
       fprintf(stderr, "Failed to load door texture\n");
       return false;
     }
 
-    if (!door_textures[HORZ_DOOR].load_from_file(textures_path("dungeon1/d1_doortile_brown-open-1.png")))
+    if (!door_textures[HORZ_DOOR].load_from_file(textures_path("dungeon1/d1_doortile_brown-open-l_1.png")))
     {
       fprintf(stderr, "Failed to load door texture\n");
       return false;
