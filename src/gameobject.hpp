@@ -28,6 +28,9 @@ public:
   void draw(const mat3 &projection, const mat3 &parent_transform) override;
   bool collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform);
 
+  void apply_force(vec2 desired_vel, float dt);
+  void apply_force(vec2 change_in_position, float dt);
+
 protected:
   virtual void update_current(float ms) = 0;
   virtual void update_children(float ms) = 0;
@@ -38,8 +41,13 @@ protected:
 
 protected:
   bool m_enabled;
+  bool physics_object;
+
   int m_z;
   float m_rotation;
+  vec2 m_forces;
+  vec2 m_accel;
+  vec2 m_vel;
   vec2 m_position;
   vec2 m_scale;
   vec2 m_size;

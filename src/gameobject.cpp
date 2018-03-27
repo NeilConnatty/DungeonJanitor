@@ -76,6 +76,18 @@ void GameObject::draw(const mat3& projection, const mat3& parent_transform)
 		draw_children(projection, final_transform);
 	}
 }
+//Calculate and apply the force which will result in
+//desired_vel being added to m_vel after dt
+void apply_force(vec2 desired_vel, float dt) {
+	vec2 force = { 0, 0 };
+	//dv/dt = a?
+	//mda/dt = F
+}
+//Calculate and apply the force which will result in
+//change_in_position after dt
+void apply_force(vec2 change_in_position, float dt) {
+
+}
 
 bool GameObject::collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform) {
 	float jLeftEdge = m_position.x;
