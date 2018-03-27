@@ -30,7 +30,7 @@ bool Dungeon::init()
       vec2 vel = {1.0f, 1.0f};
       vec4 clr = {1.0f, 0.0f, 0.0f, 1.0f};
       m_emitters.emplace_back();
-      m_emitters.back().init(janitor_room_position, vel, clr, 1000.0f, 2);
+      m_emitters.back().init(janitor_room_position, vel, clr, 100000.0f, 10);
   	}
     if (room->has_hero_spawn_loc()) 
     {

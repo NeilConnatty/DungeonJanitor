@@ -2,7 +2,6 @@
 
 #include "common.hpp"
 #include "gameobject.hpp"
-#include "particle.hpp"
 #include <vector>
 
 class Emitter : public GameObject
@@ -17,26 +16,40 @@ public:
 	void destroy() override;
 	
 protected:
-	void update_current(float ms) override {}
+	void update_current(float ms) override;
     void update_children(float ms) override;
     void draw_current(const mat3& projection, const mat3& current_transform) override {}
     void draw_children(const mat3& projection, const mat3& current_transform) override;
 
+    struct Particle
+    {
+		vec2 p_position;
+		vec2 p_velocity;
+		vec4 p_color;
+		float p_life; // curr life, < 0 : dead and unused.
+
+		Particle(vec2 position, vec2 velocity, vec4 color, float life) 
+		{
+			p_position = position;
+			p_velocity = velocity;
+			p_color = color;
+			p_life = life;
+		}
+    };
+
     struct DataGPU
 	{
-		std::vector<float> m_particles_positions; // container for emitters particles.
-    	std::vector<float> m_particles_translations; // container for emitters particles.
-    	std::vector<float> m_particles_colors; // container for emitters particles.
-		GLuint vbo_pos;
+		std::vector<float> m_particles_positions; 
+    	std::vector<float> m_particles_translations; 
+    	std::vector<float> m_particles_colors; 
+		GLuint vbo_shape;
 		GLuint vbo_translation;
 		GLuint vbo_color;
 		GLuint vao;
 	};
 
 private:
-
-	// vec2 m_position - position of spawn point.
-	// float m_scale - intial size of particles. 
+	//vec2 m_position; //in 
 	vec2 m_velocity; // initial speed of particles.
 	vec4 m_color; // color of particles.
 	float m_lifetime; // total lifetime of a particle.
