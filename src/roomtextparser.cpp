@@ -44,14 +44,6 @@
 #define FLOOR_X_OFFSET 35.f
 #define FLOOR_Y_OFFSET 25.f
 
-enum location
-{
-  NORTH,
-  EAST,
-  SOUTH,
-  WEST
-};
-
 struct door_info
 {
   vec2 pos;
