@@ -23,17 +23,32 @@ protected:
 
     struct Particle
     {
-		vec2 p_position;
-		vec2 p_velocity;
+		vec3 p_position;
+		vec3 p_velocity;
 		vec4 p_color;
 		float p_life; // curr life, < 0 : dead and unused.
 
-		Particle(vec2 position, vec2 velocity, vec4 color, float life) 
+		Particle()
+		{
+			p_position = {0.0, 0.0, 0.0};
+			p_velocity = {0.0, 0.0, 0.0};
+			p_color = {1.0, 0.0, 0.0, 1.0};
+			p_life = 0.0;
+		}
+
+		Particle(vec3 position, vec3 velocity, vec4 color, float life) 
 		{
 			p_position = position;
 			p_velocity = velocity;
 			p_color = color;
 			p_life = life;
+		}
+
+		void update(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, p_position.z + p_velocity.z * ms};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;
 		}
     };
 
@@ -45,7 +60,6 @@ protected:
 		GLuint vbo_shape;
 		GLuint vbo_translation;
 		GLuint vbo_color;
-		GLuint vao;
 	};
 
 private:

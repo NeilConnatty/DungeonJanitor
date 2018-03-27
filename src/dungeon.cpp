@@ -14,6 +14,10 @@ Dungeon::~Dungeon() {}
 
 bool Dungeon::init() 
 {
+      vec2 vel = {100.0f, 1.0f};
+      vec4 clr = {1.0f, 0.0f, 0.0f, 1.0f};
+      m_emitters.emplace_back();
+      m_emitters.back().init(janitor_room_position, vel, clr, 50.0f, 30);
   DungeonParser parser;
   if (!parser.parseDungeon(m_rooms, dungeon_path("1.dn")))
   {
@@ -27,10 +31,6 @@ bool Dungeon::init()
     {
       janitor_start_room = room.get();
       janitor_room_position = room->get_janitor_spawn_loc();
-      vec2 vel = {1.0f, 1.0f};
-      vec4 clr = {1.0f, 0.0f, 0.0f, 1.0f};
-      m_emitters.emplace_back();
-      m_emitters.back().init(janitor_room_position, vel, clr, 100000.0f, 10);
   	}
     if (room->has_hero_spawn_loc()) 
     {
@@ -53,10 +53,7 @@ void Dungeon::destroy()
 	{
 		room->destroy();
 	}
-	for (Emitter emitter : m_emitters)
-	{
-		emitter.destroy();
-	}
+		m_emitters[0].destroy();
 }
 
 vector<unique_ptr<Room>>& Dungeon::get_rooms()
@@ -105,10 +102,7 @@ void Dungeon::update_children(float ms)
 	{
 		room->update(ms);
 	}
-	for (Emitter emitter : m_emitters)
-	{
-		emitter.update(ms);
-	}
+		m_emitters[0].update(ms);
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
@@ -121,8 +115,6 @@ void Dungeon::draw_children(const mat3& projection, const mat3& current_transfor
 	{
 		room->draw(projection, current_transform);
 	}
-	for (Emitter emitter : m_emitters)
-	{
-		emitter.draw(projection, current_transform);
-	}
+		m_emitters[0].draw(projection, current_transform);
+
 }

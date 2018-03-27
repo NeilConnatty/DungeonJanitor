@@ -7,8 +7,6 @@ static constexpr GLfloat k_vertex_buffer_data[] = {
  -0.5f, -0.5f, 0.0f,
  0.5f, -0.5f, 0.0f,
  -0.5f, 0.5f, 0.0f,
- -0.5f, 0.5f, 0.0f,
- 0.5f, -0.5f, 0.0f,
  0.5f, 0.5f, 0.0f,
 };
 
@@ -23,7 +21,7 @@ bool Emitter::init()
 
 bool Emitter::init(vec2 position, vec2 velocity, vec4 color, float lifetime, int max_particles)
 {
-	m_scale = {100.f,100.f};
+	m_scale = {10.f,10.f};
 	m_position = position;
 	m_velocity = velocity;
 	m_color = color; 
@@ -45,22 +43,19 @@ bool Emitter::init(vec2 position, vec2 velocity, vec4 color, float lifetime, int
 	// VBO for particle shape
 	glGenBuffers(1, &data.vbo_shape);
 	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_shape);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 18, k_vertex_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(k_vertex_buffer_data), k_vertex_buffer_data, GL_STATIC_DRAW);
 
 	// VBO for particle vertex translations
 	glGenBuffers(1, &data.vbo_translation);
 	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_translation);
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
-	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 2 * sizeof(float), NULL, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 3 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
 	// VBO for particle colors
 	glGenBuffers(1, &data.vbo_color);
 	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_color);
 	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
-	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(float), NULL, GL_STATIC_DRAW);
-
-	glGenVertexArrays(1, &data.vao);
-	glBindVertexArray(data.vao);
+	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
 	return true;
 }
@@ -84,55 +79,56 @@ void Emitter::destroy()
 
 void Emitter::update_current(float ms)
 {
-	//m_position = m_position + m_velocity * ms;
+	//m_position = m_position + m_velocity * (ms/1000.0f);
+
+	if (m_particle_count < m_max_particles)
+	{
+		vec3 p_position = {m_position.x, m_position.y, 0.0f};
+		vec3 p_velocity = {m_velocity.x, m_velocity.y, 0.0f};
+		m_particle_container.emplace_back(p_position, p_velocity, m_color, m_lifetime);
+		m_particle_count++;
+	}
 }
 
 void Emitter::update_children(float ms) 
 {
-	if (m_particle_count < m_max_particles)
-	{
-		m_particle_container.emplace_back(m_position, m_velocity, m_color, m_lifetime);
-		m_particle_count++;
-		// std::cout << "m_position: " << m_position.z << std::endl;
-		// std::cout << "m_velocity: " << m_velocity << std::endl;
-		// std::cout << "m_color: " << m_color << std::endl;
-		std::cout << "m_max_particles: " << m_max_particles << std::endl;
-		std::cout << "size: " << m_particle_count << std::endl;
-		std::cout << "m_particle_count: " << m_particle_count << std::endl;
-	}
-
 	// Iterate over all particles in the vector
-	std::vector<Particle>::iterator p;
-	for (p = m_particle_container.begin(); p != m_particle_container.end(); ++p)
+	int next = 0;
+	for (int p = 0; p < m_particle_count; ++p)
 	{
-		p->p_life -= ms;
-		// If the particle time to live is more than zero...
-		if (p->p_life > 0)
+		if (m_particle_container[p].p_life > 0.0f)
 		{
-			vec2 dxdy = p->p_velocity * ms;
-			p->p_position = p->p_position + dxdy;
-			data.m_particles_translations.push_back(ms);
-			data.m_particles_translations.push_back(ms);
+			m_particle_container[p].update(ms/1000.0f);
+			data.m_particles_translations[next + 0] = m_particle_container[p].p_position.x;
+			data.m_particles_translations[next + 1] = m_particle_container[p].p_position.y;
+			data.m_particles_translations[next + 2] = m_particle_container[p].p_position.z;
+			data.m_particles_colors[next + 0] = m_particle_container[p].p_color.x;
+			data.m_particles_colors[next + 1] = m_particle_container[p].p_color.y;
+			data.m_particles_colors[next + 2] = m_particle_container[p].p_color.z;
+			data.m_particles_colors[next + 3] = m_particle_container[p].p_color.w;
 		}
-		else
+		else 
 		{
-			// p = m_particle_container.erase(p);
-			// m_particle_count--;
+			m_particle_container.erase(m_particle_container.begin() + p + 1);
+			p--;
+			m_particle_count--;
 		}
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_translation);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_particle_count * sizeof(float) * 2, data.m_particles_translations.data());
+	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 3 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_particle_count * sizeof(GLfloat) * 3, data.m_particles_translations.data());
 
 	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_color);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_particle_count * sizeof(float) * 4, data.m_particles_colors.data());
-	}
+	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_particle_count * sizeof(GLfloat) * 4, data.m_particles_colors.data());
+	
 }
 
 void Emitter::draw_children(const mat3& projection, const mat3& current_transform)
 {
  	// std::cout << m_particle_count << std::endl;
 	glUseProgram(effect.program);
-	glBindVertexArray(data.vao);
 
 	// Getting uniform locations for glUniform* calls
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
@@ -154,14 +150,7 @@ void Emitter::draw_children(const mat3& projection, const mat3& current_transfor
 	// 2nd attribute buffer : positions of particles' centers
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_translation);
-	glVertexAttribPointer(
-		1, // attribute. No particular reason for 1, but must match the layout in the shader.
-		2, // size : x + y + z + size => 4
-		GL_FLOAT, // type
-		GL_FALSE, // normalized?
-		0, // stride
-		(void*)0 // array buffer offset
-	);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)01);
 
 	// 3rd attribute buffer : particles' colors
 	glEnableVertexAttribArray(2);
@@ -182,6 +171,6 @@ void Emitter::draw_children(const mat3& projection, const mat3& current_transfor
 	glVertexAttribDivisor(1, 1); 
 	glVertexAttribDivisor(2, 1); 
 
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 2);
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 6, m_particle_count);
 }
 

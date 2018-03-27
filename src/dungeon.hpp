@@ -34,7 +34,7 @@ private:
 	//void test_value_iteration(); // for testing Jay
 
 public:
-	Room * janitor_start_room;
+	Room* janitor_start_room;
 	Room* hero_start_room;
 	Room* boss_start_room;
 	vec2 janitor_room_position;
