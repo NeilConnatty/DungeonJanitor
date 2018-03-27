@@ -78,10 +78,24 @@ void GameObject::draw(const mat3& projection, const mat3& parent_transform)
 }
 //Calculate and apply the force which will result in
 //desired_vel being added to m_vel after dt
+//could make it take m_vel into account as well.
 void apply_force(vec2 desired_vel, float dt) {
-	vec2 force = { 0, 0 };
+	vec2 F = { 0, 0 };
 	//dv/dt = a?
 	//mda/dt = F
+	//J = Integral(Fdt) from t1 to t2
+	//mv = Fdt
+	// F = mv/dt
+
+	F.x = m_mass * desired_vel.x / dt;
+	F.y = m_mass * desired_vel.y / dt;
+	//Need to create a timer for each force...
+	//A vector of floats? a vector of vec2's?
+	//or a struct, returned by this method,
+	//with the force vector and a float for the time
+	//over which it is applied. 
+	m_forces.x += F.x;
+	m_forces.y += F.y;
 }
 //Calculate and apply the force which will result in
 //change_in_position after dt

@@ -45,6 +45,7 @@ protected:
 
   int m_z;
   float m_rotation;
+  float m_mass;
   vec2 m_forces;
   vec2 m_accel;
   vec2 m_vel;
