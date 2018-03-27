@@ -29,6 +29,7 @@ bool Hero::init(vec2 position)
 	}
 
 	m_position = position;
+	m_is_in_boss_room = false;
 	m_vel = { 0.f, 0.f };
 
 	// The position corresponds to the center of the texture
@@ -120,6 +121,7 @@ void Hero::update_path()
 	if (m_currentRoom->containsBoss())
 	{
 		stop_movement();
+		m_is_in_boss_room = true;
 	}
 	else if (!is_moving())
 	{
@@ -151,6 +153,11 @@ void Hero::update_path()
 bool Hero::is_moving()
 {
 	return m_is_moving;
+}
+
+bool Hero::is_in_boss_room()
+{
+	return m_is_in_boss_room;
 }
 
 const Room* Hero::get_current_room()

@@ -58,11 +58,23 @@
     <ClCompile Include="..\src\gameover.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\healthbar.cpp">
-      <Filter>src\Camera/UI</Filter>
+    <ClCompile Include="..\src\Cleanable\cleanable.cpp">
+      <Filter>src\Cleanable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Cleanable\graffiti.cpp">
+      <Filter>src\Cleanable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Cleanable\garbage.cpp">
+      <Filter>src\Cleanable</Filter>
     </ClCompile>
     <ClCompile Include="..\src\camera.cpp">
       <Filter>src\Camera/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\healthbar.cpp">
+      <Filter>src\Camera/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\emitter.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,11 +132,23 @@
     <ClInclude Include="..\src\gameover.hpp">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\healthbar.hpp">
-      <Filter>headers\Camera/UI</Filter>
+    <ClInclude Include="..\src\Cleanable\cleanable.hpp">
+      <Filter>headers\Cleanable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Cleanable\graffiti.hpp">
+      <Filter>headers\Cleanable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Cleanable\garbage.hpp">
+      <Filter>headers\Cleanable</Filter>
     </ClInclude>
     <ClInclude Include="..\src\camera.hpp">
       <Filter>headers\Camera/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\healthbar.hpp">
+      <Filter>headers\Camera/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\emitter.hpp">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

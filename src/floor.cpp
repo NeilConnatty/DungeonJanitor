@@ -2,7 +2,7 @@
 
 #include "floor.hpp"
 
-Texture Floor::floor_textures[NUM_ROOM_TYPES];
+Floor::FloorTextures Floor::floor_textures;
 
 vec2 Floor::get_dimensions()
 {
@@ -20,39 +20,53 @@ bool Floor::init()
 
 bool Floor::init(vec2 position, room_type type)
 {
-	if (!floor_textures[0].is_valid())
+	if (!floor_textures.bath_textures[0].is_valid())
 	{
-    if (!floor_textures[HALLWAY_ROOM].load_from_file(textures_path("dungeon1/d1_floortile_hall-l-1.png")))
-		{
-			fprintf(stderr, "Failed to load floor texture\n");
+    if (!load_textures())
+    {
+      fprintf(stderr, "Failed to load floor texture\n");
 			return false;
-		}
-
-    if (!floor_textures[BATH_ROOM].load_from_file(textures_path("dungeon1/d1_floortile_bathroom-1.png")))
-    {
-      fprintf(stderr, "Failed to load floor texture\n");
-      return false;
-    }
-
-    if (!floor_textures[CLASS_ROOM].load_from_file(textures_path("dungeon1/d1_floortile_class-1.png")))
-    {
-      fprintf(stderr, "Failed to load floor texture\n");
-      return false;
-    }
-
-    if (!floor_textures[OFFICE_ROOM].load_from_file(textures_path("dungeon1/d1_floortile_office-l-1.png")))
-    {
-      fprintf(stderr, "Failed to load floor texture\n");
-      return false;
     }
 	}
+
+  // C++ rng
+  std::default_random_engine m_rng;
+  std::uniform_int_distribution<int> m_dist; // default 0..1
+
+  m_rng = std::default_random_engine(std::random_device()());
 	
 	m_position = position;
   m_room_type = type;
 
 	// The position corresponds to the center of the texture
-	float wr = floor_textures[m_room_type].width * 0.5f;
-	float hr = floor_textures[m_room_type].height * 0.5f;
+  float wr, hr;
+  switch (m_room_type)
+  {
+  case BATH_ROOM:
+    wr = floor_textures.bath_textures[1].width *
+         0.5f; // some of the bath textures are of 1 pixel size difference..
+               // using index 1 fixes some weird holes
+    hr = floor_textures.bath_textures[0].height * 0.5f;
+    m_dist = std::uniform_int_distribution<int>(0, NUM_BATH_TEXTURES - 1);
+    break;
+  case CLASS_ROOM:
+    wr = floor_textures.class_textures[0].width * 0.5f;
+    hr = floor_textures.class_textures[0].height * 0.5f;
+    m_dist = std::uniform_int_distribution<int>(0, NUM_CLASS_TEXTURES - 1);
+    break;
+  case HALLWAY_ROOM:
+    wr = floor_textures.hall_texture[0].width * 0.5f;
+    hr = floor_textures.hall_texture[0].height * 0.5f;
+    m_dist = std::uniform_int_distribution<int>(0, NUM_HALL_TEXTURES - 1);
+    break;
+  case OFFICE_ROOM:
+    wr = floor_textures.office_textures[0].width * 0.5f;
+    hr = floor_textures.office_textures[0].height * 0.5f;
+    m_dist = std::uniform_int_distribution<int>(0, NUM_OFFICE_TEXTURES - 1);
+    break;
+  }
+
+  m_texture_index = m_dist(m_rng);
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -94,6 +108,23 @@ bool Floor::init(vec2 position, room_type type)
 	m_scale.y = 1.f;
 
 	return true;
+}
+
+bool Floor::load_textures()
+{
+  return  floor_textures.hall_texture[0].load_from_file(textures_path("dungeon1/d1_floortile_hall-na-1.png")) &&
+    floor_textures.hall_texture[1].load_from_file(textures_path("dungeon1/d1_floortile_hall-na-2.png")) &&
+    floor_textures.hall_texture[2].load_from_file(textures_path("dungeon1/d1_floortile_hall-na-3.png")) &&
+    floor_textures.hall_texture[3].load_from_file(textures_path("dungeon1/d1_floortile_hall-na-4.png")) &&
+    floor_textures.bath_textures[0].load_from_file(textures_path("dungeon1/d1_floortile_bathroom-1.png")) &&
+    floor_textures.bath_textures[1].load_from_file(textures_path("dungeon1/d1_floortile_bathroom-2.png")) &&
+    floor_textures.bath_textures[2].load_from_file(textures_path("dungeon1/d1_floortile_bathroom-3.png")) &&
+    floor_textures.bath_textures[3].load_from_file(textures_path("dungeon1/d1_floortile_bathroom-4.png")) &&
+    floor_textures.class_textures[0].load_from_file(textures_path("dungeon1/d1_floortile_class-1.png")) &&
+    floor_textures.class_textures[1].load_from_file(textures_path("dungeon1/d1_floortile_class-2.png")) &&
+    floor_textures.class_textures[2].load_from_file(textures_path("dungeon1/d1_floortile_class-3.png")) &&
+    floor_textures.class_textures[3].load_from_file(textures_path("dungeon1/d1_floortile_class-4.png")) &&
+    floor_textures.office_textures[0].load_from_file(textures_path("dungeon1/d1_floortile_office-na-1.png"));
 }
 
 void Floor::destroy()
@@ -139,8 +170,25 @@ void Floor::draw_current(const mat3& projection, const mat3& current_transform)
 	glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
 	// Enabling and binding texture to slot 0
+  GLuint id;
+  switch (m_room_type)
+  {
+  case HALLWAY_ROOM:
+    id = floor_textures.hall_texture[m_texture_index].id;
+    break;
+  case BATH_ROOM:
+    id = floor_textures.bath_textures[m_texture_index].id;
+    break;
+  case CLASS_ROOM:
+    id = floor_textures.class_textures[m_texture_index].id;
+    break;
+  case OFFICE_ROOM:
+    id = floor_textures.office_textures[m_texture_index].id;
+    break;
+  }
+
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, floor_textures[m_room_type].id);
+	glBindTexture(GL_TEXTURE_2D, id);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Setting uniform values to the currently bound program

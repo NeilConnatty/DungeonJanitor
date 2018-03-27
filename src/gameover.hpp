@@ -10,8 +10,8 @@ class GameOver :public GameObject
 public:
 	GameOver();
 	~GameOver();
-
 	bool init();
+	bool init(vec2 pos);
 	void destroy();
 private:
 	float m_animation_time;

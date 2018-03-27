@@ -1,44 +1,34 @@
-// artifact.cpp
+// cleanable.cpp
 
-#include "artifact.hpp"
+#include "cleanable.hpp"
 
-Texture Artifact::activated_artifact_texture;
-Texture Artifact::deactivated_artifact_texture;
+Cleanable::Cleanable() {}
 
-Artifact::Artifact() : m_is_activated(false) {}
+Cleanable::~Cleanable() {}
 
-Artifact::~Artifact() {}
-
-bool Artifact::init()
+bool Cleanable::init()
 {
 	return init({ 0.f, 0.f });
 }
 
-bool Artifact::init(vec2 position)
+bool Cleanable::init(vec2 position)
 {
-	if (!activated_artifact_texture.is_valid())
+	// Setting initial scale values
+	m_scale.x = 1.5f;
+	m_scale.y = 1.5f;
+
+	if (!load_texture())
 	{
-		if (!activated_artifact_texture.load_from_file(textures_path("placeholders/artifact_placeholder.png")))
-		{
-			fprintf(stderr, "Failed to load activated artifact texture\n");
-			return false;
-		}
+		return false;
 	}
 
-	if (!deactivated_artifact_texture.is_valid())
-	{
-		if (!deactivated_artifact_texture.load_from_file(textures_path("placeholders/deactivated_artifact_placeholder.png")))
-		{
-			fprintf(stderr, "Failed to load deactivated artifact texture\n");
-			return false;
-		}
-	}
 	m_position = position;
-	m_size = {static_cast<float>(activated_artifact_texture.width), static_cast<float>(activated_artifact_texture.height)};
+	m_size = { static_cast<float>(get_texture().width), static_cast<float>(get_texture().height) };
+
 
 	// The position corresponds to the center of the texture
-	float wr = activated_artifact_texture.width * 0.5f;
-	float hr = activated_artifact_texture.height * 0.5f;
+	float wr = get_texture().width * 0.5f;
+	float hr = get_texture().height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -75,14 +65,10 @@ bool Artifact::init(vec2 position)
 	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
-	// Setting initial scale values
-	m_scale.x = 1.f;
-	m_scale.y = 1.f;
-
 	return true;
 }
 
-void Artifact::destroy()
+void Cleanable::destroy()
 {
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
@@ -93,7 +79,7 @@ void Artifact::destroy()
 	glDeleteShader(effect.program);
 }
 
-void Artifact::draw_current(const mat3& projection, const mat3& current_transform)
+void Cleanable::draw_current(const mat3& projection, const mat3& current_transform)
 {
 	// Setting shaders
 	glUseProgram(effect.program);
@@ -122,16 +108,8 @@ void Artifact::draw_current(const mat3& projection, const mat3& current_transfor
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	if (m_is_activated)
-	{
-		glBindTexture(GL_TEXTURE_2D, activated_artifact_texture.id);
-	}
-	else
-	{
-		glBindTexture(GL_TEXTURE_2D, deactivated_artifact_texture.id);
-	}
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
+	glBindTexture(GL_TEXTURE_2D, get_texture().id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
@@ -141,14 +119,4 @@ void Artifact::draw_current(const mat3& projection, const mat3& current_transfor
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
-}
-
-bool Artifact::is_activated()
-{
-	return m_is_activated;
-}
-
-void Artifact::set_active(bool active)
-{
-	m_is_activated = active;
 }

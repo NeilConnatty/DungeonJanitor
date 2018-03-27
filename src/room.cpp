@@ -1,6 +1,7 @@
 // room.cpp
 
 #include "room.hpp"
+#include "janitor.hpp"
 
 #define SPRITE_SIZE 64.f
 
@@ -41,10 +42,15 @@ void Room::destroy()
   {
     w.destroy();
   }
-
-  for (Puddle p : m_puddles)
+  
+  for (unique_ptr<Cleanable>& c : m_cleanables)
   {
-    p.destroy();
+	  c->destroy();
+  }
+
+  if (m_ArtifactHere)
+  {
+	  m_artifact.destroy();
   }
 
 }
@@ -74,9 +80,9 @@ void Room::draw_children(const mat3 &projection,
     w.draw(projection, current_transform);
   }
 
-  for (Puddle p : m_puddles) 
+  for (unique_ptr<Cleanable>& c : m_cleanables)
   {
-    p.draw(projection, current_transform);
+    c->draw(projection, current_transform);
   }
 
   if (m_ArtifactHere)
@@ -132,20 +138,42 @@ bool Room::add_walls(std::vector<wall_pair> &walls)
   return true;
 }
 
-bool Room::add_cleanables(std::vector<vec2> &puddle_positions) 
+bool Room::add_cleanables(vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 {
-    if (!puddle_positions.empty()) {
-        for (vec2 &pos : puddle_positions)
-        {
-            m_puddles.emplace_back();
-            if (!m_puddles.back().init(pos))
-            {
-                return false;
-            }
-			
+	if (!cleanable_pos.empty())
+	{
+		for (pair<Cleanable::types, vec2>& cleanable : cleanable_pos)
+		{
 			m_total_cleanables++;
-        }
-    }
+			if (cleanable.first == Cleanable::types::PUDDLE)
+			{
+				Puddle* p = new Puddle();
+				if (!p->init(cleanable.second))
+				{
+					return false;
+				}
+				m_cleanables.emplace_back(p);
+			}
+			else if (cleanable.first == Cleanable::types::GRAFFITI)
+			{
+				Graffiti* g = new Graffiti();
+				if (!g->init(cleanable.second))
+				{
+					return false;
+				}
+				m_cleanables.emplace_back(g);
+			}
+			else if (cleanable.first == Cleanable::types::GARBAGE)
+			{
+				Garbage* g = new Garbage();
+				if (!g->init(cleanable.second))
+				{
+					return false;
+				}
+				m_cleanables.emplace_back(g);
+			}
+		}
+	}
   return true;
 }
 
@@ -160,8 +188,6 @@ bool Room::add_artifact(bool has_artifact, vec2 artifact_pos)
         {
             return false;
         }
-        m_artifact.set_scale({ 0.5f, 0.5f });
-
 		m_total_artifacts++;
     }
 
@@ -193,9 +219,34 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 	return true;
 }
 
-std::vector<Wall> &Room::get_walls() { return m_walls; }
+void Room::clean(Janitor* janitor, mat3 dungeon_transform)
+{
+	for (unique_ptr<Cleanable>& c : get_cleanables()) {
+		if (c->is_enabled() &&
+			janitor->collides_with(*c, this->transform, dungeon_transform)) {
+			if (c.get()->clean())
+			{
+				increment_cleaned_cleanables();
+			}
+		}
+	}
 
-std::vector<Puddle> &Room::get_cleanables() { return m_puddles; }
+	if (containsUndiscoveredArtifact())
+	{
+		if (janitor->collides_with(*get_artifact(), this->transform, dungeon_transform))
+		{
+			if (!get_artifact()->is_activated())
+			{
+				get_artifact()->set_active(true);
+				increment_activated_artifacts();
+			}
+		}
+	}
+}
+
+vector<Wall> &Room::get_walls() { return m_walls; }
+
+vector<unique_ptr<Cleanable>> &Room::get_cleanables() { return m_cleanables; }
 
 double Room::getReward() const 
 {

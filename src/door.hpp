@@ -10,7 +10,7 @@
 class Door : public GameObject
 {
 public:
-  static Texture door_texture;
+  static Texture door_textures[2];
 
   enum door_dir
   {
@@ -28,6 +28,7 @@ public:
   bool init(door_pair pair) { return init(pair.first, pair.second); }
   bool init(vec2 pos, door_dir dir);
   void destroy() override;
+  door_dir get_dir();
 
 protected:
   void update_current(float ms) override;
