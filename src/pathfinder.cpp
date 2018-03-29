@@ -2,9 +2,11 @@
 
 #include <assert.h>
 #include "pathfinder.hpp"
+#include <memory>
+#include <vector>
 
 void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination, float x_speed, float y_speed, 
-	GameObject& moving_object, Room& room, vector<vec2>& path)
+	GameObject& moving_object, Room& room, Dungeon& dungeon, vector<vec2>& path)
 {
 	PathNode startNode = PathNode(position.x, position.y);
 	PathNode endNode = PathNode(destination.x, destination.y);
@@ -28,7 +30,7 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 
 
 		// if collision -> close node and continue
-		if (collisionDetected(moving_object, room, *node_current))
+		if (collisionDetected(moving_object, room, dungeon, *node_current))
 		{
 			closedNodes.push_back(make_unique<PathNode>(*node_current));
 			continue;
@@ -87,14 +89,32 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
   getPathFromGoalNode(endNode, path);
 }
 
-bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNode& node)
+bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, Dungeon& dungeon, PathNode& node)
 {
 	// To be updated when room has list of collidable objects
-	for (Wall& wall : room.get_walls())
+	if (room.getRoomID() != -1)
 	{
-		if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, room.transform, room.getDungeonTransform()))
+		for (Wall& wall : room.get_walls())
 		{
-			return true;
+			if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, room.transform, room.getDungeonTransform()))
+			{
+				return true;
+			}
+		}
+	}
+	// Hallway Room
+	else
+	{
+		// check all rooms
+		for (unique_ptr<Room> r : dungeon.get_rooms())
+		{
+			for (Wall& wall : r->get_walls())
+			{
+				if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, room.transform, room.getDungeonTransform()))
+				{
+					return true;
+				}
+			}
 		}
 	}
 
