@@ -80,7 +80,7 @@ bool Artifact::init(vec2 position)
 
 	// Setting initial scale values
 	m_scale.x = 1.f;
-	m_scale.y = 1.f;
+	m_scale.y = 0.75;
 
 	return true;
 }
