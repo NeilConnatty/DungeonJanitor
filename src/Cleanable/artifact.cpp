@@ -2,9 +2,7 @@
 
 #include "artifact.hpp"
 
-Texture Artifact::dirty_artifact_texture;
-Texture Artifact::activated_artifact_texture;
-Texture Artifact::deactivated_artifact_texture;
+Texture Artifact::artifact_textures[NUM_ARTIFACT_TEXTURES];
 
 Artifact::Artifact() : m_is_activated(false) {}
 
@@ -17,40 +15,33 @@ bool Artifact::init()
 
 bool Artifact::init(vec2 position)
 {
-	if (!activated_artifact_texture.is_valid())
+	if (!artifact_textures[0].is_valid())
 	{
-		if (!activated_artifact_texture.load_from_file(textures_path("dungeon1/d1_wallobject_chalkboard_1-activated.png")))
+		if (!artifact_textures[0].load_from_file(textures_path("dungeon1/d1_wallobject_chalkboard_1-activated.png")))
 		{
 			fprintf(stderr, "Failed to load activated artifact texture\n");
 			return false;
 		}
-	}
-
-	if (!deactivated_artifact_texture.is_valid())
-	{
-		if (!deactivated_artifact_texture.load_from_file(textures_path("dungeon1/d1_wallobject_chalkboard_1-deactivated.png")))
+		if (!artifact_textures[1].load_from_file(textures_path("dungeon1/d1_wallobject_chalkboard_1-deactivated.png")))
 		{
 			fprintf(stderr, "Failed to load deactivated artifact texture\n");
 			return false;
 		}
-	}
-
-	if (!dirty_artifact_texture.is_valid())
-	{
-		if (!activated_artifact_texture.load_from_file(textures_path("dungeon1/d1_wallobject_chalkboard_1.png")))
+		if (!artifact_textures[2].load_from_file(textures_path("dungeon1/d1_wallobject_chalkboard_1.png")))
 		{
 			fprintf(stderr, "Failed to load dirty artifact texture\n");
 			return false;
 		}
 	}
 
+	position.y = position.y + 27;
 	m_position = position;
-	m_size = {static_cast<float>(activated_artifact_texture.width), static_cast<float>(activated_artifact_texture.height)};
+	m_size = {static_cast<float>(artifact_textures[0].width), static_cast<float>(artifact_textures[0].height)};
 	m_is_dirty = true;
 
 	// The position corresponds to the center of the texture
-	float wr = activated_artifact_texture.width * 0.5f;
-	float hr = activated_artifact_texture.height * 0.5f;
+	float wr = artifact_textures[0].width * 0.5f;
+	float hr = artifact_textures[0].height * 0.5f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -136,15 +127,15 @@ void Artifact::draw_current(const mat3& projection, const mat3& current_transfor
 	glActiveTexture(GL_TEXTURE0);
 	if (m_is_dirty)
 	{
-		glBindTexture(GL_TEXTURE_2D, dirty_artifact_texture.id);
+		glBindTexture(GL_TEXTURE_2D, artifact_textures[2].id);
 	} 
 	else if (m_is_activated)
 	{
-		glBindTexture(GL_TEXTURE_2D, activated_artifact_texture.id);
+		glBindTexture(GL_TEXTURE_2D, artifact_textures[0].id);
 	}
 	else
 	{
-		glBindTexture(GL_TEXTURE_2D, deactivated_artifact_texture.id);
+		glBindTexture(GL_TEXTURE_2D, artifact_textures[1].id);
 	}
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 

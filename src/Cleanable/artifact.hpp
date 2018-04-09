@@ -5,13 +5,14 @@
 
 #include <vector>
 
+
+#define NUM_ARTIFACT_TEXTURES 3
+
 class Artifact : public GameObject
 {
 
 private:
-	static Texture dirty_artifact_texture;
-	static Texture activated_artifact_texture;
-	static Texture deactivated_artifact_texture;
+	static Texture artifact_textures[NUM_ARTIFACT_TEXTURES];
 	bool m_is_activated;
 	bool m_is_dirty;
 
