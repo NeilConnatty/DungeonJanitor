@@ -231,7 +231,7 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 		}
 	}
 
-	if (containsUndiscoveredArtifact())
+	if (containsArtifact())
 	{
 		if (janitor->collides_with(*get_artifact(), this->transform, dungeon_transform))
 		{
@@ -309,7 +309,7 @@ bool Room::containsBoss() const
     return m_BossHere;
 }
 
-bool Room::containsUndiscoveredArtifact()
+bool Room::containsArtifact()
 {
 	return m_ArtifactHere;
 }

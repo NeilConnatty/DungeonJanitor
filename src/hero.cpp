@@ -288,7 +288,7 @@ vec2 Hero::get_next_door_position()
 
 	for (unique_ptr<Room>& room : *m_rooms)
 	{
-		if (room->containsUndiscoveredArtifact())
+		if (room->containsArtifact())
 		{
 			num_artifacts++;
 			if (room->get_artifact()->is_activated()) {

@@ -67,7 +67,7 @@ public:
     bool has_boss_spawn_loc() const;
 	bool has_janitor_spawn_loc() const;
 	bool containsBoss() const;
-	bool containsUndiscoveredArtifact();
+	bool containsArtifact();
 
 	vec2 get_hero_spawn_loc() const;
 	vec2 get_boss_spawn_loc() const;
