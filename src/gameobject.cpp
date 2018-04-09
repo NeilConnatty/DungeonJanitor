@@ -87,9 +87,9 @@ bool GameObject::collides_with(GameObject& object, mat3 room_transform, mat3 dun
 	float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;
 
 	float oLeftEdge =  objX;
-	float oRightEdge =  objX+object.get_size().x;
+	float oRightEdge =  objX+object.get_size().x * object.get_scale().x;
 	float oTopEdge =  objY;
-	float oBottomEdge =  objY+object.get_size().y;
+	float oBottomEdge =  objY+object.get_size().y * object.get_scale().y;
 
 	if ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge))
 	{
