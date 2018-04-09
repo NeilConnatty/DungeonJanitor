@@ -322,7 +322,6 @@ void Room::setBossInRoom(bool bossInRoom)
 void Room::deactivate_artifact()
 {
 	m_artifact.set_active(false);
-	m_ArtifactHere = false; // removes it from scene - if we want to have a different asset for artifacts the boss has interacted with we will need to get rid of this
 }
 
 Artifact* Room::get_artifact()
