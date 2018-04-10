@@ -24,6 +24,7 @@ bool Room::init(vec2 position, room_type type)
   m_total_cleanables = 0;
   m_num_activated_artifacts = 0;
   m_total_artifacts = 0;
+  m_hero_has_visited = false;
 
   return true;
 }
@@ -231,13 +232,14 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 		}
 	}
 
-	if (containsUndiscoveredArtifact())
+	if (containsArtifact())
 	{
 		if (janitor->collides_with(*get_artifact(), this->transform, dungeon_transform))
 		{
 			if (!get_artifact()->is_activated())
 			{
 				get_artifact()->set_active(true);
+				set_hero_has_visited(false);
 				increment_activated_artifacts();
 			}
 		}
@@ -309,7 +311,7 @@ bool Room::containsBoss() const
     return m_BossHere;
 }
 
-bool Room::containsUndiscoveredArtifact()
+bool Room::containsArtifact()
 {
 	return m_ArtifactHere;
 }
@@ -322,7 +324,6 @@ void Room::setBossInRoom(bool bossInRoom)
 void Room::deactivate_artifact()
 {
 	m_artifact.set_active(false);
-	m_ArtifactHere = false; // removes it from scene - if we want to have a different asset for artifacts the boss has interacted with we will need to get rid of this
 }
 
 Artifact* Room::get_artifact()
@@ -335,3 +336,12 @@ void Room::setRoomID(int id)
   m_ID = id;
 }
 
+void Room::set_hero_has_visited(bool visited)
+{
+	m_hero_has_visited = visited;
+}
+
+bool Room::has_hero_visited()
+{
+	return m_hero_has_visited;
+}

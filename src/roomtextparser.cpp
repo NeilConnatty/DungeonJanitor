@@ -191,9 +191,10 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
     {
         has_artifact = true;
         artifact_pos = { x, y };
-        floor_pos.push_back({ x, y });
-        tile_dim = Floor::get_dimensions();
-        x = x + tile_dim.x;
+		edge = TOP;
+		wall_pairs.push_back({ { x, y }, edge });
+		tile_dim = Wall::get_dimensions(edge);
+		x = x + tile_dim.x;
     }
     else if (ch == HERO) // At most one per dungeon
     {
