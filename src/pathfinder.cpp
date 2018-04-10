@@ -96,7 +96,7 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNode& node, Dungeon& dungeon)
 {
 	// To be updated when room has list of collidable objects
-	/*
+	
 	if (room.getRoomID() != -1)
 	{
 		for (Wall& wall : room.get_walls())
@@ -110,20 +110,22 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 	
 	// Hallway Room
 	else
-	*/
+	
 	{
 		// check all rooms
 		for (unique_ptr<Room> &r : dungeon.get_rooms())
 		{
 			for (Wall& wall : r->get_walls())
 			{
-				if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, room.transform, room.getDungeonTransform()))
+				if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, r->transform, r->getDungeonTransform()))
 				{
 					return true;
 				}
 			}
 		}
 	}
+
+	return false;
 }
 
 unique_ptr<PathNode> Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes)
