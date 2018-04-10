@@ -38,16 +38,22 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 			closedNodes.push_back(make_unique<PathNode>(*node_current));
 			continue;
 		}
-		
+
 		// else get successors and set their values
-		vector<unique_ptr<PathNode>> successors; 
+		vector<unique_ptr<PathNode>> successors;
 		node_current->getSuccessorNodes(&successors, &endNode, x_speed, y_speed);
 
-
+		// if we have seen this node before, ignore it
 		for (unique_ptr<PathNode>& successor_node : successors)
 		{
+			if (nodeVisitedBefore(successor_node, openNodes, closedNodes))
+			{
+				continue;
+			}
+
+			/*
 			// see if in OPEN. new value should never be better
-			
+
 			auto found_node = find(openNodes.begin(), openNodes.end(), successor_node);
 			if (found_node != openNodes.end())
 			{
@@ -67,7 +73,7 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 
 			// ditto CLOSED
 			found_node = find(closedNodes.begin(), closedNodes.end(), successor_node);
-			if (found_node != closedNodes.end())
+			if (*found_node != *(closedNodes.end()))
 			{
 				if ((*found_node)->getFValue() > successor_node->getFValue())
 				{
@@ -82,21 +88,20 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 					continue;
 				}
 			}
-			
+			*/
 			openNodes.push_back(std::move(successor_node));
-			int test = 0;
 		}
 		closedNodes.push_back(std::move(node_current));
 	}
-	
-  getPathFromGoalNode(endNode, path);
+
+	getPathFromGoalNode(endNode, path);
 }
 
 
 bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNode& node, Dungeon& dungeon)
 {
 	// To be updated when room has list of collidable objects
-	
+
 	if (room.getRoomID() != -1)
 	{
 		for (Wall& wall : room.get_walls())
@@ -107,10 +112,10 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 			}
 		}
 	}
-	
+
 	// Hallway Room
 	else
-	
+
 	{
 		// check all rooms
 		for (unique_ptr<Room> &r : dungeon.get_rooms())
@@ -125,6 +130,46 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 		}
 	}
 
+	return false;
+}
+
+bool Pathfinder::nodeVisitedBefore(unique_ptr<PathNode>& successor_node,
+	vector<unique_ptr<PathNode>>& openNodes, vector<unique_ptr<PathNode>>& closedNodes)
+{
+	for (auto &node : openNodes)
+	{
+		if (*successor_node == *node)
+		{
+			return true;
+		}
+	}
+
+	for (auto &node : closedNodes)
+	{
+		if (*successor_node == *node)
+		{
+			return true;
+		}
+	}
+	
+	/*
+	for (auto node = openNodes.begin(); node != closedNodes.end(); node++)
+	{
+		if (*successor_node == **node)
+		{
+			return true;
+		}
+	}
+
+	for (auto node = closedNodes.begin(); node != closedNodes.end(); node++)
+	{
+		if (*successor_node == **node)
+		{
+			return true;
+		}
+
+	}
+	*/
 	return false;
 }
 
@@ -148,7 +193,7 @@ unique_ptr<PathNode> Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes
   std::unique_ptr<PathNode> ret(std::move(*(nodes->begin() + finalCount)));
   nodes->erase(nodes->begin() + finalCount);
 
-	return ret;
+  return ret;
 }
 
 // Returns path in reverse order. Pop_back to get the next position to go to.

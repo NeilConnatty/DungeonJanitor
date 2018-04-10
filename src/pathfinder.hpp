@@ -22,6 +22,7 @@ public:
 private:
 
 	static bool collisionDetected(GameObject& moving_object, Room& room, PathNode& node, Dungeon& dungeon);
+	static bool nodeVisitedBefore(unique_ptr<PathNode>& successor_node, vector<unique_ptr<PathNode>>& openNodes, vector<unique_ptr<PathNode>>& closedNodes);
 
 	static unique_ptr<PathNode> getNextNode(vector<unique_ptr<PathNode>>* nodes);
 	static void getPathFromGoalNode(PathNode endNode, vector<vec2>& path);
