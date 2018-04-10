@@ -67,7 +67,7 @@ public:
     bool has_boss_spawn_loc() const;
 	bool has_janitor_spawn_loc() const;
 	bool containsBoss() const;
-	bool containsUndiscoveredArtifact();
+	bool containsArtifact();
 
 	vec2 get_hero_spawn_loc() const;
 	vec2 get_boss_spawn_loc() const;
@@ -76,6 +76,8 @@ public:
     void setBossInRoom(bool bossInRoom);
     void deactivate_artifact();
 	Artifact* get_artifact();
+	void set_hero_has_visited(bool visited);
+	bool has_hero_visited();
 
 	void clean(Janitor* janitor, mat3 dungeon_transform);
 	void increment_cleaned_cleanables() { m_num_cleaned_cleanables++; } // Dana -- needs to be better plugged in (currently plugged into World)
@@ -102,6 +104,7 @@ private:
     bool m_has_hero_spawn_loc;
     bool m_has_boss_spawn_loc;
     bool m_has_janitor_spawn_loc;
+	bool m_hero_has_visited;
 
     int m_ID; // unique room id
     int m_num_cleaned_cleanables; 
