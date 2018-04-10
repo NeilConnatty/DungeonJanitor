@@ -360,70 +360,108 @@ int Janitor::get_current_room_id()
 	return m_currentRoom->getRoomID();
 }
 
+void Janitor::check_movement_helper(GameObject& object, Room& room)
+{
+  float jLeftEdge = m_position.x;
+  float jRightEdge = m_position.x + m_size.x;
+  float jTopEdge = m_position.y;
+  float jBottomEdge = m_position.y + m_size.y;
+  float wLeftEdge, wRightEdge, wTopEdge, wBottomEdge;
+  vec2 pos;
+
+  pos = get_world_coords_from_room_coords(object.get_pos(), room.transform, m_dungeon->transform);
+  wLeftEdge = pos.x;
+  wRightEdge = pos.x + object.get_size().x;
+  wTopEdge = pos.y;
+  wBottomEdge = pos.y + object.get_size().y;
+
+  // Check thin walls
+  if (object.get_size().x < m_size.x)
+  {
+    if ((wLeftEdge - jRightEdge <= object.get_size().x + 10.f && wLeftEdge > jRightEdge)
+      || (jRightEdge - wLeftEdge <= object.get_size().x + 10.f && jRightEdge > wLeftEdge))
+    {
+      if (jTopEdge - wBottomEdge <= 5.f && jTopEdge >= wBottomEdge) 
+      {
+        can_move_up = false;
+      }
+      else if (wTopEdge - jBottomEdge <= 70.f && jBottomEdge <= wTopEdge) 
+      {
+        can_move_down = false;
+      }
+    }
+
+    if ((wTopEdge - jBottomEdge <= object.get_size().y + 6.f && wTopEdge > jBottomEdge)
+      || (jBottomEdge - wTopEdge <= object.get_size().y + 6.f && jBottomEdge > wTopEdge))
+    {
+      if (jLeftEdge - wRightEdge <= m_size.x && jLeftEdge >= wRightEdge) 
+      {
+        can_move_left = false;
+      }
+      else if (wLeftEdge - jRightEdge <= m_size.x && wLeftEdge - jRightEdge >= 0.f) 
+      {
+        can_move_right = false;
+      }
+    }
+  }
+  else 
+  {
+    // Check regular walls
+    if ((abs(wLeftEdge - jRightEdge) <= object.get_size().x + 7.f && wLeftEdge > jRightEdge)
+      || (abs(jRightEdge - wLeftEdge) <= object.get_size().x + 7.f && jRightEdge > wLeftEdge)
+      || (abs(jLeftEdge - wRightEdge) <= m_size.x + 7.f && jLeftEdge > wRightEdge)) 
+    {
+      if (jTopEdge - wBottomEdge <= 5.f && jTopEdge >= wBottomEdge) 
+      {
+        can_move_up = false;
+      }
+      else if (wTopEdge - jBottomEdge <= 70.f && jBottomEdge <= wTopEdge) 
+      {
+        can_move_down = false;
+      }
+    }
+
+    if ((wTopEdge - jBottomEdge <= object.get_size().y + 6.f && wTopEdge > jBottomEdge)
+      || (jBottomEdge - wTopEdge <= object.get_size().y + 6.f && jBottomEdge > wTopEdge))
+    {
+      if (jLeftEdge - wRightEdge <= m_size.x && jLeftEdge >= wRightEdge) 
+      {
+        can_move_left = false;
+      }
+      else if (wLeftEdge - jRightEdge <= m_size.x && wLeftEdge - jRightEdge >= 0.f) 
+      {
+        can_move_right = false;
+      }
+    }
+  }
+}
+
 void Janitor::check_movement()
 {
-	float jLeftEdge = m_position.x;
-  float jRightEdge = m_position.x+m_size.x;
-  float jTopEdge = m_position.y;
-  float jBottomEdge = m_position.y+m_size.y;
-  float wLeftEdge, wRightEdge, wTopEdge, wBottomEdge;
-  vec2 wall;
-
   can_move_up = true;
   can_move_down = true;
   can_move_left = true;
   can_move_right = true;
 
-  for (std::unique_ptr<Room>& room : m_dungeon->get_rooms()) {
-  	std::vector<Wall>& walls = room->get_walls();
-  	for (Wall& w : walls) {
-  		wall = get_world_coords_from_room_coords(w.get_pos(), room->transform, m_dungeon->transform);
-  		wLeftEdge = wall.x;
-  		wRightEdge = wall.x + w.get_size().x;
-  		wTopEdge = wall.y;
-  		wBottomEdge = wall.y + w.get_size().y;
-
-				// Check thin walls
-  		if (w.get_size().x < m_size.x){
-  			if ((wLeftEdge - jRightEdge <= w.get_size().x+10.f && wLeftEdge > jRightEdge)
-  				|| (jRightEdge-wLeftEdge <= w.get_size().x+10.f && jRightEdge > wLeftEdge)){
-  				if (jTopEdge - wBottomEdge <= 5.f && jTopEdge >= wBottomEdge){
-  					can_move_up = false;
-  				} else if (wTopEdge - jBottomEdge <= 70.f && jBottomEdge <= wTopEdge){
-  					can_move_down = false;
-  				}
-  			}
-
-  			if ((wTopEdge - jBottomEdge <= w.get_size().y +6.f && wTopEdge > jBottomEdge)
-  				|| (jBottomEdge-wTopEdge <= w.get_size().y+6.f && jBottomEdge > wTopEdge)){
-  				if (jLeftEdge - wRightEdge <= m_size.x && jLeftEdge >= wRightEdge){
-  					can_move_left = false;
-  				} else if (wLeftEdge - jRightEdge <= m_size.x && wLeftEdge - jRightEdge >= 0.f){
-  					can_move_right = false;
-  				}
-  			}
-  		} else {
-					// Check regular walls
-  			if ((abs(wLeftEdge - jRightEdge) <= w.get_size().x+7.f && wLeftEdge > jRightEdge)
-  				|| (abs(jRightEdge - wLeftEdge) <= w.get_size().x+7.f && jRightEdge > wLeftEdge)
-  				|| (abs(jLeftEdge-wRightEdge) <= m_size.x+7.f && jLeftEdge> wRightEdge)){
-  				if (jTopEdge - wBottomEdge <= 5.f && jTopEdge >= wBottomEdge){
-  					can_move_up = false;
-  				} else if (wTopEdge - jBottomEdge <= 70.f && jBottomEdge <= wTopEdge){
-  					can_move_down = false;
-  				}
-  			}
-
-  			if ((wTopEdge - jBottomEdge <= w.get_size().y +6.f && wTopEdge > jBottomEdge)
-  				|| (jBottomEdge-wTopEdge <= w.get_size().y+6.f && jBottomEdge > wTopEdge)){
-  				if (jLeftEdge - wRightEdge <= m_size.x && jLeftEdge >= wRightEdge){
-  					can_move_left = false;
-  				} else if (wLeftEdge - jRightEdge <= m_size.x && wLeftEdge - jRightEdge >= 0.f){
-  					can_move_right = false;
-  				}
-  			}
-  		}
+  for (std::unique_ptr<Room>& room : m_dungeon->get_rooms()) 
+  {
+  	for (Wall& w : room->get_walls())
+    {
+      check_movement_helper(w, *room);
   	}
+
+    for (unique_ptr<FloorObject>& fo : room->get_floor_objects())
+    {
+      check_movement_helper(*fo, *room);
+    }
+
+    for (unique_ptr<Cleanable>& cl : room->get_cleanables())
+    {
+      if (cl->is_garbage())
+      {
+        check_movement_helper(*cl, *room);
+      }
+    }
   }
 }
 
