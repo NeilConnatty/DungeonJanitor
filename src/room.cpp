@@ -3,6 +3,7 @@
 #include "room.hpp"
 #include "janitor.hpp"
 #include "desk.hpp"
+#include "bathroomstall.hpp"
 
 #define SPRITE_SIZE 64.f
 
@@ -99,6 +100,30 @@ bool Room::populate_floor_objects()
     init_desk initter;
     if (!(initter(this, 6) && initter(this, 7) && initter(this, 8) &&
           initter(this, 11) && initter(this, 12) && initter(this, 13))) 
+    {
+      return false;
+    }
+  }
+  else if (m_room_type == BATH_ROOM)
+  {
+    struct init_stall
+    {
+      bool operator()(Room* room, size_t i)
+      {
+        BathroomStall* stall = new BathroomStall;
+        if (!stall->init({ room->m_floors[i].get_pos().x, room->m_floors[i].get_pos().y - 12.f }))
+        {
+          fprintf(stderr, "failed to init bath stall object.\n");
+          delete stall;
+          return false;
+        }
+        room->m_floor_objects.emplace_back(stall);
+        return true;
+      }
+    };
+
+    init_stall initter;
+    if (!(initter(this, 0) && initter(this, 1) && initter(this, 2))) 
     {
       return false;
     }
