@@ -24,6 +24,7 @@ bool Room::init(vec2 position, room_type type)
   m_total_cleanables = 0;
   m_num_activated_artifacts = 0;
   m_total_artifacts = 0;
+  m_hero_has_visited = false;
 
   return true;
 }
@@ -238,6 +239,7 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 			if (!get_artifact()->is_activated())
 			{
 				get_artifact()->set_active(true);
+				set_hero_has_visited(false);
 				increment_activated_artifacts();
 			}
 		}
@@ -334,3 +336,12 @@ void Room::setRoomID(int id)
   m_ID = id;
 }
 
+void Room::set_hero_has_visited(bool visited)
+{
+	m_hero_has_visited = visited;
+}
+
+bool Room::has_hero_visited()
+{
+	return m_hero_has_visited;
+}

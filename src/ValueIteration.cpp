@@ -161,7 +161,7 @@ float ValueIteration::calculateRoomReward(Room* room, float artifact_probability
 	}
 
 	// If room has both boss and artifact, treated as only having Boss
-	else if (room->containsArtifact())
+	else if (room->containsArtifact() && !room->has_hero_visited())
 	{
 		reward = ARTIFACT_VALUE * artifact_probability;
 	}
