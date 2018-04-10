@@ -36,6 +36,7 @@ bool Hero::init(vec2 position)
 	// The position corresponds to the center of the texture
 	float wr = hero_texture.width * 0.5f;
 	float hr = hero_texture.height * 0.5f;
+	m_size = { wr, hr };
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
@@ -118,11 +119,11 @@ void Hero::stop_movement()
 
 void Hero::update_path()
 {
-	if (!is_moving())
+	if (!is_moving() && !m_is_at_boss)
 	{
-		if (m_currentRoom->containsBoss() && !m_is_at_boss)
+		if (m_currentRoom->containsBoss())
 		{
-			vec2 boss_pos = get_world_coords_from_room_coords(m_currentRoom->get_boss_spawn_loc(), m_currentRoom->transform, m_dungeon->transform);
+			vec2 boss_pos = m_dungeon->get_boss()->get_pos();
 			set_destination(boss_pos, Hero::destinations::BOSS);
 			vector<vec2> path_to_boss;
 			Pathfinder::getPathFromPositionToDestination(m_position, boss_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_boss);
@@ -262,13 +263,15 @@ void Hero::update_current(float ms)
 		} 
 		else
 		{
-			if (m_path.empty())
+
+			if (m_destination_type == BOSS && this->collides_with(*m_dungeon->get_boss(), identity_matrix, identity_matrix))
+			{
+				m_is_at_boss = true;
+				stop_movement();
+			}
+			else if (m_path.empty())
 			{
 				stop_movement();
-				if (m_destination_type == BOSS)
-				{
-					m_is_at_boss = true;
-				}
 				if (m_destination_type == DOOR)
 				{
 					m_currentRoom = m_next_room;

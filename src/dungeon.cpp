@@ -70,6 +70,7 @@ void Dungeon::destroy()
 		m_emitters[i].destroy();
 	}
 	m_healthBar = NULL;
+	m_boss = NULL;
 }
 
 vector<unique_ptr<Room>>& Dungeon::get_rooms()
@@ -207,4 +208,14 @@ bool Dungeon::hero_has_spawned()
 void Dungeon::spawn_hero()
 {
 	m_hero_has_spawned = true;
+}
+
+void Dungeon::set_boss(Boss* boss)
+{
+	m_boss = boss;
+}
+
+Boss* Dungeon::get_boss()
+{
+	return m_boss;
 }

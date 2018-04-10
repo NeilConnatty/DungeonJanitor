@@ -157,6 +157,7 @@ bool World::init_creatures()
 		fprintf(stderr, "Failed to init Boss. \n");
 		return false;
 	}
+	m_dungeon.set_boss(&m_boss);
 	m_boss.set_scale({ 3.f , 3.f });
 
 	return true;

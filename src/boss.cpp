@@ -29,7 +29,7 @@ bool Boss::init(vec2 position)
 	// The position corresponds to the center of the texture
 	float wr = boss_texture.width * 0.5f;
 	float hr = boss_texture.height * 0.5f;
-
+	m_size = { wr, hr };
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
 	vertices[0].texcoord = { 0.f, 1.f };

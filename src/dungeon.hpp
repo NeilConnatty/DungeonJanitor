@@ -5,6 +5,7 @@
 #include "room.hpp"
 #include "healthbar.hpp"
 #include "emitter.hpp"
+#include "boss.hpp"
 
 #include <vector>
 #include <unordered_map>
@@ -34,6 +35,9 @@ public:
 	void spawn_hero();
 
 	void setHealthBar(HealthBar* health_bar) { m_healthBar = health_bar; }
+	
+	void set_boss(Boss* boss);
+	Boss* get_boss();
 
 private:
 	void update_current(float ms) override;
@@ -63,5 +67,6 @@ private:
 	bool m_hero_has_spawned;
 	HealthBar* m_healthBar;
 	vector<Emitter> m_emitters;
+	Boss* m_boss;
 };
 
