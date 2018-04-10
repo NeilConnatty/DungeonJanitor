@@ -4,9 +4,11 @@
 #include "pathfinder.hpp"
 #include <memory>
 #include <vector>
+#include "dungeon.hpp"
 
 void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination, float x_speed, float y_speed, 
-	GameObject& moving_object, Room& room, Dungeon& dungeon, vector<vec2>& path)
+	GameObject& moving_object, Room& room, vector<vec2>& path, Dungeon& dungeon)
+
 {
 	PathNode startNode = PathNode(position.x, position.y);
 	PathNode endNode = PathNode(destination.x, destination.y);
@@ -30,7 +32,8 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 
 
 		// if collision -> close node and continue
-		if (collisionDetected(moving_object, room, dungeon, *node_current))
+		if (collisionDetected(moving_object, room, *node_current, dungeon))
+
 		{
 			closedNodes.push_back(make_unique<PathNode>(*node_current));
 			continue;
@@ -89,9 +92,11 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
   getPathFromGoalNode(endNode, path);
 }
 
-bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, Dungeon& dungeon, PathNode& node)
+
+bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNode& node, Dungeon& dungeon)
 {
 	// To be updated when room has list of collidable objects
+	/*
 	if (room.getRoomID() != -1)
 	{
 		for (Wall& wall : room.get_walls())
@@ -102,11 +107,13 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, Dungeo
 			}
 		}
 	}
+	
 	// Hallway Room
 	else
+	*/
 	{
 		// check all rooms
-		for (unique_ptr<Room> r : dungeon.get_rooms())
+		for (unique_ptr<Room> &r : dungeon.get_rooms())
 		{
 			for (Wall& wall : r->get_walls())
 			{
@@ -117,8 +124,6 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, Dungeo
 			}
 		}
 	}
-
-	return false;
 }
 
 unique_ptr<PathNode> Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes)

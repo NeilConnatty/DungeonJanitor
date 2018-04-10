@@ -5,7 +5,7 @@
 Texture Artifact::activated_artifact_texture;
 Texture Artifact::deactivated_artifact_texture;
 
-Artifact::Artifact() : m_is_activated(false) {}
+Artifact::Artifact() : m_is_activated(true) {}
 
 Artifact::~Artifact() {}
 

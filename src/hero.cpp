@@ -131,7 +131,8 @@ void Hero::update_path()
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
 			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, 
-				*this, *m_currentRoom, *m_dungeon, path_to_artifact);
+				*this, *m_currentRoom, path_to_artifact, *m_dungeon);
+
 			m_path = path_to_artifact;
 			m_current_destination = m_path.back();
 			m_path.pop_back();
@@ -142,7 +143,8 @@ void Hero::update_path()
 			set_destination(next_door_pos, Hero::destinations::DOOR);
 			vector<vec2> path_to_door;
 			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f,
-				*this, *m_currentRoom, *m_dungeon, path_to_door);
+				*this, *m_currentRoom, path_to_door, *m_dungeon);
+
 			m_path = path_to_door;
 			m_current_destination = m_path.back();
 			m_path.pop_back();

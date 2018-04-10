@@ -6,7 +6,8 @@
 #include <iostream>
 
 #define ARTIFACT_VALUE 5
-#define HERO_TIME_TO_SPAWN 10000.f // 60000
+
+#define HERO_TIME_TO_SPAWN 10000.f // temporary -- was 60000
 
 Dungeon::Dungeon() : 
     GameObject()
