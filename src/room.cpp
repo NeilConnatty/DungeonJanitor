@@ -328,8 +328,8 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 }
 
 vector<Wall> &Room::get_walls() { return m_walls; }
-
 vector<unique_ptr<Cleanable>> &Room::get_cleanables() { return m_cleanables; }
+vector<unique_ptr<FloorObject>>& Room::get_floor_objects() { return m_floor_objects; }
 
 double Room::getReward() const 
 {

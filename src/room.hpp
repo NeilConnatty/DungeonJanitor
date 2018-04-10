@@ -58,7 +58,8 @@ public:
     bool add_janitor_spawn_loc(bool has_janitor_spawn, vec2 janitor_spawn_pos);
 
     vector<Wall>& get_walls();
-	vector<unique_ptr<Cleanable>>&  get_cleanables();
+	  vector<unique_ptr<Cleanable>>&  get_cleanables();
+    vector<unique_ptr<FloorObject>>& get_floor_objects();
 
     
     void setReward(double reward);
