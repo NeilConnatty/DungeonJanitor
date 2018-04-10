@@ -345,3 +345,26 @@ bool Room::has_hero_visited()
 {
 	return m_hero_has_visited;
 }
+
+void Room::spawn_debris()
+{
+	if (m_cleanables.size() < 20) {
+		default_random_engine rng;
+		uniform_int_distribution<int> dist;
+		rng = default_random_engine(random_device()());
+		dist = uniform_int_distribution<int>(0, 5);
+		int random = dist(rng);
+		if (random == 5)
+		{
+			dist = uniform_int_distribution<int>(0, m_floors.size() - 1);
+			vec2 puddle_pos = m_floors.at(dist(rng)).get_pos();
+			Puddle* p = new Puddle();
+			if (!p->init(puddle_pos))
+			{
+				return;
+			}
+			m_total_cleanables++;
+			m_cleanables.emplace_back(p);
+		}
+	}
+}

@@ -51,6 +51,7 @@ bool Dungeon::init()
   m_hero_timer = HERO_TIME_TO_SPAWN; // Three minutes in milliseconds
   m_should_spawn_hero = false;
   m_hero_has_spawned = false;
+  m_boss_fight_has_started = false;
   return true;
 }
 
@@ -218,4 +219,14 @@ void Dungeon::set_boss(Boss* boss)
 Boss* Dungeon::get_boss()
 {
 	return m_boss;
+}
+
+void Dungeon::start_boss_fight()
+{
+	m_boss_fight_has_started = true;
+}
+
+bool Dungeon::has_boss_fight_started()
+{
+	return m_boss_fight_has_started;
 }

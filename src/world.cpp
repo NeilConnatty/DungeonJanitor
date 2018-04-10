@@ -219,6 +219,10 @@ bool World::update(float elapsed_ms)
 			  return false;
 		  }
 	  }
+	  if (m_dungeon.has_boss_fight_started())
+	  {
+		  m_dungeon.boss_start_room->spawn_debris();
+	  }
 	  if (m_hero.is_at_boss())
 	  {
 		  game_over();

@@ -38,6 +38,8 @@ public:
 	
 	void set_boss(Boss* boss);
 	Boss* get_boss();
+	void start_boss_fight();
+	bool has_boss_fight_started();
 
 private:
 	void update_current(float ms) override;
@@ -68,5 +70,6 @@ private:
 	HealthBar* m_healthBar;
 	vector<Emitter> m_emitters;
 	Boss* m_boss;
+	bool m_boss_fight_has_started;
 };
 

@@ -266,8 +266,9 @@ void Hero::update_current(float ms)
 
 			if (m_destination_type == BOSS && this->collides_with(*m_dungeon->get_boss(), identity_matrix, identity_matrix))
 			{
-				m_is_at_boss = true;
+				//m_is_at_boss = true;
 				stop_movement();
+				m_dungeon->start_boss_fight();
 			}
 			else if (m_path.empty())
 			{

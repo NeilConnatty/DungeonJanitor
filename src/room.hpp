@@ -14,6 +14,7 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <random>
 
 using namespace std;
 
@@ -90,6 +91,8 @@ public:
     void set_room_type(room_type type) { m_room_type = type; }
     int getRoomID() const { return m_ID; };
     void setRoomID(int id);
+
+	void spawn_debris();
 
 private:
     void update_current(float ms) override;
