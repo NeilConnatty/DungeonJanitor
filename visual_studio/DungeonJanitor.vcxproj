@@ -506,6 +506,7 @@
     <ClCompile Include="..\src\Cleanable\cleanable.cpp" />
     <ClCompile Include="..\src\Cleanable\garbage.cpp" />
     <ClCompile Include="..\src\Cleanable\graffiti.cpp" />
+    <ClCompile Include="..\src\desk.cpp" />
     <ClCompile Include="..\src\door.cpp" />
     <ClCompile Include="..\src\dungeon.cpp" />
     <ClCompile Include="..\src\Cleanable\puddle.cpp" />
@@ -536,6 +537,7 @@
     <ClInclude Include="..\src\Cleanable\graffiti.hpp" />
     <ClInclude Include="..\src\Cleanable\puddle.hpp" />
     <ClInclude Include="..\src\common.hpp" />
+    <ClInclude Include="..\src\desk.hpp" />
     <ClInclude Include="..\src\door.hpp" />
     <ClInclude Include="..\src\dungeon.hpp" />
     <ClInclude Include="..\src\emitter.hpp" />

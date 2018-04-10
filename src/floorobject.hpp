@@ -3,8 +3,6 @@
 #include "common.hpp"
 #include "gameobject.hpp"
 
-#include <vector>
-
 class FloorObject : public GameObject
 {
 public:
