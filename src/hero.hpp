@@ -29,7 +29,7 @@ private:
 	vector<vec2> m_path;
 	vec2 m_vel;
 	bool m_is_moving;
-	bool m_is_in_boss_room;
+	bool m_is_at_boss;
 	vector<unique_ptr<Room>>* m_rooms;
 	const float SPEED = 100.0f;
 	//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
@@ -49,7 +49,7 @@ public:
 	void stop_movement();
 	void update_path();
 	bool is_moving();
-	bool is_in_boss_room();
+	bool is_at_boss();
 	const Room* get_current_room();
 
 	vec2 get_next_door_position(); // which door to go to next, returned in world coordinates

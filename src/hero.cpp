@@ -29,7 +29,7 @@ bool Hero::init(vec2 position)
 	}
 
 	m_position = position;
-	m_is_in_boss_room = false;
+	m_is_at_boss = false;
 	m_currentRoom->set_hero_has_visited(true);
 	m_vel = { 0.f, 0.f };
 
@@ -118,14 +118,19 @@ void Hero::stop_movement()
 
 void Hero::update_path()
 {
-	if (m_currentRoom->containsBoss())
+	if (!is_moving())
 	{
-		stop_movement();
-		m_is_in_boss_room = true;
-	}
-	else if (!is_moving())
-	{
-		if (m_currentRoom->get_artifact()->is_activated())
+		if (m_currentRoom->containsBoss() && !m_is_at_boss)
+		{
+			vec2 boss_pos = get_world_coords_from_room_coords(m_currentRoom->get_boss_spawn_loc(), m_currentRoom->transform, m_dungeon->transform);
+			set_destination(boss_pos, Hero::destinations::BOSS);
+			vector<vec2> path_to_boss;
+			Pathfinder::getPathFromPositionToDestination(m_position, boss_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_boss);
+			m_path = path_to_boss;
+			m_current_destination = m_path.back();
+			m_path.pop_back();
+		}
+		else if (m_currentRoom->get_artifact()->is_activated())
 		{
 			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
@@ -147,15 +152,14 @@ void Hero::update_path()
 		}
 	}
 }
-
 bool Hero::is_moving()
 {
 	return m_is_moving;
 }
 
-bool Hero::is_in_boss_room()
+bool Hero::is_at_boss()
 {
-	return m_is_in_boss_room;
+	return m_is_at_boss;
 }
 
 const Room* Hero::get_current_room()
@@ -261,6 +265,10 @@ void Hero::update_current(float ms)
 			if (m_path.empty())
 			{
 				stop_movement();
+				if (m_destination_type == BOSS)
+				{
+					m_is_at_boss = true;
+				}
 				if (m_destination_type == DOOR)
 				{
 					m_currentRoom = m_next_room;

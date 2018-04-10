@@ -218,7 +218,7 @@ bool World::update(float elapsed_ms)
 			  return false;
 		  }
 	  }
-	  if (m_hero.is_in_boss_room())
+	  if (m_hero.is_at_boss())
 	  {
 		  game_over();
 	  }
