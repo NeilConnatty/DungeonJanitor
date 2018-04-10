@@ -511,6 +511,7 @@
     <ClCompile Include="..\src\Cleanable\puddle.cpp" />
     <ClCompile Include="..\src\emitter.cpp" />
     <ClCompile Include="..\src\floor.cpp" />
+    <ClCompile Include="..\src\floorobject.cpp" />
     <ClCompile Include="..\src\gameobject.cpp" />
     <ClCompile Include="..\src\gameover.cpp" />
     <ClCompile Include="..\src\healthbar.cpp" />
@@ -539,6 +540,7 @@
     <ClInclude Include="..\src\dungeon.hpp" />
     <ClInclude Include="..\src\emitter.hpp" />
     <ClInclude Include="..\src\floor.hpp" />
+    <ClInclude Include="..\src\floorobject.hpp" />
     <ClInclude Include="..\src\gameobject.hpp" />
     <ClInclude Include="..\src\gameover.hpp" />
     <ClInclude Include="..\src\healthbar.hpp" />
