@@ -300,11 +300,17 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
     }
   }
 
-    room.set_room_type(room_t);
+  room.set_room_type(room_t);
 
   if (!populateRoom(room))
   {
     fprintf(stderr, "Issue parsing room file: %s.\n", filename);
+    return false;
+  }
+
+  if (!room.populate_floor_objects())
+  {
+    fprintf(stderr, "Issue populating room floor objects.\n");
     return false;
   }
 

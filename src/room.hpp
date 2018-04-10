@@ -10,6 +10,7 @@
 #include "Cleanable/artifact.hpp"
 #include "Cleanable/cleanable.hpp"
 #include "Cleanable/garbage.hpp"
+#include "floorobject.hpp"
 
 #include <vector>
 #include <array>
@@ -87,7 +88,8 @@ public:
 	int get_number_total_artifacts() { return m_total_artifacts; }
 	int get_number_activated_artifacts() { return m_num_activated_artifacts; }
 
-    void set_room_type(room_type type) { m_room_type = type; }
+    void set_room_type(room_type type);
+    bool populate_floor_objects();
     int getRoomID() const { return m_ID; };
     void setRoomID(int id);
 
@@ -124,5 +126,6 @@ private:
     vector<Floor>		          m_floors;
     vector<Wall>		          m_walls;
 	vector<unique_ptr<Cleanable>>			  m_cleanables;
+  vector<unique_ptr<FloorObject>>     m_floor_objects;
 }; 
 

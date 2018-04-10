@@ -500,6 +500,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\bathroomstall.cpp" />
     <ClCompile Include="..\src\boss.cpp" />
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\Cleanable\artifact.cpp" />
@@ -529,6 +530,7 @@
     <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\bathroomstall.hpp" />
     <ClInclude Include="..\src\boss.hpp" />
     <ClInclude Include="..\src\camera.hpp" />
     <ClInclude Include="..\src\Cleanable\artifact.hpp" />

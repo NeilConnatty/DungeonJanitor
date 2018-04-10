@@ -82,6 +82,9 @@
     <ClCompile Include="..\src\desk.cpp">
       <Filter>src\Dungeon\FloorObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\bathroomstall.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -160,6 +163,9 @@
       <Filter>headers\Dungeon\FloorObjects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\desk.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\bathroomstall.hpp">
       <Filter>headers\Dungeon\FloorObjects</Filter>
     </ClInclude>
   </ItemGroup>
