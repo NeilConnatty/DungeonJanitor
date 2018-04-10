@@ -70,7 +70,7 @@ void Dungeon::destroy()
 		m_emitters[i].destroy();
 	}
 	m_healthBar = NULL;
-	m_boss = NULL;
+	m_boss->destroy();
 }
 
 vector<unique_ptr<Room>>& Dungeon::get_rooms()
