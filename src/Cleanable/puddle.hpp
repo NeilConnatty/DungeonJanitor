@@ -16,5 +16,6 @@ public:
 	~Puddle();
 	Texture& get_texture() override;
 	bool load_texture() override;
+  Mix_Chunk& get_sound() override;
 	bool clean() override;
 };

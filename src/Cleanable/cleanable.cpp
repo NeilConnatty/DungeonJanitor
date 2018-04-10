@@ -24,7 +24,7 @@ bool Cleanable::init(vec2 position)
 
 	m_position = position;
 	m_size = { static_cast<float>(get_texture().width), static_cast<float>(get_texture().height) };
-
+	m_sound = &get_sound();
 
 	// The position corresponds to the center of the texture
 	float wr = get_texture().width * 0.5f;

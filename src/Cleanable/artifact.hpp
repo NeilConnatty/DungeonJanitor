@@ -4,6 +4,9 @@
 #include "../gameobject.hpp"
 
 #include <vector>
+#define SDL_MAIN_HANDLED
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
 class Artifact : public GameObject
 {
@@ -22,6 +25,7 @@ public:
 	void	destroy();
 	bool	is_activated();
 	void  set_active(bool active);
+  Mix_Chunk* m_sound;
 
 private:
 	void update_current(float ms) override {};

@@ -17,6 +17,7 @@ bool Garbage::init(vec2 pos)
 	rng = default_random_engine(random_device()());
 	dist = uniform_int_distribution<int>(0, NUM_GARBAGE_TEXTURES - 1);
 	m_texture_index = dist(rng);
+	m_sound = Mix_LoadWAV(audio_path("garbage.wav"));
 	return Cleanable::init(pos);
 }
 
@@ -83,4 +84,8 @@ bool Garbage::clean()
 	{
 		return false;
 	}
+}
+
+Mix_Chunk& Garbage::get_sound(){
+	return *m_sound;
 }

@@ -23,6 +23,7 @@ public:
 	~Garbage();
 	bool init(vec2 pos);
 	Texture& get_texture() override;
+	Mix_Chunk& get_sound() override;
 	bool load_texture() override;
 	bool clean() override;
 };

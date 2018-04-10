@@ -16,6 +16,7 @@ bool Graffiti::init(vec2 pos)
 	rng = default_random_engine(random_device()());
 	dist = uniform_int_distribution<int>(0, NUM_GRAFFITI_TEXTURES - 1);
 	m_texture_index = dist(rng);
+	m_sound = Mix_LoadWAV(audio_path("graffiti.wav"));
 	return Cleanable::init(pos);
 }
 
@@ -55,3 +56,8 @@ bool Graffiti::clean()
 	m_enabled = false;
 	return true;
 }
+
+Mix_Chunk& Graffiti::get_sound(){
+	return *m_sound;
+}
+

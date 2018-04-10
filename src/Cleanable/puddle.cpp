@@ -31,3 +31,9 @@ bool Puddle::clean()
 	m_enabled = false;
 	return true;
 }
+
+
+Mix_Chunk& Puddle::get_sound(){
+	m_sound = Mix_LoadWAV(audio_path("puddle.wav"));
+	return *m_sound;
+}
