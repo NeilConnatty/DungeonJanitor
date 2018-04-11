@@ -29,10 +29,9 @@ public:
 	virtual bool load_texture() = 0;
 	virtual bool clean() = 0;
 
-  virtual Mix_Chunk& get_sound() = 0;
-  virtual void play_sound(){
-    m_sound = &get_sound();
-    Mix_PlayChannel(-1, m_sound, 0);
+  Mix_Chunk* get_sound() { return m_sound; };
+  void play_sound(){
+    Mix_PlayChannel(-1, get_sound(), 0);
   };
   Mix_Chunk* m_sound;
 

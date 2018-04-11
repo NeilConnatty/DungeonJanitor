@@ -36,7 +36,6 @@ bool Artifact::init(vec2 position)
 
 	position.y = position.y + 27;
 	m_position = position;
-
 	m_size = {static_cast<float>(artifact_textures[0].width), static_cast<float>(artifact_textures[0].height)};
 	m_is_dirty = true;
   m_sound = Mix_LoadWAV(audio_path("artifact.wav"));

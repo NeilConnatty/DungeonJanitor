@@ -85,7 +85,3 @@ bool Garbage::clean()
 		return false;
 	}
 }
-
-Mix_Chunk& Garbage::get_sound(){
-	return *m_sound;
-}

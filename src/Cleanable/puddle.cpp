@@ -8,6 +8,12 @@ Puddle::Puddle() {}
 
 Puddle::~Puddle() {}
 
+bool Puddle::init(vec2 pos)
+{
+	m_sound = Mix_LoadWAV(audio_path("puddle.wav"));
+	return Cleanable::init(pos);
+}
+
 Texture& Puddle::get_texture()
 {
 	return puddle_texture;
@@ -30,10 +36,4 @@ bool Puddle::clean()
 {
 	m_enabled = false;
 	return true;
-}
-
-
-Mix_Chunk& Puddle::get_sound(){
-	m_sound = Mix_LoadWAV(audio_path("puddle.wav"));
-	return *m_sound;
 }

@@ -56,8 +56,3 @@ bool Graffiti::clean()
 	m_enabled = false;
 	return true;
 }
-
-Mix_Chunk& Graffiti::get_sound(){
-	return *m_sound;
-}
-

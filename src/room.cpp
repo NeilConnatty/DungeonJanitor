@@ -225,9 +225,9 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 	for (unique_ptr<Cleanable>& c : get_cleanables()) {
 		if (c->is_enabled() &&
 			janitor->collides_with(*c, this->transform, dungeon_transform)) {
-      c->play_sound();
-			if (c.get()->clean())
-			{
+      if (c.get()->clean())
+      {
+        c->play_sound();
 				increment_cleaned_cleanables();
 			}
 		}
