@@ -301,12 +301,12 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
 
     if (first_line)
     {
-      y = y + 60.f;
+      y = y + WALL_Y_OFFSET;
       first_line = false;
     }
     else
     {
-      y = y + 25.f;
+      y = y + FLOOR_Y_OFFSET;
     }
   }
 
@@ -1061,7 +1061,7 @@ bool DungeonParser::addTopLeftWall(Room& hallway, vec2 offset)
 bool DungeonParser::addBottomLeftWall(Room& hallway, vec2 offset)
 {
   vec2 new_offset = offset;
-  new_offset.y += (WALL_Y_OFFSET + 4.f*FLOOR_Y_OFFSET);
+  new_offset.y += (WALL_Y_OFFSET + static_cast<float>(FLOORS_ROWS)*FLOOR_Y_OFFSET);
 
   return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | BOTTOM) });
 }
@@ -1069,7 +1069,7 @@ bool DungeonParser::addBottomLeftWall(Room& hallway, vec2 offset)
 bool DungeonParser::addTopRightWall(Room& hallway, vec2 offset)
 {
   vec2 new_offset = offset;
-  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
+  new_offset.x += (WALL_X_OFFSET + static_cast<float>(FLOORS_COLS)*FLOOR_X_OFFSET);
 
   return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | TOP) });
 }
@@ -1077,8 +1077,8 @@ bool DungeonParser::addTopRightWall(Room& hallway, vec2 offset)
 bool DungeonParser::addBottomRightWall(Room& hallway, vec2 offset)
 {
   vec2 new_offset = offset;
-  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
-  new_offset.y += (WALL_Y_OFFSET + 4.f*FLOOR_Y_OFFSET);
+  new_offset.x += (WALL_X_OFFSET + static_cast<float>(FLOORS_COLS)*FLOOR_X_OFFSET);
+  new_offset.y += (WALL_Y_OFFSET + static_cast<float>(FLOORS_ROWS)*FLOOR_Y_OFFSET);
 
   return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | BOTTOM) });
 }
