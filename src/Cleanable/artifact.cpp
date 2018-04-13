@@ -38,6 +38,7 @@ bool Artifact::init(vec2 position)
 	m_position = position;
 	m_size = {static_cast<float>(artifact_textures[0].width), static_cast<float>(artifact_textures[0].height)};
 	m_is_dirty = true;
+  m_sound = Mix_LoadWAV(audio_path("artifact.wav"));
 
 	// The position corresponds to the center of the texture
 	float wr = artifact_textures[0].width * 0.5f;
@@ -157,6 +158,7 @@ bool Artifact::is_activated()
 
 void Artifact::set_active(bool active)
 {
+  Mix_PlayChannel(-1, m_sound, 0);
 	m_is_activated = active;
 	m_is_dirty = false;
 }
