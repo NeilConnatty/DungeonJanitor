@@ -15,6 +15,6 @@ uniform mat3 projection;
 void main()
 {
 	particlecolor = vec4(1.0,0.0,0.0,1.0);
-	vec3 new_pos = vec3(vertex_pos.xy, 1.0) + translation;
+	vec3 new_pos = vec3(vertex_pos.xy + translation.xy, 1.0);
 	gl_Position = vec4(projection * transform * new_pos, 1.0);
 }

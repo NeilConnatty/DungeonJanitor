@@ -45,9 +45,9 @@ bool Dungeon::init()
     }
   }
   m_emitters.emplace_back();
-  vec2 velocity = {10.0f, 1.0f};
-  vec4 color = {1.0f, 0.0f, 0.0f, 1.0f};
-  m_emitters.back().init(janitor_room_position, velocity, color, 100.0f, 30);
+  // vec2 velocity = {10.0f, 1.0f};
+  // vec4 color = {1.0f, 0.0f, 0.0f, 1.0f};
+  m_emitters.back().init({10.0f, 10.0f}, {40, 40}, {10.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, 100.0f, 100, {1.0f, 1.0f});
   m_hero_timer = HERO_TIME_TO_SPAWN; // Three minutes in milliseconds
   m_should_spawn_hero = false;
   m_hero_has_spawned = false;
