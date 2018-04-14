@@ -50,6 +50,7 @@ private:
                      const mat3 &current_transform) override;
 
 	float get_percent_dungeon_cleaned();
+	float get_boss_fight_dungeon_health();
 
 	//void test_value_iteration(); // for testing Jay
 

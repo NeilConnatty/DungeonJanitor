@@ -107,8 +107,14 @@ void Dungeon::update_children(float ms)
 	{
 		m_emitters[i].update(ms);
 	}
-
-  m_healthBar->set_percent_filled(get_percent_dungeon_cleaned());
+	if (has_boss_fight_started())
+	{
+		m_healthBar->set_percent_filled(get_boss_fight_dungeon_health());
+	}
+	else
+	{
+		m_healthBar->set_percent_filled(get_percent_dungeon_cleaned());
+	}
 }
 
 void Dungeon::draw_current(const mat3& projection, const mat3& current_transform)
@@ -149,6 +155,36 @@ float Dungeon::get_percent_dungeon_cleaned()
 	}
 	
 	return (cleaned_cleanables + activated_artifacts * ARTIFACT_VALUE) / (total_cleanables + total_artifacts * ARTIFACT_VALUE);
+}
+
+float Dungeon::get_boss_fight_dungeon_health()
+{
+	float cleaned_cleanables = 0;
+	float total_cleanables = 0;
+	float activated_artifacts = 0;
+	float total_artifacts = 0;
+	float spawned_boss_cleanables = 0;
+	float cleaned_boss_cleanables = 0;
+	float BOSS_CLEANABLE_VALUE = 0.02;
+
+	for (std::unique_ptr<Room>& room : m_rooms)
+	{
+		cleaned_cleanables = cleaned_cleanables + room->get_number_cleaned_cleanables();
+		total_cleanables = total_cleanables + room->get_number_total_cleanables();
+		activated_artifacts = activated_artifacts + room->get_number_activated_artifacts();
+		total_artifacts = total_artifacts + room->get_number_total_artifacts();
+		if (room->containsBoss())
+		{
+			spawned_boss_cleanables = room->get_number_spawned_boss_cleanables();
+			cleaned_boss_cleanables = room->get_number_cleaned_boss_cleanables();
+		}
+	}
+	total_cleanables = total_cleanables - spawned_boss_cleanables;
+	cleaned_cleanables = cleaned_cleanables - cleaned_boss_cleanables;
+	float cleaned_percent = (cleaned_cleanables + activated_artifacts * ARTIFACT_VALUE) / (total_cleanables + total_artifacts * ARTIFACT_VALUE);
+	cleaned_percent = cleaned_percent + BOSS_CLEANABLE_VALUE * cleaned_boss_cleanables - BOSS_CLEANABLE_VALUE * spawned_boss_cleanables;
+	cleaned_percent = max(cleaned_percent, 0.0f);
+	return min(1.00f, cleaned_percent);
 }
 
 bool Dungeon::add_doors(vector<std::unique_ptr<Door>>& doors)

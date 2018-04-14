@@ -89,6 +89,8 @@ public:
 	int get_number_cleaned_cleanables() { return m_num_cleaned_cleanables; }
 	int get_number_total_artifacts() { return m_total_artifacts; }
 	int get_number_activated_artifacts() { return m_num_activated_artifacts; }
+	int get_number_spawned_boss_cleanables() { return m_num_spawned_boss_fight_cleanables; }
+	int get_number_cleaned_boss_cleanables() { return m_num_cleaned_boss_fight_cleanables; }
 
     void set_room_type(room_type type);
     bool populate_floor_objects();
@@ -119,6 +121,10 @@ private:
 	int m_total_artifacts;
     double heroRewardValue;
 
+	int m_num_spawned_boss_fight_cleanables;
+	int m_num_cleaned_boss_fight_cleanables;
+
+
     vec2 m_hero_spawn_loc;
     vec2 m_boss_spawn_loc;
     vec2 m_janitor_spawn_loc;
@@ -130,6 +136,6 @@ private:
     vector<Floor>		          m_floors;
     vector<Wall>		          m_walls;
 	vector<unique_ptr<Cleanable>>			  m_cleanables;
-  vector<unique_ptr<FloorObject>>     m_floor_objects;
+	vector<unique_ptr<FloorObject>>     m_floor_objects;
 }; 
 

@@ -27,7 +27,8 @@ bool Room::init(vec2 position, room_type type)
   m_num_activated_artifacts = 0;
   m_total_artifacts = 0;
   m_hero_has_visited = false;
-
+  m_num_spawned_boss_fight_cleanables = 0;
+  m_num_cleaned_boss_fight_cleanables = 0;
   return true;
 }
 
@@ -305,12 +306,15 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 {
 	for (unique_ptr<Cleanable>& c : get_cleanables()) {
-		if (c->is_enabled() &&
-			janitor->collides_with(*c, this->transform, dungeon_transform)) {
-      if (c.get()->clean())
-      {
-        c->play_sound();
+		if (c->is_enabled() && janitor->collides_with(*c, this->transform, dungeon_transform)) {
+			if (c.get()->clean())
+			{
+				c->play_sound();
 				increment_cleaned_cleanables();
+				if (containsBoss())
+				{
+					m_num_cleaned_boss_fight_cleanables++;
+				}
 			}
 		}
 	}
@@ -447,6 +451,7 @@ void Room::spawn_debris()
 				return;
 			}
 			m_total_cleanables++;
+			m_num_spawned_boss_fight_cleanables++;
 			m_cleanables.emplace_back(p);
 		}
 	}
