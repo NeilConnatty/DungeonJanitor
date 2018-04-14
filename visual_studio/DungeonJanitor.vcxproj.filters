@@ -88,6 +88,21 @@
     <ClCompile Include="..\src\forcelist.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\cactus.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\filecabinet.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sink.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mirror.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\toweldispenser.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -173,6 +188,21 @@
     </ClInclude>
     <ClInclude Include="..\src\forcelist.hpp">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cactus.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\filecabinet.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\sink.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mirror.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\toweldispenser.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
