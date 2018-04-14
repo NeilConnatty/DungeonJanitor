@@ -37,15 +37,15 @@
 #define BATH_R 't'
 
 // MAGIC NUMBERS
-#define GAP_FLOORS_ROWS 3
-#define GAP_FLOORS_COLS 5
-#define FLOORS_ROWS 4
-#define FLOORS_COLS 5
-#define TOP_BOT_WALLS 5
-#define GAP_SIDE_WALLS 3
-#define SIDE_WALLS 4
+#define GAP_FLOORS_ROWS 4
+#define GAP_FLOORS_COLS 7
+#define FLOORS_ROWS 5
+#define FLOORS_COLS 7
+#define TOP_BOT_WALLS 7
+#define GAP_SIDE_WALLS 5
+#define SIDE_WALLS 5
 #define GAP_RIGHT_FLOORS 3
-#define RIGHT_FLOORS 4
+#define RIGHT_FLOORS 5
 //Offsets
 #define WALL_X_OFFSET 10.f
 #define WALL_Y_OFFSET 60.f
