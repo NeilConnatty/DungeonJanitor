@@ -6,7 +6,8 @@
 #include <iostream>
 
 #define ARTIFACT_VALUE 5
-#define HERO_TIME_TO_SPAWN 60000.f
+#define HERO_TIME_TO_SPAWN 5000.f
+#define BOSS_FIGHT_TIME 30000.f
 
 Dungeon::Dungeon() : 
     GameObject()
@@ -44,12 +45,14 @@ bool Dungeon::init()
       boss_room_position = room->get_boss_spawn_loc();
     }
   }
-  m_emitters.emplace_back();
+  //m_emitters.emplace_back();
   vec2 velocity = {10.0f, 1.0f};
   vec4 color = {1.0f, 0.0f, 0.0f, 1.0f};
-  m_emitters.back().init(janitor_room_position, velocity, color, 100.0f, 30);
+  //m_emitters.back().init(janitor_room_position, velocity, color, 100.0f, 30);
   m_hero_timer = HERO_TIME_TO_SPAWN; // Three minutes in milliseconds
+  m_boss_fight_timer = BOSS_FIGHT_TIME;
   m_should_spawn_hero = false;
+  m_boss_fight_has_ended = false;
   m_hero_has_spawned = false;
   m_boss_fight_has_started = false;
   return true;
@@ -88,6 +91,14 @@ void Dungeon::update_current(float ms)
 		if (m_hero_timer < 0)
 		{
 			m_should_spawn_hero = true;
+		}
+	}
+	if (m_boss_fight_has_started)
+	{
+		m_boss_fight_timer -= ms;
+		if (m_boss_fight_timer < 0)
+		{
+			m_boss_fight_has_ended = true;
 		}
 	}
 }
@@ -231,6 +242,26 @@ string Dungeon::get_hero_timer()
 	return  minutes_str + ":" + seconds_str;
 }
 
+string Dungeon::get_boss_fight_timer()
+{
+	double minutesRemainder = (m_boss_fight_timer) / 60000;
+	int minutes = minutesRemainder;
+	double secondsRemainder = (minutesRemainder - minutes) * 60;
+	int seconds = secondsRemainder;
+	string minutes_str = to_string(minutes);
+	string seconds_str = to_string(seconds);
+
+	if (minutes <= 0 && seconds < 0)
+	{
+		return "0:00";
+	}
+	if (seconds < 10)
+	{
+		seconds_str = "0" + seconds_str;
+	}
+	return  minutes_str + ":" + seconds_str;
+}
+
 bool Dungeon::should_spawn_hero()
 {
 	return m_should_spawn_hero;
@@ -264,4 +295,9 @@ void Dungeon::start_boss_fight()
 bool Dungeon::has_boss_fight_started()
 {
 	return m_boss_fight_has_started;
+}
+
+bool Dungeon::has_boss_fight_ended()
+{
+	return m_boss_fight_has_ended;
 }

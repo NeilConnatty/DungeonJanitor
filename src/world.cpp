@@ -250,9 +250,17 @@ void World::draw()
   glfwGetFramebufferSize(m_window, &w, &h);
 
   // Updating window title with points
-  std::stringstream title_ss;
-  title_ss << "Hero Arrival In: " << m_dungeon.get_hero_timer();
-  glfwSetWindowTitle(m_window, title_ss.str().c_str());
+  if (!m_dungeon.should_spawn_hero()) {
+	  std::stringstream title_ss;
+	  title_ss << "Hero Arrival In: " << m_dungeon.get_hero_timer();
+	  glfwSetWindowTitle(m_window, title_ss.str().c_str());
+  } 
+  else if (m_dungeon.has_boss_fight_started())
+  {
+	  std::stringstream title_ss;
+	  title_ss << "Work Day Ends In: " << m_dungeon.get_boss_fight_timer();
+	  glfwSetWindowTitle(m_window, title_ss.str().c_str());
+  }
 
   // Clearing backbuffer
   glViewport(0, 0, w, h);
