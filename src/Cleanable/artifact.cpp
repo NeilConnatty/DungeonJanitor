@@ -158,7 +158,7 @@ bool Artifact::is_activated()
 
 void Artifact::set_active(bool active)
 {
-  Mix_PlayChannel(-1, m_sound, 0);
+	Mix_PlayChannel(-1, m_sound, 0);
 	m_is_activated = active;
 	m_is_dirty = false;
 }
