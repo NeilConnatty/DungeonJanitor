@@ -2,6 +2,8 @@
 
 #include "room.hpp"
 #include "janitor.hpp"
+#include "desk.hpp"
+#include "bathroomstall.hpp"
 
 #define SPRITE_SIZE 64.f
 
@@ -49,11 +51,86 @@ void Room::destroy()
 	  c->destroy();
   }
 
+  for (unique_ptr<FloorObject>& fo : m_floor_objects)
+  {
+    fo->destroy();
+  }
+
   if (m_ArtifactHere)
   {
 	  m_artifact.destroy();
   }
 
+}
+
+void Room::set_room_type(room_type type)
+{
+  m_room_type = type;
+}
+
+bool Room::populate_floor_objects()
+{
+  if (m_room_type == OFFICE_ROOM)
+  {
+    m_floor_objects.emplace_back(new Desk);
+    if (!m_floor_objects.back()->init(m_floors[1].get_pos()))
+    {
+      fprintf(stderr, "failed to init large desk object.\n");
+      return false;
+    }
+  }
+  else if (m_room_type == CLASS_ROOM)
+  {
+    struct init_desk
+    {
+      bool operator()(Room* room, size_t i)
+      {
+        Desk* desk = new Desk();
+        if (!desk->init(room->m_floors[i].get_pos(), true))
+        {
+          fprintf(stderr, "failed to init small desk object.\n");
+          delete desk;
+          return false;
+        }
+        room->m_floor_objects.emplace_back(desk);
+        return true;
+      }
+    };
+
+    init_desk initter;
+    if (!(initter(this, 8) && initter(this, 10) && initter(this, 12) &&
+          initter(this, 15) && initter(this, 17) && initter(this, 19) &&
+          initter(this, 22) && initter(this, 24) && initter(this, 26))) 
+    {
+      return false;
+    }
+  }
+  else if (m_room_type == BATH_ROOM)
+  {
+    struct init_stall
+    {
+      bool operator()(Room* room, size_t i)
+      {
+        BathroomStall* stall = new BathroomStall;
+        if (!stall->init({ room->m_floors[i].get_pos().x, room->m_floors[i].get_pos().y - 12.f }))
+        {
+          fprintf(stderr, "failed to init bath stall object.\n");
+          delete stall;
+          return false;
+        }
+        room->m_floor_objects.emplace_back(stall);
+        return true;
+      }
+    };
+
+    init_stall initter;
+    if (!(initter(this, 0) && initter(this, 1) && initter(this, 2))) 
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 void Room::update_current(float ms) {}
@@ -84,6 +161,11 @@ void Room::draw_children(const mat3 &projection,
   for (unique_ptr<Cleanable>& c : m_cleanables)
   {
     c->draw(projection, current_transform);
+  }
+
+  for (unique_ptr<FloorObject>& fo : m_floor_objects)
+  {
+    fo->draw(projection, current_transform);
   }
 
   if (m_ArtifactHere)
@@ -225,8 +307,9 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 	for (unique_ptr<Cleanable>& c : get_cleanables()) {
 		if (c->is_enabled() &&
 			janitor->collides_with(*c, this->transform, dungeon_transform)) {
-			if (c.get()->clean())
-			{
+      if (c.get()->clean())
+      {
+        c->play_sound();
 				increment_cleaned_cleanables();
 			}
 		}
@@ -247,8 +330,8 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 }
 
 vector<Wall> &Room::get_walls() { return m_walls; }
-
 vector<unique_ptr<Cleanable>> &Room::get_cleanables() { return m_cleanables; }
+vector<unique_ptr<FloorObject>>& Room::get_floor_objects() { return m_floor_objects; }
 
 double Room::getReward() const 
 {

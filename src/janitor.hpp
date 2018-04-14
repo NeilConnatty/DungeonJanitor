@@ -43,6 +43,7 @@ public:
 
 	void check_collisions();
 	void check_movement();
+  void check_movement_helper(GameObject& object, Room& room, float xLeftRightOffset, float yDownOffset);
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;
@@ -51,8 +52,6 @@ public:
 private:
 	Room* m_currentRoom;
 	Dungeon* m_dungeon;
-	vec2 m_accel;
-	vec2 m_vel;
 
 	DIRECTION animation_dir;
 	float m_time_elapsed;

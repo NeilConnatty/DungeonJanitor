@@ -25,4 +25,5 @@ public:
 	Texture& get_texture() override;
 	bool load_texture() override;
 	bool clean() override;
+  bool is_garbage() override { return true; }
 };

@@ -76,6 +76,18 @@
     <ClCompile Include="..\src\emitter.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\floorobject.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\desk.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\bathroomstall.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\forcelist.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -150,6 +162,18 @@
     <ClInclude Include="..\src\emitter.hpp">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\floorobject.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\desk.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\bathroomstall.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\forcelist.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -187,6 +211,12 @@
     </Filter>
     <Filter Include="headers\Camera/UI">
       <UniqueIdentifier>{803b344d-cd74-430a-845e-aab09a76f77e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Dungeon\FloorObjects">
+      <UniqueIdentifier>{32de0d3b-86ad-412b-a24b-c9770c10e66e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers\Dungeon\FloorObjects">
+      <UniqueIdentifier>{3b5c41c6-c56a-4e1e-ae35-b7077fa35c8d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
