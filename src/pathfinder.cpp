@@ -111,6 +111,14 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 				return true;
 			}
 		}
+
+		for (auto& floor_object : room.get_floor_objects())
+		{
+			if (moving_object.collides_with_projected(*floor_object, { node.m_xCoord, node.m_yCoord }, room.transform, room.getDungeonTransform()))
+			{
+				return true;
+			}
+		}
 	}
 
 	// Hallway Room
