@@ -91,6 +91,9 @@
     <ClCompile Include="..\src\cactus.cpp">
       <Filter>src\Dungeon\FloorObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\filecabinet.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -178,6 +181,9 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="..\src\cactus.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\filecabinet.hpp">
       <Filter>headers\Dungeon\FloorObjects</Filter>
     </ClInclude>
   </ItemGroup>

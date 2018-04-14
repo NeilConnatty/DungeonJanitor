@@ -5,6 +5,7 @@
 #include "desk.hpp"
 #include "bathroomstall.hpp"
 #include "cactus.hpp"
+#include "filecabinet.hpp"
 
 #define SPRITE_SIZE 64.f
 
@@ -79,10 +80,25 @@ bool Room::populate_floor_objects()
       fprintf(stderr, "failed to init large desk object.\n");
       return false;
     }
+
     m_floor_objects.emplace_back(new Cactus);
     if (!m_floor_objects.back()->init(m_floors[27].get_pos()))
     {
       fprintf(stderr, "failed to init cactus object.\n");
+      return false;
+    }
+
+    m_floor_objects.emplace_back(new FileCabinet);
+    if (!m_floor_objects.back()->init({ m_floors[5].get_pos().x + 25.f, m_floors[5].get_pos().y - 15.f }))
+    {
+      fprintf(stderr, "failed to init file cabinet object.\n");
+      return false;
+    }
+
+    m_floor_objects.emplace_back(new FileCabinet);
+    if (!m_floor_objects.back()->init({ m_floors[6].get_pos().x + 9.f, m_floors[6].get_pos().y - 15.f }))
+    {
+      fprintf(stderr, "failed to init file cabinet object.\n");
       return false;
     }
   }
