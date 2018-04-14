@@ -85,6 +85,9 @@
     <ClCompile Include="..\src\bathroomstall.cpp">
       <Filter>src\Dungeon\FloorObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\forcelist.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -167,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="..\src\bathroomstall.hpp">
       <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\forcelist.hpp">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
