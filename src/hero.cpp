@@ -8,8 +8,6 @@ Hero::Hero() {}
 
 Hero::~Hero() {}
 
-#define ARTIFACT_VALUE 60
-
 bool Hero::init()
 {
 	m_is_moving = false;

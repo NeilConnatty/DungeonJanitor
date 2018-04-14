@@ -51,44 +51,6 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 				continue;
 			}
 
-			/*
-			// see if in OPEN. new value should never be better
-
-			auto found_node = find(openNodes.begin(), openNodes.end(), successor_node);
-			if (found_node != openNodes.end())
-			{
-				if ((*found_node)->getFValue() > successor_node->getFValue())
-				{
-					//Jay Should not get here. Previous node should always have more efficient path.
-					printf("Jay: Error - found more efficient node during A*");
-					assert(false);
-					openNodes.erase(found_node);
-				}
-				else
-				{
-					// discard successor_node and continue for loop
-					continue;
-				}
-			}
-
-			// ditto CLOSED
-			found_node = find(closedNodes.begin(), closedNodes.end(), successor_node);
-			if (*found_node != *(closedNodes.end()))
-			{
-				if ((*found_node)->getFValue() > successor_node->getFValue())
-				{
-					//Jay Should not get here. Previous node should always have more efficient path.
-					printf("Jay: Error - found more efficient node during A*");
-					assert(false);
-					closedNodes.erase(found_node);
-				}
-				else
-				{
-					// discard successor_node and continue for loop
-					continue;
-				}
-			}
-			*/
 			openNodes.push_back(std::move(successor_node));
 		}
 		closedNodes.push_back(std::move(node_current));
@@ -160,24 +122,6 @@ bool Pathfinder::nodeVisitedBefore(unique_ptr<PathNode>& successor_node,
 		}
 	}
 	
-	/*
-	for (auto node = openNodes.begin(); node != closedNodes.end(); node++)
-	{
-		if (*successor_node == **node)
-		{
-			return true;
-		}
-	}
-
-	for (auto node = closedNodes.begin(); node != closedNodes.end(); node++)
-	{
-		if (*successor_node == **node)
-		{
-			return true;
-		}
-
-	}
-	*/
 	return false;
 }
 
