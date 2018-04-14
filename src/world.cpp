@@ -219,11 +219,15 @@ bool World::update(float elapsed_ms)
 	  }
 	  if (m_dungeon.has_boss_fight_started())
 	  {
-		  m_dungeon.boss_start_room->spawn_debris();
-	  }
-	  if (m_hero.is_at_boss())
-	  {
-		  game_over();
+		  if (m_dungeon.get_boss_fight_dungeon_health() == 0.0f)
+		  {
+			  game_over();
+		  }
+		  else
+		  {
+			  m_dungeon.boss_start_room->spawn_debris();
+
+		  }
 	  }
 
   }

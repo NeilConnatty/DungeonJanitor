@@ -40,6 +40,7 @@ public:
 	Boss* get_boss();
 	void start_boss_fight();
 	bool has_boss_fight_started();
+	float get_boss_fight_dungeon_health();
 
 private:
 	void update_current(float ms) override;
@@ -50,7 +51,6 @@ private:
                      const mat3 &current_transform) override;
 
 	float get_percent_dungeon_cleaned();
-	float get_boss_fight_dungeon_health();
 
 	//void test_value_iteration(); // for testing Jay
 
