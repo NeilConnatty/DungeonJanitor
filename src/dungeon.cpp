@@ -7,7 +7,7 @@
 
 #define ARTIFACT_VALUE 5
 
-#define HERO_TIME_TO_SPAWN 0000.f // temporary -- was 60000
+#define HERO_TIME_TO_SPAWN 5000.f // temporary -- was 60000
 
 Dungeon::Dungeon() : 
     GameObject()

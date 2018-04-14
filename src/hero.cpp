@@ -129,6 +129,7 @@ void Hero::update_path()
 		if (m_currentRoom->containsArtifact() && m_currentRoom->get_artifact()->is_activated())
 		{
 			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
+			artifact_pos.y += 60; // OFFSET TEMP
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
 			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, // 1.0f, 1.0f,

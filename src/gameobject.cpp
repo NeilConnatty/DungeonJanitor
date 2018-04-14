@@ -200,13 +200,14 @@ bool GameObject::collides_with_projected(GameObject & object, vec2 projected_pos
 	float oTopEdge = objY;
 	float oBottomEdge = objY + object.get_size().y;
 
-	if ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge))
+	if (object.is_enabled() && ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge)))
 	{
 		if ((jTopEdge <= oBottomEdge && jBottomEdge >= oTopEdge) || (jBottomEdge >= oTopEdge && jTopEdge <= oBottomEdge))
 		{
+			//object.toggle_enable(); //For Debug
 			return true;
 		}
 	}
-	return false;// collides_with_projected(object, { projected_position.x - 1, projected_position.y - 1 }, room_transform, dungeon_transform) || false;
+	return false;
 }
 
