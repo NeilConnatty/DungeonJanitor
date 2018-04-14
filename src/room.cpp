@@ -98,8 +98,9 @@ bool Room::populate_floor_objects()
     };
 
     init_desk initter;
-    if (!(initter(this, 6) && initter(this, 7) && initter(this, 8) &&
-          initter(this, 11) && initter(this, 12) && initter(this, 13))) 
+    if (!(initter(this, 8) && initter(this, 10) && initter(this, 12) &&
+          initter(this, 15) && initter(this, 17) && initter(this, 19) &&
+          initter(this, 22) && initter(this, 24) && initter(this, 26))) 
     {
       return false;
     }

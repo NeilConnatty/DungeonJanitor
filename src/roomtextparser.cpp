@@ -36,13 +36,23 @@
 #define CLASS_R 'c'
 #define BATH_R 't'
 
+// MAGIC NUMBERS
+#define GAP_FLOORS_ROWS 4
+#define GAP_FLOORS_COLS 7
+#define FLOORS_ROWS 5
+#define FLOORS_COLS 7
+#define TOP_BOT_WALLS 7
+#define GAP_SIDE_WALLS 5
+#define SIDE_WALLS 5
+#define GAP_RIGHT_FLOORS 3
+#define RIGHT_FLOORS 5
 //Offsets
-#define ROOM_X_OFFSET 185.f
-#define ROOM_Y_OFFSET 160.f;
 #define WALL_X_OFFSET 10.f
 #define WALL_Y_OFFSET 60.f
 #define FLOOR_X_OFFSET 35.f
 #define FLOOR_Y_OFFSET 25.f
+#define ROOM_X_OFFSET (WALL_X_OFFSET + FLOORS_COLS.f * FLOOR_X_OFFSET)
+#define ROOM_Y_OFFSET (WALL_Y_OFFSET + FLOORS_ROWS.f * FLOOR_Y_OFFSET)
 
 struct door_info
 {
@@ -291,12 +301,12 @@ bool RoomParser::parseRoom(Room &room, const char *filename)
 
     if (first_line)
     {
-      y = y + 60.f;
+      y = y + WALL_Y_OFFSET;
       first_line = false;
     }
     else
     {
-      y = y + 25.f;
+      y = y + FLOOR_Y_OFFSET;
     }
   }
 
@@ -909,10 +919,10 @@ bool DungeonParser::addFloors(Room& hallway, vec2 offset, bool addGapFloors)
   if (addGapFloors)
   {
     new_offset.y = offset.y;
-    for (row = 0; row < 3; ++row)
+    for (row = 0; row < GAP_FLOORS_ROWS; ++row)
     {
       new_offset.x = offset.x + WALL_X_OFFSET;
-      for (column = 0; column < 5; ++column)
+      for (column = 0; column < GAP_FLOORS_COLS; ++column)
       {
         if (!hallway.add_floor(new_offset))
         {
@@ -926,10 +936,10 @@ bool DungeonParser::addFloors(Room& hallway, vec2 offset, bool addGapFloors)
   }
 
   new_offset.y = offset.y + WALL_Y_OFFSET;
-  for (row = 0; row < 4; ++row)
+  for (row = 0; row < FLOORS_ROWS; ++row)
   {
     new_offset.x = offset.x + WALL_X_OFFSET;
-    for (column = 0; column < 5; ++column)
+    for (column = 0; column < FLOORS_COLS; ++column)
     {
       if (!hallway.add_floor(new_offset))
       {
@@ -950,7 +960,7 @@ bool DungeonParser::addTopWalls(Room& hallway, vec2 offset)
   vec2 new_offset = offset;
   new_offset.x += WALL_X_OFFSET;
 
-  for (column = 0; column < 5; ++column)
+  for (column = 0; column < TOP_BOT_WALLS; ++column)
   {
     if (!hallway.add_wall({ new_offset, TOP }))
     {
@@ -968,9 +978,9 @@ bool DungeonParser::addBottomWalls(Room& hallway, vec2 offset)
   size_t column;
   vec2 new_offset = offset;
   new_offset.x += WALL_X_OFFSET;
-  new_offset.y += (WALL_Y_OFFSET + 4.f*FLOOR_Y_OFFSET);
+  new_offset.y += (WALL_Y_OFFSET + static_cast<float>(FLOORS_ROWS)*FLOOR_Y_OFFSET);
 
-  for (column = 0; column < 5; ++column)
+  for (column = 0; column < TOP_BOT_WALLS; ++column)
   {
     if (!hallway.add_wall({ new_offset, BOTTOM }))
     {
@@ -989,7 +999,7 @@ bool DungeonParser::addLeftWalls(Room& hallway, vec2 offset, bool addGapFiller)
 
   if (addGapFiller)
   {
-    for (row = 0; row < 3; ++row)
+    for (row = 0; row < GAP_SIDE_WALLS; ++row)
     {
       if (!hallway.add_wall({ new_offset, VERTICAL }))
       {
@@ -1000,7 +1010,7 @@ bool DungeonParser::addLeftWalls(Room& hallway, vec2 offset, bool addGapFiller)
   }
 
   new_offset.y = offset.y + WALL_Y_OFFSET;
-  for (row = 0; row < 4; ++row)
+  for (row = 0; row < SIDE_WALLS; ++row)
   {
     if (!hallway.add_wall({ new_offset, VERTICAL }))
     {
@@ -1016,11 +1026,11 @@ bool DungeonParser::addRightWalls(Room& hallway, vec2 offset, bool addGapFiller)
 {
   size_t row;
   vec2 new_offset = offset;
-  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
+  new_offset.x += (WALL_X_OFFSET + static_cast<float>(FLOORS_COLS)*FLOOR_X_OFFSET);
 
   if (addGapFiller)
   {
-    for (row = 0; row < 3; ++row)
+    for (row = 0; row < GAP_SIDE_WALLS; ++row)
     {
       if (!hallway.add_wall({ new_offset, VERTICAL }))
       {
@@ -1031,7 +1041,7 @@ bool DungeonParser::addRightWalls(Room& hallway, vec2 offset, bool addGapFiller)
   }
 
   new_offset.y = offset.y + WALL_Y_OFFSET;
-  for (row = 0; row < 4; ++row)
+  for (row = 0; row < SIDE_WALLS; ++row)
   {
     if (!hallway.add_wall({ new_offset, VERTICAL }))
     {
@@ -1051,7 +1061,7 @@ bool DungeonParser::addTopLeftWall(Room& hallway, vec2 offset)
 bool DungeonParser::addBottomLeftWall(Room& hallway, vec2 offset)
 {
   vec2 new_offset = offset;
-  new_offset.y += (WALL_Y_OFFSET + 4.f*FLOOR_Y_OFFSET);
+  new_offset.y += (WALL_Y_OFFSET + static_cast<float>(FLOORS_ROWS)*FLOOR_Y_OFFSET);
 
   return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | BOTTOM) });
 }
@@ -1059,7 +1069,7 @@ bool DungeonParser::addBottomLeftWall(Room& hallway, vec2 offset)
 bool DungeonParser::addTopRightWall(Room& hallway, vec2 offset)
 {
   vec2 new_offset = offset;
-  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
+  new_offset.x += (WALL_X_OFFSET + static_cast<float>(FLOORS_COLS)*FLOOR_X_OFFSET);
 
   return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | TOP) });
 }
@@ -1067,8 +1077,8 @@ bool DungeonParser::addTopRightWall(Room& hallway, vec2 offset)
 bool DungeonParser::addBottomRightWall(Room& hallway, vec2 offset)
 {
   vec2 new_offset = offset;
-  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
-  new_offset.y += (WALL_Y_OFFSET + 4.f*FLOOR_Y_OFFSET);
+  new_offset.x += (WALL_X_OFFSET + static_cast<float>(FLOORS_COLS)*FLOOR_X_OFFSET);
+  new_offset.y += (WALL_Y_OFFSET + static_cast<float>(FLOORS_ROWS)*FLOOR_Y_OFFSET);
 
   return hallway.add_wall({ new_offset, (wall_edge)(VERTICAL | BOTTOM) });
 }
@@ -1077,11 +1087,11 @@ bool DungeonParser::addRightFloors(Room& hallway, vec2 offset, bool addGapFiller
 {
   size_t row;
   vec2 new_offset = offset;
-  new_offset.x += (WALL_X_OFFSET + 5.f*FLOOR_X_OFFSET);
+  new_offset.x += (WALL_X_OFFSET + static_cast<float>(FLOORS_COLS)*FLOOR_X_OFFSET);
 
   if (addGapFiller)
   {
-    for (row = 0; row < 3; ++row)
+    for (row = 0; row < GAP_RIGHT_FLOORS; ++row)
     {
       if (!hallway.add_floor(new_offset)) // TODO: make way to add vertical floor tile
       {
@@ -1092,7 +1102,7 @@ bool DungeonParser::addRightFloors(Room& hallway, vec2 offset, bool addGapFiller
   }
 
   new_offset.y = offset.y + WALL_Y_OFFSET;
-  for (row = 0; row < 4; ++row)
+  for (row = 0; row < RIGHT_FLOORS; ++row)
   {
     if (!hallway.add_floor(new_offset)) // TODO: make way to add vertical floor tile
     {
