@@ -502,6 +502,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\bathroomstall.cpp" />
     <ClCompile Include="..\src\boss.cpp" />
+    <ClCompile Include="..\src\cactus.cpp" />
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\Cleanable\artifact.cpp" />
     <ClCompile Include="..\src\Cleanable\cleanable.cpp" />
@@ -533,6 +534,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\bathroomstall.hpp" />
     <ClInclude Include="..\src\boss.hpp" />
+    <ClInclude Include="..\src\cactus.hpp" />
     <ClInclude Include="..\src\camera.hpp" />
     <ClInclude Include="..\src\Cleanable\artifact.hpp" />
     <ClInclude Include="..\src\Cleanable\cleanable.hpp" />

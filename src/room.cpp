@@ -4,6 +4,7 @@
 #include "janitor.hpp"
 #include "desk.hpp"
 #include "bathroomstall.hpp"
+#include "cactus.hpp"
 
 #define SPRITE_SIZE 64.f
 
@@ -76,6 +77,12 @@ bool Room::populate_floor_objects()
     if (!m_floor_objects.back()->init(m_floors[1].get_pos()))
     {
       fprintf(stderr, "failed to init large desk object.\n");
+      return false;
+    }
+    m_floor_objects.emplace_back(new Cactus);
+    if (!m_floor_objects.back()->init(m_floors[27].get_pos()))
+    {
+      fprintf(stderr, "failed to init cactus object.\n");
       return false;
     }
   }

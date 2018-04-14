@@ -88,6 +88,9 @@
     <ClCompile Include="..\src\forcelist.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\cactus.cpp">
+      <Filter>src\Dungeon\FloorObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -173,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="..\src\forcelist.hpp">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cactus.hpp">
+      <Filter>headers\Dungeon\FloorObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
