@@ -52,8 +52,6 @@ public:
 private:
 	Room* m_currentRoom;
 	Dungeon* m_dungeon;
-	vec2 m_accel;
-	vec2 m_vel;
 
 	DIRECTION animation_dir;
 	float m_time_elapsed;

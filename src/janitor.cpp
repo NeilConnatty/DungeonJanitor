@@ -62,6 +62,8 @@ bool Janitor::init(vec2 position)
 
 	//Initialize member variables
 	m_position = position;
+	m_physics_object = true;
+	m_mass = 60.f;
 	m_size = {static_cast<float>(janitor_sheet.width/4), static_cast<float>(janitor_sheet.height/8)};
 	animation_dir = right;
 	frame = 0;
@@ -92,19 +94,18 @@ void Janitor::destroy()
 
 void Janitor::update_current(float ms) 
 {
-	vec2 force_sum = { 0, 0 };
+	vec2 internal_forces = { 0, 0 };
 	vec2 movement_force = { 0, 0 };
 	vec2 friction = { 0, 0 };
 
 	//Starts high but quickly tapers down
-	float const BUTTON_FORCE = 800.f;
+	//put movement force on a curve defined by time pressed. obviously.
+	float const BUTTON_FORCE = 2000.f;
 	//Friction constant of concrete
 	float const FRICTIONAL_CONST = 0.6;
-	float const MASS = 60.f;
 	float const G = 9.81;
-	float friction_scalar = FRICTIONAL_CONST * MASS * G;
+	float friction_scalar = FRICTIONAL_CONST * m_mass * G;
 	friction_scalar = friction_scalar*friction_scalar;
-	/* MIN_VEL is holdover, currently it has no effect, but it may be useful later, please leave for now*/
 	float const MIN_VEL = 0.f;
 	float const MAX_VEL = 220.f;
 	float const MAX_ACCEL = 600.f;
@@ -152,7 +153,7 @@ void Janitor::update_current(float ms)
 	if (m_key_left)
 	{
 		m_time_pressed_left += ms;
-		movement_force.x = (BUTTON_FORCE - (m_time_pressed_left *m_time_pressed_left));
+		movement_force.x = (BUTTON_FORCE - (m_time_pressed_left * m_time_pressed_left));
 		if (abs(movement_force.x) < friction_scalar)
 			movement_force.x = -friction_scalar;
 		//if (m_vel.x > -MIN_VEL) m_vel.x = -MIN_VEL;
@@ -180,10 +181,10 @@ void Janitor::update_current(float ms)
 	//simulation steps
 	//sum forces
 
-	force_sum.x += movement_force.x;
-	force_sum.y += movement_force.y;
+	internal_forces.x += movement_force.x;
+	internal_forces.y += movement_force.y;
   
-  //set friction to oppose velocity
+	//set friction to oppose velocity
 	if (m_vel.x > 0)
 		friction.x = -friction_scalar;
 	else if (m_vel.x < 0)
@@ -193,13 +194,13 @@ void Janitor::update_current(float ms)
 	else if (m_vel.y < 0)
 		friction.y = friction_scalar;
 
-	force_sum.x += friction.x;
-	force_sum.y += friction.y;
+	internal_forces.x += friction.x;
+	internal_forces.y += friction.y;
 
-	m_accel.x += force_sum.x * time_factor;
-	m_accel.y += force_sum.y * time_factor;
-  
-  //clamp acceleration
+	m_accel.x += internal_forces.x / m_mass;
+	m_accel.y += internal_forces.y / m_mass;
+
+	//clamp acceleration from janitor movement
 	if (m_accel.x > MAX_ACCEL) {
 		m_accel.x = MAX_ACCEL;
 	}
@@ -211,12 +212,15 @@ void Janitor::update_current(float ms)
 	}
 	else if (m_accel.y < -MAX_ACCEL) {
 		m_accel.y = -MAX_ACCEL;
-  }
-  
+	}
+	//Add Active Forces from external objects
+	m_accel.x += m_external_force.x / m_mass;
+	m_accel.y += m_external_force.y / m_mass;
+
 	m_vel.x += m_accel.x * time_factor;
 	m_vel.y += m_accel.y * time_factor;
   
-  //clamp velocity
+	//clamp velocity
 	if (m_vel.x > MAX_VEL) {
 		m_vel.x = MAX_VEL;
 	}
@@ -251,10 +255,16 @@ void Janitor::update_current(float ms)
 			m_vel.x = 0;
 		}
 	}
-
+	
+	//std::cout << "externalf.x: " << m_external_force.x << std::endl;
+	//std::cout << "externalf.y: " << m_external_force.y << std::endl;
+	//std::cout << "acc.x: " << m_accel.x << std::endl;
+	//std::cout << "acc.y: " << m_accel.y << std::endl;
+	//std::cout << "vel.x: " << m_vel.x << std::endl;
+	//std::cout << "vel.y: " << m_vel.y << std::endl;
+	//std::cout << "pos.x: " << m_position.x << std::endl;
 	m_position.x = m_position.x + m_vel.x * time_factor;
 	m_position.y = m_position.y + m_vel.y * time_factor;
-  
 	pick_movement_tex();
 }
 
