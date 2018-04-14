@@ -6,7 +6,7 @@
 #include <iostream>
 
 #define ARTIFACT_VALUE 5
-#define HERO_TIME_TO_SPAWN 5000.f
+#define HERO_TIME_TO_SPAWN 60000.f
 #define BOSS_FIGHT_TIME 30000.f
 
 Dungeon::Dungeon() : 
