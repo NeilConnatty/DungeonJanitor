@@ -80,12 +80,10 @@ bool Hero::init(vec2 position)
 		return false;
 
 
-	// Setting initial scale values
-	m_scale.x = 1.f;
-	m_scale.y = 1.f;
-	m_size = { static_cast<float>(hero_texture.width), static_cast<float>(hero_texture.height) };
+	// Setting initial size
+	m_size = { static_cast<float>(hero_texture.width) * m_scale.x / 4, static_cast<float>(hero_texture.height) * m_scale.y / 4};
 
-	m_artifact_offset = 1.5 * hero_texture.height; // Note, might need to update this when hero texture changes
+	m_artifact_offset = 1.5 * m_size.y; // Note, might need to update this when hero texture changes
 
 
 	return true;
