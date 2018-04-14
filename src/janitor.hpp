@@ -43,6 +43,7 @@ public:
 
 	void check_collisions();
 	void check_movement();
+  void check_movement_helper(GameObject& object, Room& room, float xLeftRightOffset, float yDownOffset);
 
 	void update_current(float ms)override;
 	void update_children(float ms)override;

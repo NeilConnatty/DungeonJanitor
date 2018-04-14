@@ -500,17 +500,20 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\bathroomstall.cpp" />
     <ClCompile Include="..\src\boss.cpp" />
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\Cleanable\artifact.cpp" />
     <ClCompile Include="..\src\Cleanable\cleanable.cpp" />
     <ClCompile Include="..\src\Cleanable\garbage.cpp" />
     <ClCompile Include="..\src\Cleanable\graffiti.cpp" />
+    <ClCompile Include="..\src\desk.cpp" />
     <ClCompile Include="..\src\door.cpp" />
     <ClCompile Include="..\src\dungeon.cpp" />
     <ClCompile Include="..\src\Cleanable\puddle.cpp" />
     <ClCompile Include="..\src\emitter.cpp" />
     <ClCompile Include="..\src\floor.cpp" />
+    <ClCompile Include="..\src\floorobject.cpp" />
     <ClCompile Include="..\src\gameobject.cpp" />
     <ClCompile Include="..\src\gameover.cpp" />
     <ClCompile Include="..\src\healthbar.cpp" />
@@ -527,6 +530,7 @@
     <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\bathroomstall.hpp" />
     <ClInclude Include="..\src\boss.hpp" />
     <ClInclude Include="..\src\camera.hpp" />
     <ClInclude Include="..\src\Cleanable\artifact.hpp" />
@@ -535,10 +539,12 @@
     <ClInclude Include="..\src\Cleanable\graffiti.hpp" />
     <ClInclude Include="..\src\Cleanable\puddle.hpp" />
     <ClInclude Include="..\src\common.hpp" />
+    <ClInclude Include="..\src\desk.hpp" />
     <ClInclude Include="..\src\door.hpp" />
     <ClInclude Include="..\src\dungeon.hpp" />
     <ClInclude Include="..\src\emitter.hpp" />
     <ClInclude Include="..\src\floor.hpp" />
+    <ClInclude Include="..\src\floorobject.hpp" />
     <ClInclude Include="..\src\gameobject.hpp" />
     <ClInclude Include="..\src\gameover.hpp" />
     <ClInclude Include="..\src\healthbar.hpp" />

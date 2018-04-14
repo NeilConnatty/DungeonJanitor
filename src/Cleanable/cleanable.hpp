@@ -25,6 +25,7 @@ public:
 	bool	init();
 	bool	init(vec2 position);
 	void	destroy();
+  virtual bool is_garbage() { return false; }
 	virtual Texture& get_texture() = 0;
 	virtual bool load_texture() = 0;
 	virtual bool clean() = 0;
