@@ -4,11 +4,16 @@
 #include <iostream>
 
 GameObject::GameObject() :
-	m_position({0.f, 0.f}),
-	m_scale({1.f, 1.f}),
-	m_size({1.f , 1.f}),
+	m_position({ 0.f, 0.f }),
+	m_scale({ 1.f, 1.f }),
+	m_size({ 1.f , 1.f }),
 	m_rotation(0.f),
-	m_enabled(true)
+	m_external_force({ 0, 0 }),
+	m_accel({ 0, 0 }),
+	m_vel({ 0, 0 }),
+	m_mass(1.f),
+	m_enabled(true),
+	m_active_forces(ForceList())
 {
 }
 
@@ -47,7 +52,10 @@ void GameObject::toggle_enable()
 {
 	m_enabled = !m_enabled;
 }
-
+//destroy/reinit the the active_force list as well
+void GameObject::toggle_physics() {
+	m_physics_object = !m_physics_object;
+}
 
 void GameObject::update(float ms)
 {
@@ -55,6 +63,54 @@ void GameObject::update(float ms)
 	{
 		update_current(ms);
 		update_children(ms);
+	}
+	if (m_physics_object && m_active_forces.size != 0) {
+		int i = 0;
+		ForceList::ActiveForce* af = m_active_forces.head;
+		while (af->next != nullptr) {
+			if (!af->applied) {
+				m_external_force.x += af->force.x;
+				m_external_force.y += af->force.y;
+				af->applied = true;
+			}
+			af->tick(ms);
+			//consider tapering them over time.
+			if (af->dt < 0) {
+				m_external_force.x -= af->force.x;
+				m_external_force.y -= af->force.y;
+				af->force = { 0,0 };
+				ForceList::ActiveForce* temp = af;
+				af = af->next;
+				if (temp == m_active_forces.head) {
+					m_active_forces.delete_head();
+				}
+				//probably has pointer errors
+				else {
+					m_active_forces.delete_pos(i);
+				}
+			}
+			else
+				af = af->next;
+			if (af == nullptr) return;
+			i++;
+		}
+		//tail check.
+		if (af->next == nullptr) {
+			if (!af->applied) {
+				m_external_force.x += af->force.x;
+				m_external_force.y += af->force.y;
+				af->applied = true;
+			}
+			af->tick(ms);
+			if (af->dt < 0) {
+				m_external_force.x -= af->force.x;
+				m_external_force.y -= af->force.y;
+				af->force = { 0,0 };
+				m_active_forces.delete_tail();
+			}
+		}
+		if (m_external_force.x > -1 && m_external_force.x < 1) m_external_force.x = 0;
+		if (m_external_force.y > -1 && m_external_force.y < 1) m_external_force.y = 0;
 	}
 }
 
@@ -77,30 +133,30 @@ void GameObject::draw(const mat3& projection, const mat3& parent_transform)
 	}
 }
 //Calculate and apply the force which will result in
-//desired_vel being added to m_vel after dt
-//could make it take m_vel into account as well.
-void apply_force(vec2 desired_vel, float dt) {
+//desired_vel is added to m_vel by a constant force over dt in milliseconds
+void GameObject::apply_force_dv(vec2 desired_vel, float dt)
+{
 	vec2 F = { 0, 0 };
-	//dv/dt = a?
-	//mda/dt = F
-	//J = Integral(Fdt) from t1 to t2
-	//mv = Fdt
-	// F = mv/dt
-
-	F.x = m_mass * desired_vel.x / dt;
-	F.y = m_mass * desired_vel.y / dt;
-	//Need to create a timer for each force...
-	//A vector of floats? a vector of vec2's?
-	//or a struct, returned by this method,
-	//with the force vector and a float for the time
-	//over which it is applied. 
-	m_forces.x += F.x;
-	m_forces.y += F.y;
+	float time_factor = dt/1000.f;
+	F.x = m_mass * (desired_vel.x / time_factor);
+	F.y = m_mass * (desired_vel.y / time_factor);
+	m_active_forces.insert_back(ForceList::ActiveForce(F, dt));
 }
 //Calculate and apply the force which will result in
 //change_in_position after dt
-void apply_force(vec2 change_in_position, float dt) {
+void GameObject::apply_force_dx(vec2 dx, float dt) 
+{
+	vec2 F = { 0, 0 };
+	float time_factor = dt/1000.f;
+	float dvx = dx.x / time_factor;
+	float dvy = dx.y / time_factor;
 
+	//J = mv2 - mv1
+	//J/dt = average force over dt
+	F.x = (m_mass * dvx - m_mass * m_vel.x) / time_factor;
+	F.y = (m_mass * dvy - m_mass * m_vel.y) / time_factor;
+
+	m_active_forces.insert_back(ForceList::ActiveForce(F, dt));
 }
 
 bool GameObject::collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform) {
