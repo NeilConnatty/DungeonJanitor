@@ -31,9 +31,9 @@ bool Emitter::init(vec2 scale, vec2 position, vec2 velocity, vec4 color, float l
 	m_particle_count = 0;
 	m_next_spawn = 0.0f;
 
-	data.m_particles_positions.resize(max_particles);
-	data.m_particles_translations.resize(max_particles);
-	data.m_particles_colors.resize(max_particles);
+	data.m_particles_positions.resize(max_particles*3);
+	data.m_particles_translations.resize(max_particles*3);
+	data.m_particles_colors.resize(max_particles*4);
 
 	// Clearing errors
 	gl_flush_errors();
@@ -54,10 +54,10 @@ bool Emitter::init(vec2 scale, vec2 position, vec2 velocity, vec4 color, float l
 	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 3 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
 	// VBO for particle colors
-	glGenBuffers(1, &data.vbo_color);
-	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_color);
-	// Initialize with empty (NULL) buffer : it will be updated later, each frame.
-	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+	// glGenBuffers(1, &data.vbo_color);
+	// glBindBuffer(GL_ARRAY_BUFFER, data.vbo_color);
+	// // Initialize with empty (NULL) buffer : it will be updated later, each frame.
+	// glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 
 	return true;
 }
@@ -102,16 +102,16 @@ void Emitter::update_children(float ms)
 	int next = 0;
 	for (int p = 0; p < m_particle_count; ++p)
 	{
-		if (m_particle_container[p].p_life > 0.0f)
+		if (m_particle_container[p].p_life >= 0.0f)
 		{
 			m_particle_container[p].update(ms/1000.0f);
 			data.m_particles_translations[3 * next + 0] = m_particle_container[p].p_position.x;
 			data.m_particles_translations[3 * next + 1] = m_particle_container[p].p_position.y;
 			data.m_particles_translations[3 * next + 2] = m_particle_container[p].p_position.z;
-			data.m_particles_colors[4 * next + 0] = m_particle_container[p].p_color.x;
-			data.m_particles_colors[4 * next + 1] = m_particle_container[p].p_color.y;
-			data.m_particles_colors[4 * next + 2] = m_particle_container[p].p_color.z;
-			data.m_particles_colors[4 * next + 3] = m_particle_container[p].p_color.w;
+			// data.m_particles_colors[4 * next + 0] = m_particle_container[p].p_color.x;
+			// data.m_particles_colors[4 * next + 1] = m_particle_container[p].p_color.y;
+			// data.m_particles_colors[4 * next + 2] = m_particle_container[p].p_color.z;
+			// data.m_particles_colors[4 * next + 3] = m_particle_container[p].p_color.w;
 			next++;
 		}
 		else 
@@ -126,9 +126,9 @@ void Emitter::update_children(float ms)
 	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 3 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_particle_count * sizeof(GLfloat) * 3, data.m_particles_translations.data());
 
-	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_color);
-	glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_particle_count * sizeof(GLfloat) * 4, data.m_particles_colors.data());
+	// glBindBuffer(GL_ARRAY_BUFFER, data.vbo_color);
+	// glBufferData(GL_ARRAY_BUFFER, m_max_particles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+	// glBufferSubData(GL_ARRAY_BUFFER, 0, m_particle_count * sizeof(GLfloat) * 4, data.m_particles_colors.data());
 }
 
 void Emitter::draw_children(const mat3& projection, const mat3& current_transform)
@@ -152,9 +152,9 @@ void Emitter::draw_children(const mat3& projection, const mat3& current_transfor
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	// 3rd attribute buffer : particles' colors
-	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, data.vbo_color);
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	// glEnableVertexAttribArray(2);
+	// glBindBuffer(GL_ARRAY_BUFFER, data.vbo_color);
+	// glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&current_transform);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
