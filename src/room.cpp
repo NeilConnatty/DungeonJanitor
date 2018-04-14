@@ -2,6 +2,8 @@
 
 #include "room.hpp"
 #include "janitor.hpp"
+#include "desk.hpp"
+#include "bathroomstall.hpp"
 
 #define SPRITE_SIZE 64.f
 
@@ -24,6 +26,7 @@ bool Room::init(vec2 position, room_type type)
   m_total_cleanables = 0;
   m_num_activated_artifacts = 0;
   m_total_artifacts = 0;
+  m_hero_has_visited = false;
 
   return true;
 }
@@ -48,11 +51,86 @@ void Room::destroy()
 	  c->destroy();
   }
 
+  for (unique_ptr<FloorObject>& fo : m_floor_objects)
+  {
+    fo->destroy();
+  }
+
   if (m_ArtifactHere)
   {
 	  m_artifact.destroy();
   }
 
+}
+
+void Room::set_room_type(room_type type)
+{
+  m_room_type = type;
+}
+
+bool Room::populate_floor_objects()
+{
+  if (m_room_type == OFFICE_ROOM)
+  {
+    m_floor_objects.emplace_back(new Desk);
+    if (!m_floor_objects.back()->init(m_floors[1].get_pos()))
+    {
+      fprintf(stderr, "failed to init large desk object.\n");
+      return false;
+    }
+  }
+  else if (m_room_type == CLASS_ROOM)
+  {
+    struct init_desk
+    {
+      bool operator()(Room* room, size_t i)
+      {
+        Desk* desk = new Desk();
+        if (!desk->init(room->m_floors[i].get_pos(), true))
+        {
+          fprintf(stderr, "failed to init small desk object.\n");
+          delete desk;
+          return false;
+        }
+        room->m_floor_objects.emplace_back(desk);
+        return true;
+      }
+    };
+
+    init_desk initter;
+    if (!(initter(this, 8) && initter(this, 10) && initter(this, 12) &&
+          initter(this, 15) && initter(this, 17) && initter(this, 19) &&
+          initter(this, 22) && initter(this, 24) && initter(this, 26))) 
+    {
+      return false;
+    }
+  }
+  else if (m_room_type == BATH_ROOM)
+  {
+    struct init_stall
+    {
+      bool operator()(Room* room, size_t i)
+      {
+        BathroomStall* stall = new BathroomStall;
+        if (!stall->init({ room->m_floors[i].get_pos().x, room->m_floors[i].get_pos().y - 12.f }))
+        {
+          fprintf(stderr, "failed to init bath stall object.\n");
+          delete stall;
+          return false;
+        }
+        room->m_floor_objects.emplace_back(stall);
+        return true;
+      }
+    };
+
+    init_stall initter;
+    if (!(initter(this, 0) && initter(this, 1) && initter(this, 2))) 
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 void Room::update_current(float ms) {}
@@ -83,6 +161,11 @@ void Room::draw_children(const mat3 &projection,
   for (unique_ptr<Cleanable>& c : m_cleanables)
   {
     c->draw(projection, current_transform);
+  }
+
+  for (unique_ptr<FloorObject>& fo : m_floor_objects)
+  {
+    fo->draw(projection, current_transform);
   }
 
   if (m_ArtifactHere)
@@ -224,20 +307,22 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 	for (unique_ptr<Cleanable>& c : get_cleanables()) {
 		if (c->is_enabled() &&
 			janitor->collides_with(*c, this->transform, dungeon_transform)) {
-			if (c.get()->clean())
-			{
+      if (c.get()->clean())
+      {
+        c->play_sound();
 				increment_cleaned_cleanables();
 			}
 		}
 	}
 
-	if (containsUndiscoveredArtifact())
+	if (containsArtifact())
 	{
 		if (janitor->collides_with(*get_artifact(), this->transform, dungeon_transform))
 		{
 			if (!get_artifact()->is_activated())
 			{
 				get_artifact()->set_active(true);
+				set_hero_has_visited(false);
 				increment_activated_artifacts();
 			}
 		}
@@ -245,8 +330,8 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 }
 
 vector<Wall> &Room::get_walls() { return m_walls; }
-
 vector<unique_ptr<Cleanable>> &Room::get_cleanables() { return m_cleanables; }
+vector<unique_ptr<FloorObject>>& Room::get_floor_objects() { return m_floor_objects; }
 
 double Room::getReward() const 
 {
@@ -309,7 +394,7 @@ bool Room::containsBoss() const
     return m_BossHere;
 }
 
-bool Room::containsUndiscoveredArtifact()
+bool Room::containsArtifact()
 {
 	return m_ArtifactHere;
 }
@@ -322,7 +407,6 @@ void Room::setBossInRoom(bool bossInRoom)
 void Room::deactivate_artifact()
 {
 	m_artifact.set_active(false);
-	m_ArtifactHere = false; // removes it from scene - if we want to have a different asset for artifacts the boss has interacted with we will need to get rid of this
 }
 
 Artifact* Room::get_artifact()
@@ -335,3 +419,12 @@ void Room::setRoomID(int id)
   m_ID = id;
 }
 
+void Room::set_hero_has_visited(bool visited)
+{
+	m_hero_has_visited = visited;
+}
+
+bool Room::has_hero_visited()
+{
+	return m_hero_has_visited;
+}

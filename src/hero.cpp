@@ -30,6 +30,7 @@ bool Hero::init(vec2 position)
 
 	m_position = position;
 	m_is_in_boss_room = false;
+	m_currentRoom->set_hero_has_visited(true);
 	m_vel = { 0.f, 0.f };
 
 	// The position corresponds to the center of the texture
@@ -139,7 +140,7 @@ void Hero::update_path()
 		}
 		else
 		{
-      vec2 next_door_pos = get_next_door_position();
+			vec2 next_door_pos = get_next_door_position();
 			set_destination(next_door_pos, Hero::destinations::DOOR);
 			vector<vec2> path_to_door;
 			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, 1.0f, 1.0f, //SPEED / 10.f, Y_SPEED / 10.f,
@@ -268,6 +269,7 @@ void Hero::update_current(float ms)
 				if (m_destination_type == DOOR)
 				{
 					m_currentRoom = m_next_room;
+					m_currentRoom->set_hero_has_visited(true);
 				}
 				else if (m_destination_type == ARTIFACT)
 				{
@@ -293,7 +295,7 @@ vec2 Hero::get_next_door_position()
 
 	for (unique_ptr<Room>& room : *m_rooms)
 	{
-		if (room->containsUndiscoveredArtifact())
+		if (room->containsArtifact())
 		{
 			num_artifacts++;
 			if (room->get_artifact()->is_activated()) {

@@ -10,6 +10,7 @@
 #include "Cleanable/artifact.hpp"
 #include "Cleanable/cleanable.hpp"
 #include "Cleanable/garbage.hpp"
+#include "floorobject.hpp"
 
 #include <vector>
 #include <array>
@@ -57,7 +58,8 @@ public:
     bool add_janitor_spawn_loc(bool has_janitor_spawn, vec2 janitor_spawn_pos);
 
     vector<Wall>& get_walls();
-	vector<unique_ptr<Cleanable>>&  get_cleanables();
+	  vector<unique_ptr<Cleanable>>&  get_cleanables();
+    vector<unique_ptr<FloorObject>>& get_floor_objects();
 
     
     void setReward(double reward);
@@ -67,7 +69,7 @@ public:
     bool has_boss_spawn_loc() const;
 	bool has_janitor_spawn_loc() const;
 	bool containsBoss() const;
-	bool containsUndiscoveredArtifact();
+	bool containsArtifact();
 
 	vec2 get_hero_spawn_loc() const;
 	vec2 get_boss_spawn_loc() const;
@@ -76,6 +78,8 @@ public:
     void setBossInRoom(bool bossInRoom);
     void deactivate_artifact();
 	Artifact* get_artifact();
+	void set_hero_has_visited(bool visited);
+	bool has_hero_visited();
 
 	void clean(Janitor* janitor, mat3 dungeon_transform);
 	void increment_cleaned_cleanables() { m_num_cleaned_cleanables++; } // Dana -- needs to be better plugged in (currently plugged into World)
@@ -85,7 +89,8 @@ public:
 	int get_number_total_artifacts() { return m_total_artifacts; }
 	int get_number_activated_artifacts() { return m_num_activated_artifacts; }
 
-    void set_room_type(room_type type) { m_room_type = type; }
+    void set_room_type(room_type type);
+    bool populate_floor_objects();
     int getRoomID() const { return m_ID; };
     void setRoomID(int id);
 	void setDungeonTransform(mat3 transform) { m_dungeon_transform = transform; }
@@ -104,6 +109,7 @@ private:
     bool m_has_hero_spawn_loc;
     bool m_has_boss_spawn_loc;
     bool m_has_janitor_spawn_loc;
+	bool m_hero_has_visited;
 
     int m_ID; // unique room id
     int m_num_cleaned_cleanables; 
@@ -125,5 +131,6 @@ private:
     vector<Floor>		          m_floors;
     vector<Wall>		          m_walls;
 	vector<unique_ptr<Cleanable>>			  m_cleanables;
+  vector<unique_ptr<FloorObject>>     m_floor_objects;
 }; 
 
