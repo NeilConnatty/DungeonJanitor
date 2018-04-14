@@ -33,8 +33,7 @@ bool Hero::init(vec2 position)
 	m_currentRoom->set_hero_has_visited(true);
 	m_vel = { 0.f, 0.f };
 	m_time_elapsed = 0;
-	m_scale.x = 0.8f;
-	m_scale.y = 0.75f;
+
 	animation_dir = right;
 	frame = 0;
 	// The position corresponds to the center of the texture
@@ -80,7 +79,6 @@ bool Hero::init(vec2 position)
 	// Loading shaders
 	if (!effect.load_from_file(shader_path("animated.vs.glsl"), shader_path("animated.fs.glsl")))
 		return false;
-
 
 	return true;
 }
@@ -350,17 +348,15 @@ void Hero::pick_movement_tex() {
 	float theta = acos(dot(vel_dir, default_dir)); //gives the angle of our velocity (but only from 0-pi in rads)
 	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
 	float pi = atan(1) * 4;
-	
-	animation_dir = right;
+	animation_dir = right; 
 	if (theta < 3 * pi / 4 && theta > pi / 4) {
 		animation_dir = up;
 	}
 	else if (theta < -5 * pi / 4 && theta > -7 * pi / 4) {
-		//downleft
 		animation_dir = down;
 	}
 	//odd case
-	else if (theta > 3 * pi / 4) {
+	else if (theta > 3 * pi / 4 || theta < -5 * pi / 4) {
 		animation_dir = left;
 	}
 	//if (theta < pi / 8 || theta > -pi / 8)

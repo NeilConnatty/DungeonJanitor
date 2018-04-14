@@ -73,7 +73,7 @@ bool World::init(vec2 screen)
 
     //-------------------------------------------------------------------------
     // Loading music and sounds
-
+	/*
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
         fprintf(stderr, "Failed to initialize SDL Audio");
@@ -100,7 +100,7 @@ bool World::init(vec2 screen)
     Mix_PlayMusic(m_background_music, -1);
 
     fprintf(stderr, "Loaded music");
-
+	*/
     //actually put something like return m_janitor.init();
 	if (!m_dungeon.init())
 	{
@@ -171,7 +171,7 @@ bool World::init_hero()
 		return false;
 
 	}
-	m_hero.set_scale({ 3.f, 3.f });
+	m_hero.set_scale({ 2.f, 2.f });
 	m_hero.setAllRooms(&m_dungeon.get_rooms());
 	m_dungeon.spawn_hero();
 	return true;
@@ -181,12 +181,13 @@ bool World::init_hero()
 // Releases all the associated resources
 void World::destroy()
 {
+	/*
   if (m_background_music != nullptr)
     Mix_FreeMusic(m_background_music);
 
   Mix_CloseAudio();
   SDL_Quit();
-
+  */
   m_dungeon.destroy();
   m_janitor.destroy();
   m_hero.destroy();
