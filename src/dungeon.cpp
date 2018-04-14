@@ -165,6 +165,7 @@ float Dungeon::get_boss_fight_dungeon_health()
 	float total_artifacts = 0;
 	float spawned_boss_cleanables = 0;
 	float cleaned_boss_cleanables = 0;
+	float BOSS_SPAWN_VALUE = 0.03;
 	float BOSS_CLEANABLE_VALUE = 0.02;
 
 	for (std::unique_ptr<Room>& room : m_rooms)
@@ -179,10 +180,8 @@ float Dungeon::get_boss_fight_dungeon_health()
 			cleaned_boss_cleanables = room->get_number_cleaned_boss_cleanables();
 		}
 	}
-	total_cleanables = total_cleanables - spawned_boss_cleanables;
-	cleaned_cleanables = cleaned_cleanables - cleaned_boss_cleanables;
 	float cleaned_percent = (cleaned_cleanables + activated_artifacts * ARTIFACT_VALUE) / (total_cleanables + total_artifacts * ARTIFACT_VALUE);
-	cleaned_percent = cleaned_percent + BOSS_CLEANABLE_VALUE * cleaned_boss_cleanables - BOSS_CLEANABLE_VALUE * spawned_boss_cleanables;
+	cleaned_percent = cleaned_percent + BOSS_CLEANABLE_VALUE * cleaned_boss_cleanables - BOSS_SPAWN_VALUE * spawned_boss_cleanables;
 	cleaned_percent = max(cleaned_percent, 0.0f);
 	return min(1.00f, cleaned_percent);
 }

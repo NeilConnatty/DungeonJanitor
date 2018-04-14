@@ -224,7 +224,20 @@ bool Room::add_walls(std::vector<wall_pair> &walls)
 
 bool Room::add_cleanables(vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 {
-	if (!cleanable_pos.empty())
+	if (containsBoss())
+	{
+		for (Floor &floor : m_floors)
+		{
+			Puddle* p = new Puddle();
+			if (!p->init(floor.get_pos()))
+			{
+				return false;
+			}
+			m_cleanables.emplace_back(p);
+			p->toggle_enable();
+		}
+	}
+	else if (!cleanable_pos.empty())
 	{
 		for (pair<Cleanable::types, vec2>& cleanable : cleanable_pos)
 		{
@@ -310,10 +323,13 @@ void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 			if (c.get()->clean())
 			{
 				c->play_sound();
-				increment_cleaned_cleanables();
 				if (containsBoss())
 				{
 					m_num_cleaned_boss_fight_cleanables++;
+				}
+				else
+				{
+					increment_cleaned_cleanables();
 				}
 			}
 		}
@@ -435,24 +451,19 @@ bool Room::has_hero_visited()
 
 void Room::spawn_debris()
 {
-	if (m_cleanables.size() < 20) {
-		default_random_engine rng;
-		uniform_int_distribution<int> dist;
-		rng = default_random_engine(random_device()());
-		dist = uniform_int_distribution<int>(0, 5);
-		int random = dist(rng);
-		if (random == 5)
+	default_random_engine rng;
+	uniform_int_distribution<int> dist;
+	rng = default_random_engine(random_device()());
+	dist = uniform_int_distribution<int>(0, 10);
+	int random = dist(rng);
+	if (random == 5)
+	{
+		dist = uniform_int_distribution<int>(0, m_cleanables.size() - 1);
+		unique_ptr<Cleanable>& c = m_cleanables.at(dist(rng));
+		if (!c->is_enabled())
 		{
-			dist = uniform_int_distribution<int>(0, m_floors.size() - 1);
-			vec2 puddle_pos = m_floors.at(dist(rng)).get_pos();
-			Puddle* p = new Puddle();
-			if (!p->init(puddle_pos))
-			{
-				return;
-			}
-			m_total_cleanables++;
 			m_num_spawned_boss_fight_cleanables++;
-			m_cleanables.emplace_back(p);
+			c->toggle_enable();
 		}
 	}
 }
