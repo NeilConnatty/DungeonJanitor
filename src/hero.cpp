@@ -360,7 +360,7 @@ void Hero::pick_movement_tex() {
 		animation_dir = down;
 	}
 	//odd case
-	else if (theta > 3 * pi / 4 && theta < -5 * pi / 4) {
+	else if (theta > 3 * pi / 4) {
 		animation_dir = left;
 	}
 	//if (theta < pi / 8 || theta > -pi / 8)
