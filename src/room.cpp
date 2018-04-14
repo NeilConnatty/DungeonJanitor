@@ -6,6 +6,9 @@
 #include "bathroomstall.hpp"
 #include "cactus.hpp"
 #include "filecabinet.hpp"
+#include "sink.hpp"
+#include "mirror.hpp"
+#include "toweldispenser.hpp"
 
 #define SPRITE_SIZE 64.f
 
@@ -149,6 +152,27 @@ bool Room::populate_floor_objects()
     init_stall initter;
     if (!(initter(this, 0) && initter(this, 1) && initter(this, 2))) 
     {
+      return false;
+    }
+
+    m_floor_objects.emplace_back(new Mirror);
+    if (!m_floor_objects.back()->init({ m_walls[6].get_pos().x, m_walls[6].get_pos().y + 10.f }))
+    {
+      fprintf(stderr, "failed to init mirror object.\n");
+      return false;
+    }
+
+    m_floor_objects.emplace_back(new Sink);
+    if (!m_floor_objects.back()->init({ m_walls[6].get_pos().x, m_walls[6].get_pos().y + 25.f }))
+    {
+      fprintf(stderr, "failed to init sink object.\n");
+      return false;
+    }
+
+    m_floor_objects.emplace_back(new TowelDispenser);
+    if (!m_floor_objects.back()->init({ m_walls[7].get_pos().x, m_walls[7].get_pos().y + 25.f }))
+    {
+      fprintf(stderr, "failed to init towel dispenser object.\n");
       return false;
     }
   }

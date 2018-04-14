@@ -525,10 +525,13 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\common.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\world.cpp" />
+    <ClCompile Include="..\src\mirror.cpp" />
     <ClCompile Include="..\src\pathfinder.cpp" />
     <ClCompile Include="..\src\pathfindernode.cpp" />
     <ClCompile Include="..\src\room.cpp" />
     <ClCompile Include="..\src\roomtextparser.cpp" />
+    <ClCompile Include="..\src\sink.cpp" />
+    <ClCompile Include="..\src\toweldispenser.cpp" />
     <ClCompile Include="..\src\ValueIteration.cpp" />
     <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
@@ -556,10 +559,13 @@
     <ClInclude Include="..\src\healthbar.hpp" />
     <ClInclude Include="..\src\hero.hpp" />
     <ClInclude Include="..\src\janitor.hpp" />
+    <ClInclude Include="..\src\mirror.hpp" />
     <ClInclude Include="..\src\pathfinder.hpp" />
     <ClInclude Include="..\src\pathfindernode.hpp" />
     <ClInclude Include="..\src\room.hpp" />
     <ClInclude Include="..\src\roomtextparser.hpp" />
+    <ClInclude Include="..\src\sink.hpp" />
+    <ClInclude Include="..\src\toweldispenser.hpp" />
     <ClInclude Include="..\src\ValueIteration.hpp" />
     <ClInclude Include="..\src\wall.hpp" />
     <ClInclude Include="..\src\world.hpp" />
