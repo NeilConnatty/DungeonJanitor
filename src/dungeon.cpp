@@ -224,42 +224,12 @@ void Dungeon::add_adjacency(int roomID, Room::adjacent_room adj)
 
 string Dungeon::get_hero_timer()
 {
-	double minutesRemainder = (m_hero_timer) / 60000;
-	int minutes = minutesRemainder;
-	double secondsRemainder = (minutesRemainder - minutes) * 60;
-	int seconds = secondsRemainder;
-	string minutes_str = to_string(minutes);
-	string seconds_str = to_string(seconds);
-
-	if (minutes <= 0 && seconds < 0)
-	{
-		return "0:00";
-	}
-	if (seconds < 10)
-	{
-		seconds_str = "0" + seconds_str;
-	}
-	return  minutes_str + ":" + seconds_str;
+	return get_timer_string(m_hero_timer);
 }
 
 string Dungeon::get_boss_fight_timer()
 {
-	double minutesRemainder = (m_boss_fight_timer) / 60000;
-	int minutes = minutesRemainder;
-	double secondsRemainder = (minutesRemainder - minutes) * 60;
-	int seconds = secondsRemainder;
-	string minutes_str = to_string(minutes);
-	string seconds_str = to_string(seconds);
-
-	if (minutes <= 0 && seconds < 0)
-	{
-		return "0:00";
-	}
-	if (seconds < 10)
-	{
-		seconds_str = "0" + seconds_str;
-	}
-	return  minutes_str + ":" + seconds_str;
+	return get_timer_string(m_boss_fight_timer);
 }
 
 bool Dungeon::should_spawn_hero()

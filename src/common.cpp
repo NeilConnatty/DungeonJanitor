@@ -169,6 +169,27 @@ float det(mat3 m)
   return det(m, minors);
 }
 
+std::string get_timer_string(float timer)
+{
+	double minutesRemainder = (timer) / 60000;
+	int minutes = minutesRemainder;
+	double secondsRemainder = (minutesRemainder - minutes) * 60;
+	int seconds = secondsRemainder;
+	std::string minutes_str = std::to_string(minutes);
+	std::string seconds_str = std::to_string(seconds);
+
+	if (minutes <= 0 && seconds < 0)
+	{
+		return "0:00";
+	}
+	if (seconds < 10)
+	{
+		seconds_str = "0" + seconds_str;
+	}
+	return  minutes_str + ":" + seconds_str;
+}
+
+
 vec2 get_world_coords_from_room_coords(vec2 room_coords, mat3 room_transform, mat3 dungeon_transform)
 {
 

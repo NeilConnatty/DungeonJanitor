@@ -40,6 +40,7 @@ mat3  operator*(const mat3& l, const mat3& r);
 vec2  normalize(vec2 v);
 mat3  inverse(mat3 m);
 float det(mat3 m);
+std::string get_timer_string(float timer);
 
 #define identity_matrix { {1.f, 0.f, 0.f}, {0.f, 1.f, 0.f}, {0.f, 0.f, 1.f} }
 
