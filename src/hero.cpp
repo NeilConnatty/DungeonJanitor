@@ -227,6 +227,7 @@ void Hero::update_current(float ms)
 	update_path();
 	if (m_is_moving)
 	{
+		m_vel = { 0,0 };
 		m_time_elapsed += ms;
 		if (m_time_elapsed > MS_PER_FRAME) {
 			m_time_elapsed = 0;
@@ -341,7 +342,6 @@ void Hero::pick_movement_tex() {
 	if (x_vel > y_vel)
 		vel_magnitude = x_vel;
 	if (vel_magnitude == 0) return;
-
 	//Pick current texture based on direction of velocity
 	vec2 vel_dir = normalize(m_vel);
 	vec2 default_dir = { 1, 0 };
@@ -349,17 +349,20 @@ void Hero::pick_movement_tex() {
 	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
 	float pi = atan(1) * 4;
 	animation_dir = right; 
+
+
 	if (theta < 3 * pi / 4 && theta > pi / 4) {
 		animation_dir = up;
 	}
-	else if (theta < -5 * pi / 4 && theta > -7 * pi / 4) {
+	else if (theta < -pi / 4 && theta > -3 * pi / 4) {
 		animation_dir = down;
 	}
 	//odd case
-	else if (theta > 3 * pi / 4 || theta < -5 * pi / 4) {
+	//why doesn't taht work. fuck. 
+	else if (theta > 3 * pi / 4 || theta < -3* pi / 4) {
 		animation_dir = left;
 	}
-	//if (theta < pi / 8 || theta > -pi / 8)
+	//if (theta < pi / 4 || theta > -pi / 4)
 	else {
 		animation_dir = right;
 	}
