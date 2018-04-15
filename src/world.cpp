@@ -417,7 +417,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_camera.follow_object(&m_janitor);
 	}
 	// Resetting game
-	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
+	if (action == GLFW_RELEASE && key == GLFW_KEY_SPACE && game_is_over)
 	{
 		game_is_over = false;
 		m_did_win = false;
