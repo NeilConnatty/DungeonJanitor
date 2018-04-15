@@ -3,8 +3,9 @@
 #include "pathfindernode.hpp"
 #include <memory>
 
-#define CLOSE_ENOUGH 0.001f; // Subject to change
-#define IS_MATCH 10.f; // Subject to change
+#define DIAGONAL_ALLOWED false
+#define CLOSE_ENOUGH 0.001f // Subject to change
+#define IS_MATCH 10.f // Subject to change
 
 bool PathNode::isMatch(PathNode endNode)
 {
@@ -40,31 +41,37 @@ void PathNode::getSuccessorNodes(vector<unique_ptr<PathNode>> * successor_nodes,
 
 	PathNode* pn1 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord);
 	PathNode* pn2 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord);
-	PathNode* pn3 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord + y_speed);
-	PathNode* pn4 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord - y_speed);
-	PathNode* pn5 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord + y_speed);
-	PathNode* pn6 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord - y_speed);
 	PathNode* pn7 = new PathNode(this->m_xCoord			, this->m_yCoord + y_speed);
 	PathNode* pn8 = new PathNode(this->m_xCoord			, this->m_yCoord - y_speed);
 
 	// Set G based on distance from this node
 	pn1->G = this->G + x_speed;
 	pn2->G = this->G + x_speed;
-	pn3->G = this->G + diagonal;
-	pn4->G = this->G + diagonal;
-	pn5->G = this->G + diagonal;
-	pn6->G = this->G + diagonal;
 	pn7->G = this->G + y_speed;
 	pn8->G = this->G + y_speed;
 
 	successor_nodes->emplace_back(pn1);
 	successor_nodes->emplace_back(pn2);
-	successor_nodes->emplace_back(pn3);
-	successor_nodes->emplace_back(pn4);
-	successor_nodes->emplace_back(pn5);
-	successor_nodes->emplace_back(pn6);
 	successor_nodes->emplace_back(pn7);
 	successor_nodes->emplace_back(pn8);
+
+	if (DIAGONAL_ALLOWED)
+	{
+		PathNode* pn3 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord + y_speed);
+		PathNode* pn4 = new PathNode(this->m_xCoord + x_speed, this->m_yCoord - y_speed);
+		PathNode* pn5 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord + y_speed);
+		PathNode* pn6 = new PathNode(this->m_xCoord - x_speed, this->m_yCoord - y_speed);
+
+		pn3->G = this->G + diagonal;
+		pn4->G = this->G + diagonal;
+		pn5->G = this->G + diagonal;
+		pn6->G = this->G + diagonal;
+
+		successor_nodes->emplace_back(pn3);
+		successor_nodes->emplace_back(pn4);
+		successor_nodes->emplace_back(pn5);
+		successor_nodes->emplace_back(pn6);
+	}
 
 	for (std::unique_ptr<PathNode>& node : *successor_nodes)
 	{
