@@ -25,7 +25,7 @@ bool Boss::init(vec2 position)
 	}
 
 	m_position = position;
-	m_size = { boss_texture.width * 1.0f, boss_texture.height * 1.0f };
+	m_size = { boss_texture.width / 4.f * 0.5f, boss_texture.height / 2.f * 0.5f };
 
 	// The position corresponds to the center of the texture
 	float wr = boss_texture.width/4.f * 0.5f;

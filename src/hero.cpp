@@ -33,7 +33,7 @@ bool Hero::init(vec2 position)
 	m_currentRoom->set_hero_has_visited(true);
 	m_vel = { 0.f, 0.f };
 	m_time_elapsed = 0;
-	m_size = { hero_texture.width * 1.0f, hero_texture.height * 1.0f };
+	m_size = { hero_texture.width / 4.f * 0.5f, hero_texture.height / 4.f * 0.5f };
 
 	animation_dir = right;
 	frame = 0;
