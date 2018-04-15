@@ -196,9 +196,9 @@ bool GameObject::collides_with_projected(GameObject & object, vec2 projected_pos
 	float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;
 
 	float oLeftEdge = objX;
-	float oRightEdge = objX + object.get_size().x ;
+	float oRightEdge = objX + object.get_size().x * object.get_scale().x ;
 	float oTopEdge = objY;
-	float oBottomEdge = objY + object.get_size().y;
+	float oBottomEdge = objY + object.get_size().y * object.get_scale().y;
 
 	if (object.is_enabled() && ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge)))
 	{
