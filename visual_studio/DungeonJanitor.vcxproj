@@ -502,6 +502,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\bathroomstall.cpp" />
     <ClCompile Include="..\src\boss.cpp" />
+    <ClCompile Include="..\src\cactus.cpp" />
     <ClCompile Include="..\src\camera.cpp" />
     <ClCompile Include="..\src\Cleanable\artifact.cpp" />
     <ClCompile Include="..\src\Cleanable\cleanable.cpp" />
@@ -512,6 +513,7 @@
     <ClCompile Include="..\src\dungeon.cpp" />
     <ClCompile Include="..\src\Cleanable\puddle.cpp" />
     <ClCompile Include="..\src\emitter.cpp" />
+    <ClCompile Include="..\src\filecabinet.cpp" />
     <ClCompile Include="..\src\floor.cpp" />
     <ClCompile Include="..\src\floorobject.cpp" />
     <ClCompile Include="..\src\forcelist.cpp" />
@@ -523,16 +525,20 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\common.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\world.cpp" />
+    <ClCompile Include="..\src\mirror.cpp" />
     <ClCompile Include="..\src\pathfinder.cpp" />
     <ClCompile Include="..\src\pathfindernode.cpp" />
     <ClCompile Include="..\src\room.cpp" />
     <ClCompile Include="..\src\roomtextparser.cpp" />
+    <ClCompile Include="..\src\sink.cpp" />
+    <ClCompile Include="..\src\toweldispenser.cpp" />
     <ClCompile Include="..\src\ValueIteration.cpp" />
     <ClCompile Include="..\src\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\bathroomstall.hpp" />
     <ClInclude Include="..\src\boss.hpp" />
+    <ClInclude Include="..\src\cactus.hpp" />
     <ClInclude Include="..\src\camera.hpp" />
     <ClInclude Include="..\src\Cleanable\artifact.hpp" />
     <ClInclude Include="..\src\Cleanable\cleanable.hpp" />
@@ -544,6 +550,7 @@
     <ClInclude Include="..\src\door.hpp" />
     <ClInclude Include="..\src\dungeon.hpp" />
     <ClInclude Include="..\src\emitter.hpp" />
+    <ClInclude Include="..\src\filecabinet.hpp" />
     <ClInclude Include="..\src\floor.hpp" />
     <ClInclude Include="..\src\floorobject.hpp" />
     <ClInclude Include="..\src\forcelist.hpp" />
@@ -552,10 +559,13 @@
     <ClInclude Include="..\src\healthbar.hpp" />
     <ClInclude Include="..\src\hero.hpp" />
     <ClInclude Include="..\src\janitor.hpp" />
+    <ClInclude Include="..\src\mirror.hpp" />
     <ClInclude Include="..\src\pathfinder.hpp" />
     <ClInclude Include="..\src\pathfindernode.hpp" />
     <ClInclude Include="..\src\room.hpp" />
     <ClInclude Include="..\src\roomtextparser.hpp" />
+    <ClInclude Include="..\src\sink.hpp" />
+    <ClInclude Include="..\src\toweldispenser.hpp" />
     <ClInclude Include="..\src\ValueIteration.hpp" />
     <ClInclude Include="..\src\wall.hpp" />
     <ClInclude Include="..\src\world.hpp" />

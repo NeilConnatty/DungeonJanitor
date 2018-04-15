@@ -8,8 +8,6 @@ Hero::Hero() {}
 
 Hero::~Hero() {}
 
-
-
 bool Hero::init()
 {
 	m_is_moving = false;
@@ -82,6 +80,12 @@ bool Hero::init(vec2 position)
 	m_size = { static_cast<float>(hero_texture.width) / 4.f, static_cast<float>(hero_texture.height) / 4.f };
 	m_scale = { 1.5f, 1.5f };
 
+
+	// Setting initial size
+	m_size = { static_cast<float>(hero_texture.width) / 4, static_cast<float>(hero_texture.height) / 4};
+
+	m_artifact_offset = 1.5 * m_size.y * m_scale.y; // Note, might need to update this when hero texture changes
+
 	return true;
 }
 
@@ -131,12 +135,15 @@ void Hero::update_path()
 	}
 	else if (!is_moving())
 	{
-		if (m_currentRoom->get_artifact()->is_activated())
+		if (m_currentRoom->containsArtifact() && m_currentRoom->get_artifact()->is_activated())
 		{
 			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
+			artifact_pos.y += m_artifact_offset;
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
-			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_artifact);
+			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f,
+				*this, *m_currentRoom, path_to_artifact, *m_dungeon);
+
 			m_path = path_to_artifact;
 			m_current_destination = m_path.back();
 			m_path.pop_back();
@@ -146,7 +153,9 @@ void Hero::update_path()
 			vec2 next_door_pos = get_next_door_position();
 			set_destination(next_door_pos, Hero::destinations::DOOR);
 			vector<vec2> path_to_door;
-			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_door);
+			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f,
+				*this, *m_currentRoom, path_to_door, *m_dungeon);
+
 			m_path = path_to_door;
 			m_current_destination = m_path.back();
 			m_path.pop_back();
@@ -351,8 +360,6 @@ void Hero::pick_movement_tex() {
 	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
 	float pi = atan(1) * 4;
 	animation_dir = right; 
-
-
 	if (theta < 3 * pi / 4 && theta > pi / 4) {
 		animation_dir = up;
 	}
@@ -360,7 +367,6 @@ void Hero::pick_movement_tex() {
 		animation_dir = down;
 	}
 	//odd case
-	//why doesn't taht work. fuck. 
 	else if (theta > 3 * pi / 4 || theta < -3*pi / 4) {
 		animation_dir = left;
 	}
