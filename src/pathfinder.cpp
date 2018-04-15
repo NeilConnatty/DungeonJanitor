@@ -30,15 +30,6 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 			break;
 		}
 
-		/*
-		// if collision -> close node and continue
-		if (collisionDetected(moving_object, room, *node_current, dungeon))
-
-		{
-			closedNodes.push_back(make_unique<PathNode>(*node_current));
-			continue;
-		}
-		*/
 
 		// else get successors and set their values
 		vector<unique_ptr<PathNode>> successors;
