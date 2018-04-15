@@ -261,7 +261,14 @@ void World::draw()
   glfwGetFramebufferSize(m_window, &w, &h);
 
   // Updating window title with points
-  if (!m_dungeon.should_spawn_hero()) {
+  if (game_is_over)
+  {
+	  std::stringstream title_ss;
+	  int score = m_dungeon.get_boss_fight_dungeon_health() * 100.f;
+	  title_ss << "Final Score: " << score << "%";
+	  glfwSetWindowTitle(m_window, title_ss.str().c_str());
+  } 
+  else if (!m_dungeon.should_spawn_hero()) {
 	  std::stringstream title_ss;
 	  title_ss << "Hero Arrival In: " << m_dungeon.get_hero_timer();
 	  glfwSetWindowTitle(m_window, title_ss.str().c_str());
