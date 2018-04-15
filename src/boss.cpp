@@ -17,7 +17,7 @@ bool Boss::init(vec2 position)
 {
 	if (!boss_texture.is_valid())
 	{
-		if (!boss_texture.load_from_file(textures_path("placeholders/boss_placeholder.png")))
+		if (!boss_texture.load_from_file(textures_path("dungeon1/d1_boss_sheet.png")))
 		{
 			fprintf(stderr, "Failed to load boss texture\n");
 			return false;
@@ -27,18 +27,19 @@ bool Boss::init(vec2 position)
 	m_position = position;
 
 	// The position corresponds to the center of the texture
-	float wr = boss_texture.width * 0.5f;
-	float hr = boss_texture.height * 0.5f;
-
+	float wr = boss_texture.width/4.f * 0.5f;
+	float hr = boss_texture.height/2.f * 0.5f;
+	animation_frame_w = 1 / 4.f;
+	animation_frame_h = 1 / 2.f;
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
-	vertices[0].texcoord = { 0.f, 1.f };
+	vertices[0].texcoord = { 0.f, animation_frame_h };
 	vertices[1].position = { +wr, +hr, -0.02f };
-	vertices[1].texcoord = { 1.f, 1.f };
+	vertices[1].texcoord = { animation_frame_w, animation_frame_h };
 	vertices[2].position = { +wr, -hr, -0.02f };
-	vertices[2].texcoord = { 1.f, 0.f };
+	vertices[2].texcoord = { animation_frame_w, 0.f };
 	vertices[3].position = { -wr, -hr, -0.02f };
-	vertices[3].texcoord = { 0.f, 0.f };
+	vertices[3].texcoord = { 0.f,  0.f };
 
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
@@ -62,13 +63,17 @@ bool Boss::init(vec2 position)
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+	if (!effect.load_from_file(shader_path("animated.vs.glsl"), shader_path("animated.fs.glsl")))
 		return false;
 
 	// Setting initial scale values
-	m_scale.x = 1.f;
-	m_scale.y = 1.f;
-
+	m_size = { static_cast<float>(boss_texture.width) / 4.f, static_cast<float>(boss_texture.height) / 2.f };
+	m_scale.x = 2.f;
+	m_scale.y = 2.f;
+	m_mass = 60.f;
+	m_time_elapsed = 0.f;
+	frame = 0;
+	animation_dir = left;
 	return true;
 }
 
@@ -96,6 +101,12 @@ void Boss::draw_current(const mat3& projection, const mat3& current_transform)
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 
+	//animation uniforms
+	GLint frame_uloc = glGetUniformLocation(effect.program, "frame");
+	GLint animation_dir_uloc = glGetUniformLocation(effect.program, "animation_dir");
+	GLfloat animation_frame_w_uloc = glGetUniformLocation(effect.program, "animation_frame_w");
+	GLfloat animation_frame_h_uloc = glGetUniformLocation(effect.program, "animation_frame_h");
+
 	// Setting vertices and indices
 	glBindVertexArray(mesh.vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
@@ -120,6 +131,52 @@ void Boss::draw_current(const mat3& projection, const mat3& current_transform)
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
+	//animation uniforms
+	glUniform1iv(frame_uloc, 1, &frame);
+	glUniform1iv(animation_dir_uloc, 1, (int*)&animation_dir);
+	glUniform1fv(animation_frame_w_uloc, 1, &animation_frame_w);
+	glUniform1fv(animation_frame_h_uloc, 1, &animation_frame_h);
+
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+}
+void Boss::update_current(float ms) {
+	float time_factor = ms / 1000;
+	if (m_vel.x != 0 || m_vel.y != 0) {
+		m_time_elapsed += ms;
+		if (m_time_elapsed > MS_PER_FRAME) {
+			m_time_elapsed = 0;
+			frame = (frame + 1) % NUM_FRAMES;
+		}
+	}
+	//can move by using: 
+	//apply_force_dv(vec2 change_in_velocity, float time) 
+	//apply_force_dx(vec2 change_in_pos, float time)
+	//the force corresponding to change in those values after "time" will be applied for "time"
+	m_accel.x += m_external_force.x / m_mass;
+	m_accel.y += m_external_force.y / m_mass;
+	m_vel.x += m_accel.x * time_factor;
+	m_vel.y += m_accel.y * time_factor;
+	m_position.x += m_vel.x * time_factor;
+	m_position.y += m_vel.y * time_factor;
+}
+void Boss::pick_movement_tex() {
+	//if velocity is 0, return, leaving the current animation frame as is
+	float x_vel = abs(m_vel.x);
+	float y_vel = abs(m_vel.y);
+	float vel_magnitude = y_vel;
+	if (x_vel > y_vel)
+		vel_magnitude = x_vel;
+	if (vel_magnitude == 0) return;
+
+	//Pick current texture based on direction of velocity
+	vec2 vel_dir = normalize(m_vel);
+	vec2 default_dir = { 1, 0 };
+	float theta = acos(dot(vel_dir, default_dir)); //gives the angle of our velocity (but only from 0-pi in rads)
+	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
+	float pi = atan(1) * 4;
+	animation_dir = right;
+	if (theta > pi / 2 || theta < -pi / 2)
+		animation_dir = left;
+
 }

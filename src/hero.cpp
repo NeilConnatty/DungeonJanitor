@@ -31,14 +31,12 @@ bool Hero::init(vec2 position)
 	m_currentRoom->set_hero_has_visited(true);
 	m_vel = { 0.f, 0.f };
 	m_time_elapsed = 0;
-	m_scale.x = 2.f;
-	m_scale.y = 2.f;
+
 	animation_dir = right;
 	frame = 0;
 	// The position corresponds to the center of the texture
 	// scale of the bounding box will be a little fucked
 	// because the sprites are not all the same size. 
-	// stupid bitch with her hair.
 	//just hardcode the frame jumps.
 	float wr = hero_texture.width/4.f * 0.5f;
 	float hr = hero_texture.height/4.f * 0.5f;
@@ -78,13 +76,14 @@ bool Hero::init(vec2 position)
 	// Loading shaders
 	if (!effect.load_from_file(shader_path("animated.vs.glsl"), shader_path("animated.fs.glsl")))
 		return false;
+	m_size = { static_cast<float>(hero_texture.width) / 4.f, static_cast<float>(hero_texture.height) / 4.f };
+	m_scale = { 1.5f, 1.5f };
 
 
 	// Setting initial size
 	m_size = { static_cast<float>(hero_texture.width) / 4, static_cast<float>(hero_texture.height) / 4};
 
 	m_artifact_offset = 1.5 * m_size.y * m_scale.y; // Note, might need to update this when hero texture changes
-
 
 	return true;
 }
@@ -238,6 +237,7 @@ void Hero::update_current(float ms)
 	update_path();
 	if (m_is_moving)
 	{
+		m_vel = { 0,0 };
 		m_time_elapsed += ms;
 		if (m_time_elapsed > MS_PER_FRAME) {
 			m_time_elapsed = 0;
@@ -352,27 +352,24 @@ void Hero::pick_movement_tex() {
 	if (x_vel > y_vel)
 		vel_magnitude = x_vel;
 	if (vel_magnitude == 0) return;
-
 	//Pick current texture based on direction of velocity
 	vec2 vel_dir = normalize(m_vel);
 	vec2 default_dir = { 1, 0 };
 	float theta = acos(dot(vel_dir, default_dir)); //gives the angle of our velocity (but only from 0-pi in rads)
 	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
 	float pi = atan(1) * 4;
-	
-	animation_dir = right;
+	animation_dir = right; 
 	if (theta < 3 * pi / 4 && theta > pi / 4) {
 		animation_dir = up;
 	}
-	else if (theta < -5 * pi / 4 && theta > -7 * pi / 4) {
-		//downleft
+	else if (theta < -pi / 4 && theta > -3 * pi / 4) {
 		animation_dir = down;
 	}
 	//odd case
-	else if (theta > 3 * pi / 4) {
+	else if (theta > 3 * pi / 4 || theta < -3*pi / 4) {
 		animation_dir = left;
 	}
-	//if (theta < pi / 8 || theta > -pi / 8)
+	//if (theta < pi / 4 || theta > -pi / 4)
 	else {
 		animation_dir = right;
 	}
