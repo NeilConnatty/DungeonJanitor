@@ -31,14 +31,6 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 		}
 
 
-		// if collision -> close node and continue
-		if (collisionDetected(moving_object, room, *node_current, dungeon))
-
-		{
-			closedNodes.push_back(make_unique<PathNode>(*node_current));
-			continue;
-		}
-
 		// else get successors and set their values
 		vector<unique_ptr<PathNode>> successors;
 		node_current->getSuccessorNodes(&successors, &endNode, x_speed, y_speed);
@@ -48,6 +40,14 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 		{
 			if (nodeVisitedBefore(successor_node, openNodes, closedNodes))
 			{
+				continue;
+			}
+
+			// if collision -> close node and continue
+			if (collisionDetected(moving_object, room, *successor_node, dungeon))
+
+			{
+				closedNodes.push_back(make_unique<PathNode>(*successor_node));
 				continue;
 			}
 
@@ -64,11 +64,13 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 {
 	// To be updated when room has list of collidable objects
 
+	vec2 node_pos = { node.m_xCoord, node.m_yCoord };
+
 	if (room.getRoomID() != -1)
 	{
 		for (Wall& wall : room.get_walls())
 		{
-			if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, room.transform, room.getDungeonTransform()))
+			if (moving_object.collides_with_projected(wall, node_pos, room.transform, room.getDungeonTransform()))
 			{
 				return true;
 			}
@@ -76,7 +78,7 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 
 		for (auto& floor_object : room.get_floor_objects())
 		{
-			if (moving_object.collides_with_projected(*floor_object, { node.m_xCoord, node.m_yCoord }, room.transform, room.getDungeonTransform()))
+			if (moving_object.collides_with_projected(*floor_object, node_pos, room.transform, room.getDungeonTransform()))
 			{
 				return true;
 			}
@@ -87,12 +89,12 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 	else
 
 	{
-		// check all rooms
-		for (unique_ptr<Room> &r : dungeon.get_rooms())
+		// check all adjacent rooms
+		for (auto &r : dungeon.get_adjacent_rooms(-1))
 		{
-			for (Wall& wall : r->get_walls())
+			for (Wall& wall : r.room->get_walls())
 			{
-				if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, r->transform, r->getDungeonTransform()))
+				if (moving_object.collides_with_projected(wall, node_pos, r.room->transform, r.room->getDungeonTransform()))
 				{
 					return true;
 				}
@@ -102,6 +104,8 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 
 	return false;
 }
+
+
 
 bool Pathfinder::nodeVisitedBefore(unique_ptr<PathNode>& successor_node,
 	vector<unique_ptr<PathNode>>& openNodes, vector<unique_ptr<PathNode>>& closedNodes)

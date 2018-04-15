@@ -2,6 +2,8 @@
 
 #include "hero.hpp"
 
+#define ARTIFACT_OFFSET 60.f
+
 Texture Hero::hero_texture;
 
 Hero::Hero() {}
@@ -80,8 +82,6 @@ bool Hero::init(vec2 position)
 	// Setting initial size
 	m_size = { static_cast<float>(hero_texture.width) / 4, static_cast<float>(hero_texture.height) / 4};
 
-	m_artifact_offset = 1.5 * m_size.y * m_scale.y; // Note, might need to update this when hero texture changes
-
 	return true;
 }
 
@@ -134,7 +134,7 @@ void Hero::update_path()
 		if (m_currentRoom->containsArtifact() && m_currentRoom->get_artifact()->is_activated())
 		{
 			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
-			artifact_pos.y += m_artifact_offset;
+			artifact_pos.y += ARTIFACT_OFFSET;
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
 			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f,
