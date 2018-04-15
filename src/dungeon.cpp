@@ -7,7 +7,7 @@
 
 #define ARTIFACT_VALUE 5 // For calculating health increase
 
-#define HERO_TIME_TO_SPAWN 60000.f
+#define HERO_TIME_TO_SPAWN 0.f//60000.f
 
 Dungeon::Dungeon() : 
     GameObject()

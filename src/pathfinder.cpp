@@ -87,12 +87,12 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 	else
 
 	{
-		// check all rooms
-		for (unique_ptr<Room> &r : dungeon.get_rooms())
+		// check all adjacent rooms
+		for (auto &r : dungeon.get_adjacent_rooms(-1))
 		{
-			for (Wall& wall : r->get_walls())
+			for (Wall& wall : r.room->get_walls())
 			{
-				if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, r->transform, r->getDungeonTransform()))
+				if (moving_object.collides_with_projected(wall, { node.m_xCoord, node.m_yCoord }, r.room->transform, r.room->getDungeonTransform()))
 				{
 					return true;
 				}

@@ -31,8 +31,8 @@ bool Hero::init(vec2 position)
 	m_currentRoom->set_hero_has_visited(true);
 	m_vel = { 0.f, 0.f };
 	m_time_elapsed = 0;
-	m_scale.x = 0.8f;
-	m_scale.y = 0.75f;
+	m_scale.x = 2.f;
+	m_scale.y = 2.f;
 	animation_dir = right;
 	frame = 0;
 	// The position corresponds to the center of the texture
@@ -138,7 +138,7 @@ void Hero::update_path()
 		if (m_currentRoom->containsArtifact() && m_currentRoom->get_artifact()->is_activated())
 		{
 			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
-			artifact_pos.y += m_artifact_offset;
+			artifact_pos.y += 60;// m_artifact_offset;
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
 			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f,

@@ -165,13 +165,14 @@ bool World::init_hero()
 	vec2 hero_position = get_world_coords_from_room_coords(m_dungeon.hero_room_position, m_dungeon.hero_start_room->transform, m_dungeon.transform);
 	m_hero.setRoom(m_dungeon.hero_start_room);
 	m_hero.setDungeon(&m_dungeon);
+
 	if (!m_hero.init(hero_position))
 	{
 		fprintf(stderr, "Failed to init Hero. \n");
 		return false;
 
 	}
-	m_hero.set_scale({ 3.f, 3.f });
+
 	m_hero.setAllRooms(&m_dungeon.get_rooms());
 	m_dungeon.spawn_hero();
 	return true;

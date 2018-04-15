@@ -4,7 +4,7 @@
 
 Texture Artifact::artifact_textures[NUM_ARTIFACT_TEXTURES];
 
-Artifact::Artifact() : m_is_activated(false) {}
+Artifact::Artifact() : m_is_activated(true) {}
 
 Artifact::~Artifact() {}
 
