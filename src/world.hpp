@@ -72,6 +72,7 @@ private:
 
 	// Boss
 	Boss m_boss;
+	bool m_boss_music_off;
 
 	//Camera
 	Camera m_camera;

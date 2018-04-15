@@ -102,6 +102,7 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
 		return false;
 	}
+	m_boss_music_off = true;
 
     // Playing background music indefinitely
     Mix_PlayMusic(m_background_music, -1);
@@ -225,8 +226,11 @@ bool World::update(float elapsed_ms)
 	  }
 	  if (m_dungeon.has_boss_fight_started())
 	  {
-		  //Mix_PauseMusic();
-		  Mix_PlayMusic(m_boss_fight_music, -1);
+		  if (m_boss_music_off)
+		  {
+			  Mix_PlayMusic(m_boss_fight_music, -1);
+			  m_boss_music_off = false;
+		  }
 		  if (m_dungeon.get_boss_fight_dungeon_health() == 0.0f)
 		  {
 			  game_over();
