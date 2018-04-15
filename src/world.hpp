@@ -61,6 +61,7 @@ private:
 
 	// Game entities
 	Mix_Music* m_background_music;
+	Mix_Music* m_boss_fight_music;
 
 	//Janitor
 	Janitor m_janitor;
@@ -71,6 +72,7 @@ private:
 
 	// Boss
 	Boss m_boss;
+	bool m_boss_music_off;
 
 	//Camera
 	Camera m_camera;
