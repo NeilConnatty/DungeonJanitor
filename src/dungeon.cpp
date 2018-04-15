@@ -5,7 +5,8 @@
 #include "ValueIteration.hpp" // testing
 #include <iostream>
 
-#define ARTIFACT_VALUE 5
+#define ARTIFACT_VALUE 5 // For calculating health increase
+
 #define HERO_TIME_TO_SPAWN 60000.f
 #define BOSS_FIGHT_TIME 30000.f
 
@@ -44,6 +45,8 @@ bool Dungeon::init()
       boss_start_room = room.get();
       boss_room_position = room->get_boss_spawn_loc();
     }
+
+	room->setDungeonTransform(identity_matrix);
   }
   //m_emitters.emplace_back();
   vec2 velocity = {10.0f, 1.0f};

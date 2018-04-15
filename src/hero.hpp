@@ -17,23 +17,32 @@ public:
 		ARTIFACT = 1,
 		BOSS = 2
 	};
-
+	enum direction {
+		down, left, right, up
+	};
 private:
-	static Texture hero_texture;
-	Room * m_currentRoom;
-	Dungeon* m_dungeon;
-	Room* m_next_room;
-	Hero::destinations m_destination_type;
-	vec2 m_end_destination;
-	vec2 m_current_destination;
-	vector<vec2> m_path;
-	vec2 m_vel;
 	bool m_is_moving;
 	bool m_is_at_boss;
-	vector<unique_ptr<Room>>* m_rooms;
+	float m_artifact_offset;
+
 	const float SPEED = 100.0f;
 	//Floor tiles are 35x24, this is the proportion for speed to be consistent depthwise.
 	const float Y_SPEED = SPEED * (24.f / 35.f);
+
+	vec2 m_end_destination;
+	vec2 m_current_destination;
+	vec2 m_vel;
+	vector<vec2> m_path;
+
+	Hero::destinations m_destination_type;
+	
+	static Texture hero_texture;
+	
+	Room * m_currentRoom;
+	Room* m_next_room;
+	vector<unique_ptr<Room>>* m_rooms;
+	Dungeon* m_dungeon;	
+	
 
 public:
 	Hero();
@@ -59,4 +68,14 @@ private:
 	void update_children(float ms) override {};
 	void draw_current(const mat3& projection, const mat3& current_transform) override;
 	void draw_children(const mat3& projection, const mat3& current_transform) override {};
+	
+	void pick_movement_tex();
+
+	int frame;
+	int const NUM_FRAMES = 4;
+	float animation_frame_w;
+	float animation_frame_h;
+	direction animation_dir;
+	float m_time_elapsed;
+	float const MS_PER_FRAME = (1 / 12.5) * 1000;
 };

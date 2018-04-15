@@ -2,8 +2,13 @@
 
 #include <assert.h>
 #include "pathfinder.hpp"
+#include <memory>
+#include <vector>
+#include "dungeon.hpp"
 
-void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination, float x_speed, float y_speed, vector<vec2>& path)
+void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destination, float x_speed, float y_speed, 
+	GameObject& moving_object, Room& room, vector<vec2>& path, Dungeon& dungeon)
+
 {
 	PathNode startNode = PathNode(position.x, position.y);
 	PathNode endNode = PathNode(destination.x, destination.y);
@@ -26,70 +31,101 @@ void Pathfinder::getPathFromPositionToDestination(vec2 position, vec2 destinatio
 		}
 
 
-		// if collision -> close node and continue
-		if (collisionDetected(*node_current))
-		{
-			closedNodes.push_back(make_unique<PathNode>(*node_current));
-			continue;
-		}
-		
 		// else get successors and set their values
-		vector<unique_ptr<PathNode>> successors; 
+		vector<unique_ptr<PathNode>> successors;
 		node_current->getSuccessorNodes(&successors, &endNode, x_speed, y_speed);
 
-
+		// if we have seen this node before, ignore it
 		for (unique_ptr<PathNode>& successor_node : successors)
 		{
-			// see if in OPEN. new value should never be better
-			
-			auto found_node = find(openNodes.begin(), openNodes.end(), successor_node);
-			if (found_node != openNodes.end())
+			if (nodeVisitedBefore(successor_node, openNodes, closedNodes))
 			{
-				if ((*found_node)->getFValue() > successor_node->getFValue())
-				{
-					//Jay Should not get here. Previous node should always have more efficient path.
-          printf("Jay: Error - found more efficient node during A*");
-          assert(false);
-          openNodes.erase(found_node);
-        }
-				else
-				{
-					// discard successor_node and continue for loop
-					continue;
-				}
+				continue;
 			}
 
-			// ditto CLOSED
-			found_node = find(closedNodes.begin(), closedNodes.end(), successor_node);
-			if (found_node != closedNodes.end())
+			// if collision -> close node and continue
+			if (collisionDetected(moving_object, room, *successor_node, dungeon))
+
 			{
-				if ((*found_node)->getFValue() > successor_node->getFValue())
-				{
-					//Jay Should not get here. Previous node should always have more efficient path.
-					printf("Jay: Error - found more efficient node during A*");
-					assert(false);
-					closedNodes.erase(found_node);
-				}
-				else
-				{
-					// discard successor_node and continue for loop
-					continue;
-				}
+				closedNodes.push_back(make_unique<PathNode>(*successor_node));
+				continue;
 			}
-			
+
 			openNodes.push_back(std::move(successor_node));
-			int test = 0;
 		}
 		closedNodes.push_back(std::move(node_current));
 	}
-	
-  getPathFromGoalNode(endNode, path);
+
+	getPathFromGoalNode(endNode, path);
 }
 
-bool Pathfinder::collisionDetected(PathNode& node)
-{
 
-	//stub
+bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNode& node, Dungeon& dungeon)
+{
+	// To be updated when room has list of collidable objects
+
+	vec2 node_pos = { node.m_xCoord, node.m_yCoord };
+
+	if (room.getRoomID() != -1)
+	{
+		for (Wall& wall : room.get_walls())
+		{
+			if (moving_object.collides_with_projected(wall, node_pos, room.transform, room.getDungeonTransform()))
+			{
+				return true;
+			}
+		}
+
+		for (auto& floor_object : room.get_floor_objects())
+		{
+			if (moving_object.collides_with_projected(*floor_object, node_pos, room.transform, room.getDungeonTransform()))
+			{
+				return true;
+			}
+		}
+	}
+
+	// Hallway Room
+	else
+
+	{
+		// check all adjacent rooms
+		for (auto &r : dungeon.get_adjacent_rooms(-1))
+		{
+			for (Wall& wall : r.room->get_walls())
+			{
+				if (moving_object.collides_with_projected(wall, node_pos, r.room->transform, r.room->getDungeonTransform()))
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+
+
+bool Pathfinder::nodeVisitedBefore(unique_ptr<PathNode>& successor_node,
+	vector<unique_ptr<PathNode>>& openNodes, vector<unique_ptr<PathNode>>& closedNodes)
+{
+	for (auto &node : openNodes)
+	{
+		if (*successor_node == *node)
+		{
+			return true;
+		}
+	}
+
+	for (auto &node : closedNodes)
+	{
+		if (*successor_node == *node)
+		{
+			return true;
+		}
+	}
+	
 	return false;
 }
 
@@ -113,7 +149,7 @@ unique_ptr<PathNode> Pathfinder::getNextNode(vector<unique_ptr<PathNode>>* nodes
   std::unique_ptr<PathNode> ret(std::move(*(nodes->begin() + finalCount)));
   nodes->erase(nodes->begin() + finalCount);
 
-	return ret;
+  return ret;
 }
 
 // Returns path in reverse order. Pop_back to get the next position to go to.

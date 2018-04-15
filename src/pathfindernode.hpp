@@ -38,6 +38,7 @@ public:
 	bool isMatch(PathNode endNode);
 
 	bool operator==(const PathNode& comparison_node);
+	bool operator!=(const PathNode& comparison_node) { return !(*this == comparison_node); }
 	
 	float getFValue() { return G + H; };
 	float getManhattanDistance(PathNode * destinationNode);

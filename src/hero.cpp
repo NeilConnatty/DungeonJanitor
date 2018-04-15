@@ -2,13 +2,13 @@
 
 #include "hero.hpp"
 
+#define ARTIFACT_OFFSET 60.f
+
 Texture Hero::hero_texture;
 
 Hero::Hero() {}
 
 Hero::~Hero() {}
-
-
 
 bool Hero::init()
 {
@@ -21,7 +21,7 @@ bool Hero::init(vec2 position)
 {
 	if (!hero_texture.is_valid())
 	{
-		if (!hero_texture.load_from_file(textures_path("placeholders/hero_placeholder.png")))
+		if (!hero_texture.load_from_file(textures_path("dungeon1/d1_hero_sheet.png")))
 		{
 			fprintf(stderr, "Failed to load hero texture\n");
 			return false;
@@ -32,21 +32,26 @@ bool Hero::init(vec2 position)
 	m_is_at_boss = false;
 	m_currentRoom->set_hero_has_visited(true);
 	m_vel = { 0.f, 0.f };
+	m_time_elapsed = 0;
+	m_size = { hero_texture.width * 1.0f, hero_texture.height * 1.0f };
 
+	animation_dir = right;
+	frame = 0;
 	// The position corresponds to the center of the texture
-	float wr = hero_texture.width * 0.5f;
-	float hr = hero_texture.height * 0.5f;
-	m_size = { wr, hr };
+	float wr = hero_texture.width/4.f * 0.5f;
+	float hr = hero_texture.height/4.f * 0.5f;
+	animation_frame_w = 1 / 4.0f;
+	animation_frame_h = 1 / 4.0f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
-	vertices[0].texcoord = { 0.f, 1.f };
+	vertices[0].texcoord = { 0.f, animation_frame_h };
 	vertices[1].position = { +wr, +hr, -0.02f };
-	vertices[1].texcoord = { 1.f, 1.f };
+	vertices[1].texcoord = { animation_frame_w, animation_frame_h };
 	vertices[2].position = { +wr, -hr, -0.02f };
-	vertices[2].texcoord = { 1.f, 0.f };
+	vertices[2].texcoord = { animation_frame_w, 0.f };
 	vertices[3].position = { -wr, -hr, -0.02f };
-	vertices[3].texcoord = { 0.f, 0.f };
+	vertices[3].texcoord = { 0.f,  0.f };
 
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
@@ -70,12 +75,14 @@ bool Hero::init(vec2 position)
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+	if (!effect.load_from_file(shader_path("animated.vs.glsl"), shader_path("animated.fs.glsl")))
 		return false;
+	m_size = { static_cast<float>(hero_texture.width) / 4.f, static_cast<float>(hero_texture.height) / 4.f };
+	m_scale = { 1.5f, 1.5f };
 
-	// Setting initial scale values
-	m_scale.x = 1.f;
-	m_scale.y = 1.f;
+
+	// Setting initial size
+	m_size = { static_cast<float>(hero_texture.width) / 4, static_cast<float>(hero_texture.height) / 4};
 
 	return true;
 }
@@ -126,7 +133,8 @@ void Hero::update_path()
 			vec2 boss_pos = m_dungeon->get_boss()->get_pos();
 			set_destination(boss_pos, Hero::destinations::BOSS);
 			vector<vec2> path_to_boss;
-			Pathfinder::getPathFromPositionToDestination(m_position, boss_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_boss);
+			Pathfinder::getPathFromPositionToDestination(m_position, boss_pos, SPEED / 10.f, Y_SPEED / 10.f,
+				*this, *m_currentRoom, path_to_boss, *m_dungeon);
 			m_path = path_to_boss;
 			m_current_destination = m_path.back();
 			m_path.pop_back();
@@ -134,9 +142,12 @@ void Hero::update_path()
 		else if (m_currentRoom->get_artifact()->is_activated())
 		{
 			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
+			artifact_pos.y += ARTIFACT_OFFSET;
 			set_destination(artifact_pos, Hero::destinations::ARTIFACT);
 			vector<vec2> path_to_artifact;
-			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_artifact);
+			Pathfinder::getPathFromPositionToDestination(m_position, artifact_pos, SPEED / 10.f, Y_SPEED / 10.f,
+				*this, *m_currentRoom, path_to_artifact, *m_dungeon);
+
 			m_path = path_to_artifact;
 			m_current_destination = m_path.back();
 			m_path.pop_back();
@@ -146,7 +157,9 @@ void Hero::update_path()
 			vec2 next_door_pos = get_next_door_position();
 			set_destination(next_door_pos, Hero::destinations::DOOR);
 			vector<vec2> path_to_door;
-			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f, path_to_door);
+			Pathfinder::getPathFromPositionToDestination(m_position, next_door_pos, SPEED / 10.f, Y_SPEED / 10.f,
+				*this, *m_currentRoom, path_to_door, *m_dungeon);
+
 			m_path = path_to_door;
 			m_current_destination = m_path.back();
 			m_path.pop_back();
@@ -182,6 +195,12 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 
+	//animation uniforms
+	GLint frame_uloc = glGetUniformLocation(effect.program, "frame");
+	GLint animation_dir_uloc = glGetUniformLocation(effect.program, "animation_dir");
+	GLfloat animation_frame_w_uloc = glGetUniformLocation(effect.program, "animation_frame_w");
+	GLfloat animation_frame_h_uloc = glGetUniformLocation(effect.program, "animation_frame_h");
+	
 	// Setting vertices and indices
 	glBindVertexArray(mesh.vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
@@ -206,6 +225,12 @@ void Hero::draw_current(const mat3& projection, const mat3& current_transform)
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
+	//animation uniforms
+	glUniform1iv(frame_uloc, 1, &frame);
+	glUniform1iv(animation_dir_uloc, 1, (int*)&animation_dir);
+	glUniform1fv(animation_frame_w_uloc, 1, &animation_frame_w);
+	glUniform1fv(animation_frame_h_uloc, 1, &animation_frame_h);
+
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
@@ -216,6 +241,12 @@ void Hero::update_current(float ms)
 	update_path();
 	if (m_is_moving)
 	{
+		m_vel = { 0,0 };
+		m_time_elapsed += ms;
+		if (m_time_elapsed > MS_PER_FRAME) {
+			m_time_elapsed = 0;
+			frame = (frame + 1) % NUM_FRAMES;
+		}
 		float step_size = 10.f; // should probably replace this with collisions 
 		float timeFactor = ms / 1000;
 		bool will_move_x = false;
@@ -289,6 +320,7 @@ void Hero::update_current(float ms)
 				m_path.pop_back();
 			}
 		}
+		pick_movement_tex();
 	}
 	
 }
@@ -321,4 +353,35 @@ vec2 Hero::get_next_door_position()
 
   m_next_room = target_room.room;
   return get_world_coords_from_room_coords(target_room.door->get_pos(), m_dungeon->transform, identity_matrix); // door is in dungeon coords
+}
+//RIPped it right of janitor.
+void Hero::pick_movement_tex() {
+	//if velocity is 0, return, leaving the current animation frame as is
+	float x_vel = abs(m_vel.x);
+	float y_vel = abs(m_vel.y);
+	float vel_magnitude = y_vel;
+	if (x_vel > y_vel)
+		vel_magnitude = x_vel;
+	if (vel_magnitude == 0) return;
+	//Pick current texture based on direction of velocity
+	vec2 vel_dir = normalize(m_vel);
+	vec2 default_dir = { 1, 0 };
+	float theta = acos(dot(vel_dir, default_dir)); //gives the angle of our velocity (but only from 0-pi in rads)
+	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
+	float pi = atan(1) * 4;
+	animation_dir = right; 
+	if (theta < 3 * pi / 4 && theta > pi / 4) {
+		animation_dir = up;
+	}
+	else if (theta < -pi / 4 && theta > -3 * pi / 4) {
+		animation_dir = down;
+	}
+	//odd case
+	else if (theta > 3 * pi / 4 || theta < -3*pi / 4) {
+		animation_dir = left;
+	}
+	//if (theta < pi / 4 || theta > -pi / 4)
+	else {
+		animation_dir = right;
+	}
 }

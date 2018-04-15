@@ -152,6 +152,8 @@ bool RoomParser::parseLine(std::string &line, float y, bool first_line, bool las
       else if (last_line)
       {
         door_infos.push_back({ { x,y }, Door::VERTICAL, SOUTH });
+        floor_pos.push_back({ x, y + FLOOR_Y_OFFSET-15.f });
+        floor_pos.push_back({ x, y + (2.f*FLOOR_Y_OFFSET) -15.f});
       }
       else if (i == 0)
       {
