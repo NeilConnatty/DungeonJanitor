@@ -155,8 +155,6 @@ bool World::init_creatures()
 		fprintf(stderr, "Failed to init Boss. \n");
 		return false;
 	}
-	m_boss.set_scale({ 3.f , 3.f });
-
 	return true;
 }
 
@@ -171,7 +169,6 @@ bool World::init_hero()
 		return false;
 
 	}
-	m_hero.set_scale({ 2.f, 2.f });
 	m_hero.setAllRooms(&m_dungeon.get_rooms());
 	m_dungeon.spawn_hero();
 	return true;
