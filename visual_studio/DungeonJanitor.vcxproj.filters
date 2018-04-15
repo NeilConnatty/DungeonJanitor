@@ -103,6 +103,9 @@
     <ClCompile Include="..\src\toweldispenser.cpp">
       <Filter>src\Dungeon\FloorObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\startscreen.cpp">
+      <Filter>src\Camera/UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\world.hpp">
@@ -203,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="..\src\toweldispenser.hpp">
       <Filter>headers\Dungeon\FloorObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\startscreen.hpp">
+      <Filter>headers\Camera/UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

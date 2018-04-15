@@ -70,64 +70,127 @@ bool World::init(vec2 screen)
     auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
     glfwSetKeyCallback(m_window, key_redirect);
     glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
-
-    //-------------------------------------------------------------------------
-    // Loading music and sounds
-
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        fprintf(stderr, "Failed to initialize SDL Audio");
-        return false;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
-    {
-        fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
-        //fprintf(stderr, "Failed to open audio device");
-        return false;
-    }
-
-    m_background_music = Mix_LoadMUS(audio_path("music.wav"));
-
-    //test all sound effects for nullptr
-    if (m_background_music == nullptr)
-    {
-        fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
-        return false;
-    }
-
-    // Playing background music indefinitely
-    Mix_PlayMusic(m_background_music, -1);
 	
-    fprintf(stderr, "Loaded music");
-    //actually put something like return m_janitor.init();
+	//-------------------------------------------------------------------------
+	// Loading music and sounds
+	/*
+	if (SDL_Init(SDL_INIT_AUDIO) < 0)
+	{
+	fprintf(stderr, "Failed to initialize SDL Audio");
+	return false;
+	}
+
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+	{
+	fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
+	//fprintf(stderr, "Failed to open audio device");
+	return false;
+	}
+
+	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
+
+	//test all sound effects for nullptr
+	if (m_background_music == nullptr)
+	{
+	fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
+	return false;
+	}
+
+	// Playing background music indefinitely
+	Mix_PlayMusic(m_background_music, -1);
+
+	fprintf(stderr, "Loaded music");
+	*/
+
 	if (!m_dungeon.init())
 	{
 		fprintf(stderr, "Failed to init Dungeon.\n");
 		return false;
 	}
 
-  
+
 	if (!init_creatures())
 	{
 		fprintf(stderr, "Failed to init Creatures. \n");
 		return false;
 	}
-  
-  int w, h;
-  glfwGetWindowSize(m_window, &w, &h);
-  if (!m_camera.init(w, h))
-  {
-    fprintf(stderr, "failed to init Camera. \n");
-    return false;
-  }
 
-  // Attach health bar to dungeon
-  m_dungeon.setHealthBar(m_camera.getHealthBar());
-  
+	int w, h;
+	glfwGetWindowSize(m_window, &w, &h);
+	if (!m_camera.init(w, h))
+	{
+		fprintf(stderr, "failed to init Camera. \n");
+		return false;
+	}
+	on_start_screen = true;
+	if (!m_start.init({ 0, 0 }))
+	{
+		fprintf(stderr, "failed to init Start Screen. \n");
+		return false;
+	}
+	m_camera.follow_object(&m_start);
+	// Attach health bar to dungeon
+	m_dungeon.setHealthBar(m_camera.getHealthBar());
 	return true;
 }
+bool World::world_init_helper() {
+	//-------------------------------------------------------------------------
+	// Loading music and sounds
+	/*
+	if (SDL_Init(SDL_INIT_AUDIO) < 0)
+	{
+	fprintf(stderr, "Failed to initialize SDL Audio");
+	return false;
+	}
 
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1)
+	{
+	fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
+	//fprintf(stderr, "Failed to open audio device");
+	return false;
+	}
+
+	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
+
+	//test all sound effects for nullptr
+	if (m_background_music == nullptr)
+	{
+	fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
+	return false;
+	}
+
+	// Playing background music indefinitely
+	Mix_PlayMusic(m_background_music, -1);
+
+	fprintf(stderr, "Loaded music");
+	*/
+
+	if (!m_dungeon.init())
+	{
+		fprintf(stderr, "Failed to init Dungeon.\n");
+		return false;
+	}
+
+
+	if (!init_creatures())
+	{
+		fprintf(stderr, "Failed to init Creatures. \n");
+		return false;
+	}
+
+	int w, h;
+	glfwGetWindowSize(m_window, &w, &h);
+	if (!m_camera.init(w, h))
+	{
+		fprintf(stderr, "failed to init Camera. \n");
+		return false;
+	}
+
+	// Attach health bar to dungeon
+	m_dungeon.setHealthBar(m_camera.getHealthBar());
+
+	return true;
+}
 bool World::init_creatures()
 {
   if (m_dungeon.janitor_start_room == nullptr || m_dungeon.hero_start_room == nullptr || m_dungeon.boss_start_room == nullptr)
@@ -191,6 +254,9 @@ void World::destroy()
   m_janitor.destroy();
   m_hero.destroy();
   m_boss.destroy();
+  m_camera.destroy();
+  m_game_over_screen.destroy();
+  m_start.destroy();
   // Destructors for game objects here
   glfwDestroyWindow(m_window);
 }
@@ -198,44 +264,47 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-  if (!game_is_over)
-  {
-	  m_janitor.update(elapsed_ms);
-	  m_boss.update(elapsed_ms);
-	  m_dungeon.update(elapsed_ms);
-	  m_camera.update(elapsed_ms);
-	  m_janitor.check_movement();
-	  if (m_dungeon.hero_has_spawned())
-	  {
-		  m_hero.update(elapsed_ms);
-	  }
-	  else if (m_dungeon.should_spawn_hero())
-	  {
-		  if (!init_hero())
-		  {
-			  return false;
-		  }
-	  }
-	  if (m_dungeon.has_boss_fight_started())
-	  {
-		  if (m_dungeon.get_boss_fight_dungeon_health() == 0.0f)
-		  {
-			  game_over();
-		  }
-		  else
-		  {
-			  m_dungeon.boss_start_room->spawn_debris();
+	if (on_start_screen) {
+		m_camera.update(elapsed_ms);
+		m_start.update(elapsed_ms);
+	}
+	else if (!game_is_over && !on_start_screen)
+	{
+		m_janitor.update(elapsed_ms);
+		m_boss.update(elapsed_ms);
+		m_dungeon.update(elapsed_ms);
+		m_camera.update(elapsed_ms);
+		m_janitor.check_movement();
+		if (m_dungeon.hero_has_spawned())
+		{
+			m_hero.update(elapsed_ms);
+		}
+		else if (m_dungeon.should_spawn_hero())
+		{
+			if (!init_hero())
+			{
+				return false;
+			}
+		}
+		if (m_dungeon.has_boss_fight_started())
+		{
+			if (m_dungeon.get_boss_fight_dungeon_health() == 0.0f)
+			{
+				game_over();
+			}
+			else
+			{
+				m_dungeon.boss_start_room->spawn_debris();
+			}
+		}
 
-		  }
-	  }
-
-  }
-  else 
-  {
-	  m_camera.update(elapsed_ms);
-	  m_game_over_screen.update(elapsed_ms);
-  }
-  return true;
+	}
+	else 
+	{
+		m_camera.update(elapsed_ms);
+		m_game_over_screen.update(elapsed_ms);
+	}
+	return true;
 }
 
 // Render our game world
@@ -273,12 +342,13 @@ void World::draw()
   mat3 transform = m_camera.get_transform();
 
   // Drawing entities
-  if (!game_is_over) 
+  if (on_start_screen) { m_start.draw(projection_2D, transform); }
+  else if (!game_is_over && !on_start_screen) 
   {
 	  m_dungeon.draw(projection_2D, transform);
 	  m_janitor.draw(projection_2D, transform);
 	  m_boss.draw(projection_2D, transform);
-    m_camera.draw(projection_2D, transform);
+	m_camera.draw(projection_2D, transform);
     if (m_dungeon.hero_has_spawned())
     {
       m_hero.draw(projection_2D, transform);
@@ -349,17 +419,22 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			r->clean(&m_janitor, m_dungeon.transform);
 		}
     }
+	if (action == GLFW_RELEASE && (key == GLFW_KEY_ENTER || key == GLFW_KEY_SPACE) && on_start_screen) {
+		on_start_screen = false;
+		m_camera.follow_object(&m_janitor);
+		m_start.destroy();
+	}
 	// Resetting game
-	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
-	{
+	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over) {
 		game_is_over = false;
 		//Destructor functions for game objects go below:
+		
 		m_dungeon.destroy();
 		m_janitor.destroy();
 		m_hero.destroy();
 		m_boss.destroy();
 		m_camera.destroy();
-		
+		m_game_over_screen.destroy();
 		
 		if (!m_dungeon.init())
 		{

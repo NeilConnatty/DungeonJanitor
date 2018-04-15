@@ -9,6 +9,7 @@
 #include "camera.hpp"
 #include "gameover.hpp"
 #include "ValueIteration.hpp"
+#include "StartScreen.hpp"
 // stlib
 #include <vector>
 #include <random>
@@ -27,7 +28,7 @@ public:
 
 	// Creates a window, sets up events and begins the game
 	bool init(vec2 screen);
-
+	bool world_init_helper();
 	bool init_creatures();
 	bool init_hero();
 
@@ -39,7 +40,7 @@ public:
 
 	// Renders our scene
 	void draw();
-
+	
 	// Should the game be over ? (closes the window)
 	bool is_over()const;
 
@@ -75,6 +76,9 @@ private:
 	//Camera
 	Camera m_camera;
 
+	//Start Screen
+	StartScreen m_start;
+	bool on_start_screen;
 	//Game Over Screen
 	GameOver m_game_over_screen;
 	bool game_is_over;

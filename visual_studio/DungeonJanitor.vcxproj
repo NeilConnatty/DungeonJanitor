@@ -531,6 +531,7 @@
     <ClCompile Include="..\src\room.cpp" />
     <ClCompile Include="..\src\roomtextparser.cpp" />
     <ClCompile Include="..\src\sink.cpp" />
+    <ClCompile Include="..\src\startscreen.cpp" />
     <ClCompile Include="..\src\toweldispenser.cpp" />
     <ClCompile Include="..\src\ValueIteration.cpp" />
     <ClCompile Include="..\src\wall.cpp" />
@@ -565,6 +566,7 @@
     <ClInclude Include="..\src\room.hpp" />
     <ClInclude Include="..\src\roomtextparser.hpp" />
     <ClInclude Include="..\src\sink.hpp" />
+    <ClInclude Include="..\src\startscreen.hpp" />
     <ClInclude Include="..\src\toweldispenser.hpp" />
     <ClInclude Include="..\src\ValueIteration.hpp" />
     <ClInclude Include="..\src\wall.hpp" />
