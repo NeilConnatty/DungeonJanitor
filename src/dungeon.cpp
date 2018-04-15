@@ -6,7 +6,7 @@
 #include <iostream>
 
 #define ARTIFACT_VALUE 5
-#define HERO_TIME_TO_SPAWN 60000.f
+#define HERO_TIME_TO_SPAWN 5000.f
 #define BOSS_FIGHT_TIME 30000.f
 
 Dungeon::Dungeon() : 
@@ -176,8 +176,8 @@ float Dungeon::get_boss_fight_dungeon_health()
 	float total_artifacts = 0;
 	float spawned_boss_cleanables = 0;
 	float cleaned_boss_cleanables = 0;
-	float BOSS_SPAWN_VALUE = 0.03;
-	float BOSS_CLEANABLE_VALUE = 0.02;
+	float BOSS_SPAWN_VALUE = 0.05;
+	float BOSS_CLEANABLE_VALUE = 0.05;
 
 	for (std::unique_ptr<Room>& room : m_rooms)
 	{
