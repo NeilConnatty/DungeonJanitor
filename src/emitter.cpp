@@ -163,8 +163,8 @@ void Emitter::draw_children(const mat3& projection, const mat3& current_transfor
 	glVertexAttribDivisor(1, 1); 
 	glVertexAttribDivisor(2, 1); 
 
-	debug_print_gpu();
-	debug_print_state();
+	//debug_print_gpu();
+	//debug_print_state();
 
 	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, m_particle_count);
 }
