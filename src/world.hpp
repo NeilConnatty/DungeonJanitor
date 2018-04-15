@@ -9,6 +9,7 @@
 #include "camera.hpp"
 #include "gameover.hpp"
 #include "winscreen.hpp"
+#include "startscreen.hpp"
 #include "ValueIteration.hpp"
 // stlib
 #include <vector>
@@ -82,6 +83,8 @@ private:
 	//Game Over Screen
 	GameOver m_game_over_screen;
 	Winscreen m_win_screen;
+	StartScreen m_start_screen;
+	bool m_game_did_start;
 	bool m_did_win;
 	bool game_is_over;
 
