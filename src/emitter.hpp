@@ -46,11 +46,39 @@ protected:
 			p_life = life;
 		}
 
-		void update(float ms)
+		void update_shape_line(float ms)
 		{
 			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
-			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.0000001f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
 			p_life = p_life - ms;
+		}
+
+		void update_shape_spiral(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;			
+		}
+
+		void update_shape_circle(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;			
+		}
+
+		void update_shape_square(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;			
+		}
+
+		void update_shape_rand(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;			
 		}
     };
 
@@ -65,7 +93,7 @@ protected:
 	};
 
 private:
-	//vec2 m_position; //in 
+	GameObject* attached_to; // gameobject emitter is attached to.
 	vec2 m_velocity; // initial speed of particles.
 	vec4 m_color; // color of particles.
 	float m_lifetime; // total lifetime of a particle.
@@ -73,7 +101,6 @@ private:
 	int m_particle_count; // num active particles.
 	vec2 m_spawn_frequency; // frequency of spawning particles -> {time between spawn, number to spawn}
 	float m_next_spawn;
-	GameObject* attached_to; // gameobject emitter is attached to.
 	std::vector<Particle> m_particle_container; // container for emitters particles.
 	DataGPU data;
 };
