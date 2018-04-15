@@ -38,7 +38,6 @@ bool Hero::init(vec2 position)
 	// The position corresponds to the center of the texture
 	// scale of the bounding box will be a little fucked
 	// because the sprites are not all the same size. 
-	// stupid bitch with her hair.
 	//just hardcode the frame jumps.
 	float wr = hero_texture.width/4.f * 0.5f;
 	float hr = hero_texture.height/4.f * 0.5f;
