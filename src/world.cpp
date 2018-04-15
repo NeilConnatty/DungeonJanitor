@@ -73,6 +73,7 @@ bool World::init(vec2 screen)
 
     //-------------------------------------------------------------------------
     // Loading music and sounds
+
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
         fprintf(stderr, "Failed to initialize SDL Audio");
@@ -97,9 +98,8 @@ bool World::init(vec2 screen)
 
     // Playing background music indefinitely
     Mix_PlayMusic(m_background_music, -1);
-
-    fprintf(stderr, "Loaded music");
 	
+    fprintf(stderr, "Loaded music");
     //actually put something like return m_janitor.init();
 	if (!m_dungeon.init())
 	{
@@ -146,7 +146,7 @@ bool World::init_creatures()
 		return false;
 	}
 	m_janitor.set_scale({ 3.f, 3.f });
-  m_camera.follow_object(&m_janitor);
+	m_camera.follow_object(&m_janitor);
 
 	vec2 boss_position = get_world_coords_from_room_coords(m_dungeon.boss_room_position, m_dungeon.boss_start_room->transform, m_dungeon.transform);
 	if (!m_boss.init(boss_position))
@@ -183,7 +183,7 @@ void World::destroy()
 
   Mix_CloseAudio();
   SDL_Quit();
-  
+
   m_dungeon.destroy();
   m_janitor.destroy();
   m_hero.destroy();
@@ -330,7 +330,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			r->clean(&m_janitor, m_dungeon.transform);
 		}
     }
-
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
 	{
@@ -340,18 +339,27 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_janitor.destroy();
 		m_hero.destroy();
 		m_boss.destroy();
-
+		m_camera.destroy();
+		
+		
 		if (!m_dungeon.init())
 		{
-			fprintf(stderr, "Failed to init Dungeon.\n");
+			fprintf(stderr, "Failed to reinit Dungeon.\n");
 			return;
 		}
+		int w, h;
+		glfwGetWindowSize(m_window, &w, &h);
+		if (!m_camera.init(w, h))
+		{
+			fprintf(stderr, "failed to reinit Camera. \n");
+			return;
+		}
+		m_dungeon.setHealthBar(m_camera.getHealthBar());
 		if (!init_creatures())
 		{
-			fprintf(stderr, "Failed to init Creatures. \n");
+			fprintf(stderr, "Failed to reinit Creatures. \n");
 			return;
 		}
-		m_camera.follow_object(&m_janitor);
 	}
 }
 

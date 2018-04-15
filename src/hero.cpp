@@ -35,9 +35,6 @@ bool Hero::init(vec2 position)
 	animation_dir = right;
 	frame = 0;
 	// The position corresponds to the center of the texture
-	// scale of the bounding box will be a little fucked
-	// because the sprites are not all the same size. 
-	//just hardcode the frame jumps.
 	float wr = hero_texture.width/4.f * 0.5f;
 	float hr = hero_texture.height/4.f * 0.5f;
 	animation_frame_w = 1 / 4.0f;
