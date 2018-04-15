@@ -161,9 +161,9 @@ void GameObject::apply_force_dx(vec2 dx, float dt)
 
 bool GameObject::collides_with(GameObject& object, mat3 room_transform, mat3 dungeon_transform) {
 	float jLeftEdge = m_position.x;
-	float jRightEdge = m_position.x+m_size.x;
+	float jRightEdge = m_position.x+m_size.x * m_scale.x;
 	float jTopEdge = m_position.y;
-	float jBottomEdge = m_position.y+m_size.y;
+	float jBottomEdge = m_position.y+m_size.y * m_scale.y;
 
 	float objX = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).x;
 	float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;

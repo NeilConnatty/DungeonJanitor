@@ -25,12 +25,14 @@ bool Boss::init(vec2 position)
 	}
 
 	m_position = position;
+	m_size = { boss_texture.width / 4.f * 0.5f, boss_texture.height / 2.f * 0.5f };
 
 	// The position corresponds to the center of the texture
 	float wr = boss_texture.width/4.f * 0.5f;
 	float hr = boss_texture.height/2.f * 0.5f;
 	animation_frame_w = 1 / 4.f;
 	animation_frame_h = 1 / 2.f;
+
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
 	vertices[0].texcoord = { 0.f, animation_frame_h };

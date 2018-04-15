@@ -259,10 +259,10 @@ bool RoomParser::populateRoom(Room &room)
 {
   return (room.add_floors(floor_pos) && 
           room.add_walls(wall_pairs) &&
+		  room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&
 		  room.add_cleanables(cleanable_pos) &&
           room.add_artifact(has_artifact, artifact_pos) &&
           room.add_hero_spawn_loc(has_hero_spawn, hero_spawn_pos) &&
-          room.add_boss_spawn_loc(has_boss_spawn, boss_spawn_pos) &&
           room.add_janitor_spawn_loc(has_janitor_spawn, janitor_spawn_pos));
 }
 

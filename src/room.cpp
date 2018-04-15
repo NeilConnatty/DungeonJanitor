@@ -32,7 +32,8 @@ bool Room::init(vec2 position, room_type type)
   m_num_activated_artifacts = 0;
   m_total_artifacts = 0;
   m_hero_has_visited = false;
-
+  m_num_spawned_boss_fight_cleanables = 0;
+  m_num_cleaned_boss_fight_cleanables = 0;
   return true;
 }
 
@@ -270,7 +271,20 @@ bool Room::add_walls(std::vector<wall_pair> &walls)
 
 bool Room::add_cleanables(vector<pair<Cleanable::types, vec2>>& cleanable_pos)
 {
-	if (!cleanable_pos.empty())
+	if (containsBoss())
+	{
+		for (Floor &floor : m_floors)
+		{
+			Puddle* p = new Puddle();
+			if (!p->init(floor.get_pos()))
+			{
+				return false;
+			}
+			m_cleanables.emplace_back(p);
+			p->toggle_enable();
+		}
+	}
+	else if (!cleanable_pos.empty())
 	{
 		for (pair<Cleanable::types, vec2>& cleanable : cleanable_pos)
 		{
@@ -352,12 +366,18 @@ bool Room::add_janitor_spawn_loc(bool has_janitor_spawn_loc, vec2 janitor_spawn_
 void Room::clean(Janitor* janitor, mat3 dungeon_transform)
 {
 	for (unique_ptr<Cleanable>& c : get_cleanables()) {
-		if (c->is_enabled() &&
-			janitor->collides_with(*c, this->transform, dungeon_transform)) {
-      if (c.get()->clean())
-      {
-        c->play_sound();
-				increment_cleaned_cleanables();
+		if (c->is_enabled() && janitor->collides_with(*c, this->transform, dungeon_transform)) {
+			if (c.get()->clean())
+			{
+				c->play_sound();
+				if (containsBoss())
+				{
+					m_num_cleaned_boss_fight_cleanables++;
+				}
+				else
+				{
+					increment_cleaned_cleanables();
+				}
 			}
 		}
 	}
@@ -474,4 +494,23 @@ void Room::set_hero_has_visited(bool visited)
 bool Room::has_hero_visited()
 {
 	return m_hero_has_visited;
+}
+
+void Room::spawn_debris()
+{
+	default_random_engine rng;
+	uniform_int_distribution<int> dist;
+	rng = default_random_engine(random_device()());
+	dist = uniform_int_distribution<int>(0, 25);
+	int random = dist(rng);
+	if (random == 1 || (m_num_spawned_boss_fight_cleanables - m_num_cleaned_boss_fight_cleanables > 10 && random == 2))
+	{
+		dist = uniform_int_distribution<int>(0, m_cleanables.size() - 1);
+		unique_ptr<Cleanable>& c = m_cleanables.at(dist(rng));
+		if (!c->is_enabled())
+		{
+			m_num_spawned_boss_fight_cleanables++;
+			c->toggle_enable();
+		}
+	}
 }

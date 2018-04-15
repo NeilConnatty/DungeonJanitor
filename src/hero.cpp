@@ -29,10 +29,11 @@ bool Hero::init(vec2 position)
 	}
 
 	m_position = position;
-	m_is_in_boss_room = false;
+	m_is_at_boss = false;
 	m_currentRoom->set_hero_has_visited(true);
 	m_vel = { 0.f, 0.f };
 	m_time_elapsed = 0;
+	m_size = { hero_texture.width / 4.f , hero_texture.height / 4.f };
 
 	animation_dir = right;
 	frame = 0;
@@ -41,6 +42,7 @@ bool Hero::init(vec2 position)
 	float hr = hero_texture.height/4.f * 0.5f;
 	animation_frame_w = 1 / 4.0f;
 	animation_frame_h = 1 / 4.0f;
+
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, -0.02f };
 	vertices[0].texcoord = { 0.f, animation_frame_h };
@@ -124,14 +126,20 @@ void Hero::stop_movement()
 
 void Hero::update_path()
 {
-	if (m_currentRoom->containsBoss())
+	if (!is_moving() && !m_is_at_boss)
 	{
-		stop_movement();
-		m_is_in_boss_room = true;
-	}
-	else if (!is_moving())
-	{
-		if (m_currentRoom->containsArtifact() && m_currentRoom->get_artifact()->is_activated())
+		if (m_currentRoom->containsBoss())
+		{
+			vec2 boss_pos = m_dungeon->get_boss()->get_pos();
+			set_destination(boss_pos, Hero::destinations::BOSS);
+			vector<vec2> path_to_boss;
+			Pathfinder::getPathFromPositionToDestination(m_position, boss_pos, SPEED / 10.f, Y_SPEED / 10.f,
+				*this, *m_currentRoom, path_to_boss, *m_dungeon);
+			m_path = path_to_boss;
+			m_current_destination = m_path.back();
+			m_path.pop_back();
+		}
+		else if (m_currentRoom->get_artifact()->is_activated())
 		{
 			vec2 artifact_pos = get_world_coords_from_room_coords(m_currentRoom->get_artifact()->get_pos(), m_currentRoom->transform, m_dungeon->transform);
 			artifact_pos.y += ARTIFACT_OFFSET;
@@ -158,15 +166,14 @@ void Hero::update_path()
 		}
 	}
 }
-
 bool Hero::is_moving()
 {
 	return m_is_moving;
 }
 
-bool Hero::is_in_boss_room()
+bool Hero::is_at_boss()
 {
-	return m_is_in_boss_room;
+	return m_is_at_boss;
 }
 
 const Room* Hero::get_current_room()
@@ -287,7 +294,14 @@ void Hero::update_current(float ms)
 		} 
 		else
 		{
-			if (m_path.empty())
+
+			if (m_destination_type == BOSS && this->collides_with(*m_dungeon->get_boss(), identity_matrix, identity_matrix))
+			{
+				//m_is_at_boss = true;
+				stop_movement();
+				m_dungeon->start_boss_fight();
+			}
+			else if (m_path.empty())
 			{
 				stop_movement();
 				if (m_destination_type == DOOR)
