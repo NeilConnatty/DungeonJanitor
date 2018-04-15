@@ -12,10 +12,12 @@ public:
 	~Emitter();
 
 	bool init() override;
-	bool init(vec2 position, vec2 velocity, vec4 color, float lifetime, int max_particles);
+	bool init(vec2 scale, vec2 position, vec2 velocity, vec4 color, float lifetime, int max_particles, vec2 spawn_frequency);
 	void destroy() override;
 	
 protected:
+	void debug_print_state();
+	void debug_print_gpu();
 	void update_current(float ms) override;
     void update_children(float ms) override;
     void draw_current(const mat3& projection, const mat3& current_transform) override {}
@@ -44,11 +46,39 @@ protected:
 			p_life = life;
 		}
 
-		void update(float ms)
+		void update_shape_line(float ms)
 		{
-			p_position = {p_position.x + p_velocity.x * ms, 0.0f, 0.0f};
-			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - p_life/ms};
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
 			p_life = p_life - ms;
+		}
+
+		void update_shape_spiral(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;			
+		}
+
+		void update_shape_circle(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;			
+		}
+
+		void update_shape_square(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;			
+		}
+
+		void update_shape_rand(float ms)
+		{
+			p_position = {p_position.x + p_velocity.x * ms, p_position.y + p_velocity.y * ms, 0.0f};
+			p_color = {p_color.x, p_color.y, p_color.z, p_color.w - 0.01f};
+			p_life = p_life - ms;			
 		}
     };
 
@@ -63,13 +93,14 @@ protected:
 	};
 
 private:
-	//vec2 m_position; //in 
+	GameObject* attached_to; // gameobject emitter is attached to.
 	vec2 m_velocity; // initial speed of particles.
 	vec4 m_color; // color of particles.
 	float m_lifetime; // total lifetime of a particle.
 	int m_max_particles; // max awake particles.
 	int m_particle_count; // num active particles.
-	GameObject* attached_to; // gameobject emitter is attached to.
+	vec2 m_spawn_frequency; // frequency of spawning particles -> {time between spawn, number to spawn}
+	float m_next_spawn;
 	std::vector<Particle> m_particle_container; // container for emitters particles.
 	DataGPU data;
 };

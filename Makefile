@@ -22,7 +22,7 @@ test: build
 	./$(BIN)
 
 %.o: src/%.cpp
-	g++ -c $(CXXFLAGS) -o $@ $<
+	g++ -c -g $(CXXFLAGS) -o $@ $<
 
 $(BIN): $(OBJ)
 	g++ -o $@ $(OBJ) $(LIB)
