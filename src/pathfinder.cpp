@@ -105,6 +105,8 @@ bool Pathfinder::collisionDetected(GameObject& moving_object, Room& room, PathNo
 	return false;
 }
 
+
+
 bool Pathfinder::nodeVisitedBefore(unique_ptr<PathNode>& successor_node,
 	vector<unique_ptr<PathNode>>& openNodes, vector<unique_ptr<PathNode>>& closedNodes)
 {
