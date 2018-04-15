@@ -48,10 +48,10 @@ bool Dungeon::init()
 
 	room->setDungeonTransform(identity_matrix);
   }
-  m_emitters.emplace_back();
+  //m_emitters.emplace_back();
   // vec2 velocity = {10.0f, 1.0f};
   // vec4 color = {1.0f, 0.0f, 0.0f, 1.0f};
-  m_emitters.back().init({10.0f, 10.0f}, {40, 40}, {10.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, 10.0f, 20, {0.5f, 1.0f});
+  //m_emitters.back().init({10.0f, 10.0f}, {40, 40}, {10.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f}, 10.0f, 20, {0.5f, 1.0f});
 
   m_hero_timer = HERO_TIME_TO_SPAWN; // Three minutes in milliseconds
   m_boss_fight_timer = BOSS_FIGHT_TIME;
