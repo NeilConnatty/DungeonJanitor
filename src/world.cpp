@@ -133,7 +133,9 @@ bool World::init(vec2 screen)
   // Attach health bar to dungeon
   m_dungeon.setHealthBar(m_camera.getHealthBar());
   m_did_win = false;
-  
+  m_game_did_start = false;
+  m_start_screen.init(m_janitor.get_pos());
+  m_camera.follow_object(&m_start_screen);
 	return true;
 }
 
@@ -207,59 +209,64 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-  if (!game_is_over)
-  {
-	  m_janitor.update(elapsed_ms);
-	  m_boss.update(elapsed_ms);
-	  m_dungeon.update(elapsed_ms);
-	  m_camera.update(elapsed_ms);
-	  m_janitor.check_movement();
-	  if (m_dungeon.hero_has_spawned())
-	  {
-		  m_hero.update(elapsed_ms);
-	  }
-	  else if (m_dungeon.should_spawn_hero())
-	  {
-		  if (!init_hero())
-		  {
-			  return false;
-		  }
-	  }
-	  if (m_dungeon.has_boss_fight_started())
-	  {
-		  if (m_boss_music_off)
-		  {
-			  Mix_PlayMusic(m_boss_fight_music, -1);
-			  m_boss_music_off = false;
-		  }
-		  if (m_dungeon.get_boss_fight_dungeon_health() == 0.0f)
-		  {
-			  game_over(false);
-		  }
-		  else if (m_dungeon.has_boss_fight_ended())
-		  {
-			  game_over(true);
-		  }
-		  else
-		  {
-			  m_dungeon.boss_start_room->spawn_debris();
+	if (m_game_did_start)
+	{
 
-		  }
-	  }
+		if (!game_is_over)
+		{
+			m_janitor.update(elapsed_ms);
+			m_boss.update(elapsed_ms);
+			m_dungeon.update(elapsed_ms);
+			m_camera.update(elapsed_ms);
+			m_janitor.check_movement();
+			if (m_dungeon.hero_has_spawned())
+			{
+				m_hero.update(elapsed_ms);
+			}
+			else if (m_dungeon.should_spawn_hero())
+			{
+				if (!init_hero())
+				{
+					return false;
+				}
+			}
+			if (m_dungeon.has_boss_fight_started())
+			{
+				if (m_boss_music_off)
+				{
+					Mix_PlayMusic(m_boss_fight_music, -1);
+					m_boss_music_off = false;
+				}
+				if (m_dungeon.get_boss_fight_dungeon_health() == 0.0f)
+				{
+					game_over(false);
+				}
+				else if (m_dungeon.has_boss_fight_ended())
+				{
+					game_over(true);
+				}
+				else
+				{
+					m_dungeon.boss_start_room->spawn_debris();
 
-  }
-  else
-  {
-	  m_camera.update(elapsed_ms);
-	  if (m_did_win)
-	  {
-		  m_win_screen.update(elapsed_ms);
-	  }
-	  else
-	  {
-		  m_game_over_screen.update(elapsed_ms);
-	  }
-  }
+				}
+			}
+
+		}
+	}
+	m_camera.update(elapsed_ms);
+	if (!m_game_did_start)
+	{
+		m_start_screen.update(elapsed_ms);
+	}
+	else if (m_did_win)
+	{
+		m_win_screen.update(elapsed_ms);
+	}
+	else
+	{
+		m_game_over_screen.update(elapsed_ms);
+	}
   return true;
 }
 
@@ -274,23 +281,26 @@ void World::draw()
   glfwGetFramebufferSize(m_window, &w, &h);
 
   // Updating window title with points
-  if (game_is_over)
+  if (m_game_did_start)
   {
-	  std::stringstream title_ss;
-	  int score = m_dungeon.get_boss_fight_dungeon_health() * 100.f;
-	  title_ss << "Final Score: " << score << "%";
-	  glfwSetWindowTitle(m_window, title_ss.str().c_str());
-  } 
-  else if (!m_dungeon.should_spawn_hero()) {
-	  std::stringstream title_ss;
-	  title_ss << "Hero Arrival In: " << m_dungeon.get_hero_timer();
-	  glfwSetWindowTitle(m_window, title_ss.str().c_str());
-  } 
-  else if (m_dungeon.has_boss_fight_started())
-  {
-	  std::stringstream title_ss;
-	  title_ss << "Work Day Ends In: " << m_dungeon.get_boss_fight_timer();
-	  glfwSetWindowTitle(m_window, title_ss.str().c_str());
+	  if (game_is_over)
+	  {
+		  std::stringstream title_ss;
+		  int score = m_dungeon.get_boss_fight_dungeon_health() * 100.f;
+		  title_ss << "Final Score: " << score << "%";
+		  glfwSetWindowTitle(m_window, title_ss.str().c_str());
+	  }
+	  else if (!m_dungeon.should_spawn_hero()) {
+		  std::stringstream title_ss;
+		  title_ss << "Hero Arrival In: " << m_dungeon.get_hero_timer();
+		  glfwSetWindowTitle(m_window, title_ss.str().c_str());
+	  }
+	  else if (m_dungeon.has_boss_fight_started())
+	  {
+		  std::stringstream title_ss;
+		  title_ss << "Work Day Ends In: " << m_dungeon.get_boss_fight_timer();
+		  glfwSetWindowTitle(m_window, title_ss.str().c_str());
+	  }
   }
 
   // Clearing backbuffer
@@ -315,6 +325,10 @@ void World::draw()
     {
       m_hero.draw(projection_2D, transform);
     }
+	if (!m_game_did_start)
+	{
+		m_start_screen.draw(projection_2D, transform);
+	}
   }
   else
   {
@@ -359,42 +373,49 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// key is of 'type' GLFW_KEY_
 	// action can be GLFW_PRESS GLFW_RELEASE GLFW_REPEAT
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-		if (key == GLFW_KEY_UP) {
-			m_janitor.key_up(true);
+	if (m_game_did_start) {
+		if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+			if (key == GLFW_KEY_UP) {
+				m_janitor.key_up(true);
+			}
+			if (key == GLFW_KEY_DOWN) {
+				m_janitor.key_down(true);
+			}
+			if (key == GLFW_KEY_LEFT) {
+				m_janitor.key_left(true);
+			}
+			if (key == GLFW_KEY_RIGHT) {
+				m_janitor.key_right(true);
+			}
 		}
-		if (key == GLFW_KEY_DOWN) {
-			m_janitor.key_down(true);
+		if (action == GLFW_RELEASE) {
+			if (key == GLFW_KEY_UP) {
+				m_janitor.key_up(false);
+			}
+			if (key == GLFW_KEY_DOWN) {
+				m_janitor.key_down(false);
+			}
+			if (key == GLFW_KEY_LEFT) {
+				m_janitor.key_left(false);
+			}
+			if (key == GLFW_KEY_RIGHT) {
+				m_janitor.key_right(false);
+			}
 		}
-		if (key == GLFW_KEY_LEFT) {
-			m_janitor.key_left(true);
-		}
-		if (key == GLFW_KEY_RIGHT) {
-			m_janitor.key_right(true);
+		if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+			for (unique_ptr<Room>& r : m_dungeon.get_rooms())
+			{
+				Room* room = r.get();
+				r->clean(&m_janitor, m_dungeon.transform);
+			}
 		}
 	}
-    if (action == GLFW_RELEASE) {
-      if (key == GLFW_KEY_UP){
-        m_janitor.key_up(false);
-      }
-      if (key == GLFW_KEY_DOWN){
-        m_janitor.key_down(false);
-      }
-      if (key == GLFW_KEY_LEFT){
-        m_janitor.key_left(false);
-      }
-      if (key == GLFW_KEY_RIGHT){
-        m_janitor.key_right(false);
-      }
-    }
     
-    if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
-		for (unique_ptr<Room>& r : m_dungeon.get_rooms())
-		{
-			Room* room = r.get();
-			r->clean(&m_janitor, m_dungeon.transform);
-		}
-    }
+	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE)
+	{
+		m_game_did_start = true;
+		m_camera.follow_object(&m_janitor);
+	}
 	// Resetting game
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
 	{
