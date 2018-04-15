@@ -379,6 +379,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R && game_is_over)
 	{
 		game_is_over = false;
+		m_did_win = false;
 		//Destructor functions for game objects go below:
 		m_dungeon.destroy();
 		m_janitor.destroy();
