@@ -182,3 +182,32 @@ bool GameObject::collides_with(GameObject& object, mat3 room_transform, mat3 dun
 	}
   return false;
 }
+
+
+bool GameObject::collides_with_projected(GameObject & object, vec2 projected_position, mat3 room_transform, mat3 dungeon_transform)
+{
+	float jLeftEdge = projected_position.x;
+	float jRightEdge = jLeftEdge + m_size.x;
+	float jTopEdge = projected_position.y;
+	float jBottomEdge = jTopEdge + m_size.y;
+
+
+	float objX = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).x;
+	float objY = get_world_coords_from_room_coords(object.get_pos(), room_transform, dungeon_transform).y;
+
+	float oLeftEdge = objX;
+	float oRightEdge = objX + object.get_size().x * object.get_scale().x ;
+	float oTopEdge = objY;
+	float oBottomEdge = objY + object.get_size().y * object.get_scale().y;
+
+	if (object.is_enabled() && ((jLeftEdge <= oRightEdge && jRightEdge >= oLeftEdge) || (jRightEdge >= oLeftEdge && jLeftEdge <= oRightEdge)))
+	{
+		if ((jTopEdge <= oBottomEdge && jBottomEdge >= oTopEdge) || (jBottomEdge >= oTopEdge && jTopEdge <= oBottomEdge))
+		{
+			//object.toggle_enable(); //For Debug
+			return true;
+		}
+	}
+	return false;
+}
+
