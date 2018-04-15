@@ -456,7 +456,7 @@ void Room::spawn_debris()
 	rng = default_random_engine(random_device()());
 	dist = uniform_int_distribution<int>(0, 25);
 	int random = dist(rng);
-	if (random == 1)
+	if (random == 1 || (m_num_spawned_boss_fight_cleanables - m_num_cleaned_boss_fight_cleanables > 10 && random == 2))
 	{
 		dist = uniform_int_distribution<int>(0, m_cleanables.size() - 1);
 		unique_ptr<Cleanable>& c = m_cleanables.at(dist(rng));
