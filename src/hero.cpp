@@ -345,6 +345,7 @@ void Hero::pick_movement_tex() {
 	//Pick current texture based on direction of velocity
 	vec2 vel_dir = normalize(m_vel);
 	vec2 default_dir = { 1, 0 };
+	vel_dir = { -1, 0.5 };
 	float theta = acos(dot(vel_dir, default_dir)); //gives the angle of our velocity (but only from 0-pi in rads)
 	if (vel_dir.y > 0) theta = -theta;	//flip negative values for the bottom half of the unit circle
 	float pi = atan(1) * 4;
@@ -359,7 +360,7 @@ void Hero::pick_movement_tex() {
 	}
 	//odd case
 	//why doesn't taht work. fuck. 
-	else if (theta > 3 * pi / 4 || theta < -3* pi / 4) {
+	else if (theta > 3 * pi / 4 || theta < -3*pi / 4) {
 		animation_dir = left;
 	}
 	//if (theta < pi / 4 || theta > -pi / 4)
