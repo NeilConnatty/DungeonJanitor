@@ -61,6 +61,7 @@ private:
 
 	// Game entities
 	Mix_Music* m_background_music;
+	Mix_Music* m_boss_fight_music;
 
 	//Janitor
 	Janitor m_janitor;

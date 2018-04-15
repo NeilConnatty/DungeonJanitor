@@ -88,6 +88,7 @@ bool World::init(vec2 screen)
     }
 
     m_background_music = Mix_LoadMUS(audio_path("music.wav"));
+	m_boss_fight_music = Mix_LoadMUS(audio_path("battle_in_the_winter.wav"));
 
     //test all sound effects for nullptr
     if (m_background_music == nullptr)
@@ -95,6 +96,12 @@ bool World::init(vec2 screen)
         fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
         return false;
     }
+
+	if (m_boss_fight_music == nullptr)
+	{
+		fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
+		return false;
+	}
 
     // Playing background music indefinitely
     Mix_PlayMusic(m_background_music, -1);
@@ -218,6 +225,8 @@ bool World::update(float elapsed_ms)
 	  }
 	  if (m_dungeon.has_boss_fight_started())
 	  {
+		  //Mix_PauseMusic();
+		  Mix_PlayMusic(m_boss_fight_music, -1);
 		  if (m_dungeon.get_boss_fight_dungeon_health() == 0.0f)
 		  {
 			  game_over();
