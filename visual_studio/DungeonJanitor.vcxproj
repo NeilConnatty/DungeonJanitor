@@ -534,6 +534,7 @@
     <ClCompile Include="..\src\toweldispenser.cpp" />
     <ClCompile Include="..\src\ValueIteration.cpp" />
     <ClCompile Include="..\src\wall.cpp" />
+    <ClCompile Include="..\src\winscreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\bathroomstall.hpp" />
@@ -568,6 +569,7 @@
     <ClInclude Include="..\src\toweldispenser.hpp" />
     <ClInclude Include="..\src\ValueIteration.hpp" />
     <ClInclude Include="..\src\wall.hpp" />
+    <ClInclude Include="..\src\winscreen.hpp" />
     <ClInclude Include="..\src\world.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

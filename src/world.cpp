@@ -124,6 +124,7 @@ bool World::init(vec2 screen)
 
   // Attach health bar to dungeon
   m_dungeon.setHealthBar(m_camera.getHealthBar());
+  m_did_win = false;
   
 	return true;
 }
@@ -220,7 +221,11 @@ bool World::update(float elapsed_ms)
 	  {
 		  if (m_dungeon.get_boss_fight_dungeon_health() == 0.0f)
 		  {
-			  game_over();
+			  game_over(false);
+		  }
+		  else if (m_dungeon.has_boss_fight_ended())
+		  {
+			  game_over(true);
 		  }
 		  else
 		  {
@@ -230,10 +235,17 @@ bool World::update(float elapsed_ms)
 	  }
 
   }
-  else 
+  else
   {
 	  m_camera.update(elapsed_ms);
-	  m_game_over_screen.update(elapsed_ms);
+	  if (m_did_win)
+	  {
+		  m_win_screen.update(elapsed_ms);
+	  }
+	  else
+	  {
+		  m_game_over_screen.update(elapsed_ms);
+	  }
   }
   return true;
 }
@@ -286,7 +298,13 @@ void World::draw()
   }
   else
   {
-	  m_game_over_screen.draw(projection_2D, transform);
+	  if (m_did_win)
+	  {
+		  m_win_screen.draw(projection_2D, transform);
+	  }
+	  else {
+		  m_game_over_screen.draw(projection_2D, transform);
+	  }
   }
   // Presenting
   glfwSwapBuffers(m_window);
@@ -298,11 +316,19 @@ bool World::is_over()const
     return glfwWindowShouldClose(m_window);
 }
 
-void World::game_over() 
+void World::game_over(bool didWin) 
 {
 	game_is_over = true;
-	m_game_over_screen.init(m_janitor.get_pos());
-	m_camera.follow_object(&m_game_over_screen);
+	m_did_win = didWin;
+	if (m_did_win)
+	{
+		m_win_screen.init(m_janitor.get_pos());
+		m_camera.follow_object(&m_win_screen);
+	}
+	else {
+		m_game_over_screen.init(m_janitor.get_pos());
+		m_camera.follow_object(&m_game_over_screen);
+	}
 }
 
 // On key callback
