@@ -169,10 +169,7 @@ bool World::init_hero()
 		return false;
 
 	}
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 	m_hero.setAllRooms(&m_dungeon.get_rooms());
 	m_dungeon.spawn_hero();
 	return true;
